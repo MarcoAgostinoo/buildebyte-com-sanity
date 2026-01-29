@@ -20,7 +20,7 @@ export async function GET(request: Request) {
   }
 
   // Enable Draft Mode by setting a cookie
-  draftMode().enable()
+  ;(await draftMode()).enable()
 
   // Redirect to the post page with the given slug
   redirect(`/post/${slug}`)

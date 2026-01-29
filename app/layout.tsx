@@ -19,9 +19,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${inter.className} flex flex-col min-h-screen`}>
+      {/* Adicionei 'antialiased' para deixar a fonte mais nítida */}
+      <body className={`${inter.className} flex flex-col min-h-screen antialiased`}>
         <Header />
-        <main className="flex-grow">
+        {/* 'grow' faz a mesma coisa que flex-grow, mas é o padrão atual do Tailwind */}
+        <main className="grow">
           {children}
         </main>
         <Footer />

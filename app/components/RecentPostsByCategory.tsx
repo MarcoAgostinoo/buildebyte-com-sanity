@@ -1,56 +1,105 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { client } from '../lib/sanity';
+import { client } from '@/app/lib/sanity';
 
-// Função para formatar a data, ajuste o caminho se necessário
-function formatDate(dateString: string) {
-  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-  return new Date(dateString).toLocaleDateString('pt-BR', options);
+interface PostWithCategory {
+  _id: string;
+  title: string;
+  slug: string;
+  imagem: string;
+  publishedAt: string;
+  excerpt: string;
+  categoryTitle: string;
 }
 
-async function getRecentPosts(category: string) {
-  const query = `*[_type == "post" && references(*[_type == "category" && title == $category]._id)] | order(publishedAt desc) [0...4] {
-    title,
-    "slug": slug.current,
-    "imagem": mainImage.asset->url,
-    excerpt,
-    "author": author->name,
-    publishedAt,
-  }`;
-  const posts = await client.fetch(query, { category });
-  return posts;
+// A nova função de busca de dados
+async function getLatestPostFromCategories(): Promise<PostWithCategory[]> {
+  const query = `
+    *[_type == "category" && !(_id in path('drafts.**')) && count(*[_type == "post" && references(^._id)]) > 0] | order(title asc) [0...8] {
+      // Pega o post mais recente de cada uma das 8 categorias
+      "latestPost": *[_type == "post" && references(^._id)] | order(publishedAt desc) [0] {
+        _id,
+        title,
+        "slug": slug.current,
+        "imagem": mainImage.asset->url,
+        publishedAt,
+        excerpt,
+        "categoryTitle": ^.title // Adiciona o título da categoria ao post
+      }
+    }.latestPost
+  `;
+  
+  const posts = await client.fetch(query);
+  // Filtra qualquer resultado nulo que possa ter vindo da query
+  return posts.filter(Boolean);
 }
 
-export default async function RecentPostsByCategory({ category }: { category: string }) {
-  const posts = await getRecentPosts(category);
+export default async function RecentPostsByCategory() {
+  const posts = await getLatestPostFromCategories();
 
   if (!posts || posts.length === 0) {
-    return <p>Nenhum post encontrado nesta categoria.</p>;
+    return null; // Não renderiza nada se não encontrar posts
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-1 gap-10">
-      {posts.map((post: any) => (
-        <article key={post.slug} className="bg-white p-6 rounded-lg shadow-sm flex flex-col sm:flex-row items-start gap-6">
-          {post.imagem && (
-            <Link href={`/post/${post.slug}`} className="w-full sm:w-1/3">
-              <Image src={post.imagem} alt={post.title} width={400} height={225} className="w-full h-auto object-cover rounded-md" />
-            </Link>
-          )}
-          <div className="flex-1">
-            <Link href={`/post/${post.slug}`}>
-              <h3 className="text-2xl font-bold text-blue-600 hover:underline mb-3">{post.title}</h3>
-            </Link>
-            <p className="text-gray-600 mb-4">{post.excerpt}</p>
-            <div className="text-sm text-gray-500 mb-4">
-              <span>{post.author}</span> | <span>{formatDate(post.publishedAt)}</span>
-            </div>
-            <Link href={`/post/${post.slug}`} className="text-blue-500 hover:underline font-semibold">
-              Leia mais...
-            </Link>
-          </div>
-        </article>
-      ))}
-    </div>
+    <section className="py-12 sm:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+            Últimas de Nossas Categorias
+          </h2>
+          <p className="mt-4 text-lg text-gray-600">
+            Uma seleção dos artigos mais recentes de diversas áreas para você se manter atualizado.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {posts.map((post) => (
+            <article 
+              key={post._id} 
+              className="group relative flex flex-col bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+            >
+              <div className="relative">
+                {post.imagem && (
+                  <Link href={`/post/${post.slug}`} className="block">
+                    <Image 
+                      src={post.imagem} 
+                      alt={post.title} 
+                      width={400}
+                      height={225}
+                      className="aspect-video object-cover w-full transition-transform duration-500 group-hover:scale-105" 
+                    />
+                  </Link>
+                )}
+                 {/* Tag da Categoria */}
+                <Link href={`/categorias/${encodeURIComponent(post.categoryTitle)}`}>
+                    <span className="absolute top-4 left-4 inline-block bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider transition-transform duration-300 group-hover:bg-blue-700">
+                        {post.categoryTitle}
+                    </span>
+                </Link>
+              </div>
+              
+              <div className="p-5 flex flex-col grow">
+                <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 leading-tight grow">
+                  <Link href={`/post/${post.slug}`} className="hover:text-blue-600 transition-colors">
+                    {post.title}
+                  </Link>
+                </h3>
+                
+                <p className="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed">
+                  {post.excerpt}
+                </p>
+
+                <div className="pt-4 border-t border-gray-100 mt-auto">
+                  <time className="text-xs uppercase tracking-wider text-gray-500">
+                    {new Date(post.publishedAt).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' })}
+                  </time>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

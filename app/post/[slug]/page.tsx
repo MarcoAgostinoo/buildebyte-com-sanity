@@ -5,11 +5,10 @@ import AdComponent from "@/app/components/AdComponent";
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata, ResolvingMetadata } from "next";
-import imageUrlBuilder from "@sanity/image-url";
+import { createImageUrlBuilder } from "@sanity/image-url";
 import { draftMode } from "next/headers";
-import { ReactNode } from "react";
 
-// Define interfaces for our Sanity data
+// --- INTERFACES ---
 interface Category {
   title: string;
   slug: string;
@@ -19,7 +18,7 @@ interface SanityImage {
   _type: 'image';
   asset: {
     _ref: string;
-    url?: string; // a asset expandida terá a url
+    url?: string;
     metadata?: {
       dimensions: {
         width: number;
@@ -41,6 +40,7 @@ interface Post {
   title: string;
   slug: string;
   body: (Block | SanityImage)[];
+  contentHtml?: string;
   imagem: string;
   author: string;
   publishedAt: string;
@@ -50,31 +50,24 @@ interface Post {
   excerpt: string;
 }
 
-interface PageProps {
-  params: { slug: string };
-}
-
-// Configuração do builder de imagem
-const builder = imageUrlBuilder(client);
+// --- CONFIGURAÇÃO DE IMAGEM ---
+const builder = createImageUrlBuilder(client);
 function urlFor(source: SanityImage) {
   return builder.image(source);
 }
 
-// Componentes customizados para o PortableText
+// --- COMPONENTES CUSTOMIZADOS PARA PORTABLE TEXT (Responsivos) ---
 const ptComponents: PortableTextComponents = {
   types: {
     image: ({ value }: { value: SanityImage }) => {
-      if (!value?.asset?.metadata?.dimensions) {
-        return null;
-      }
-
+      if (!value?.asset?.metadata?.dimensions) return null;
       const { width, aspectRatio } = value.asset.metadata.dimensions;
       const imageUrl = urlFor(value).width(width).fit("max").auto("format").url();
-      const imageWidth = 1200; // Largura máxima para a imagem no layout
+      const imageWidth = 1200;
       const imageHeight = imageWidth / aspectRatio;
 
       return (
-        <div className="my-10 overflow-hidden rounded-xl shadow-lg">
+        <div className="my-6 sm:my-10 overflow-hidden rounded-xl shadow-md">
           <Image
             src={imageUrl}
             alt={value.alt || "Imagem do artigo"}
@@ -84,7 +77,7 @@ const ptComponents: PortableTextComponents = {
             className="w-full h-auto"
           />
           {value.caption && (
-            <p className="mt-2 text-center text-sm text-gray-500 italic">
+            <p className="mt-2 text-center text-xs sm:text-sm text-gray-500 italic px-4">
               {value.caption}
             </p>
           )}
@@ -93,61 +86,40 @@ const ptComponents: PortableTextComponents = {
     },
   },
   block: {
-    h2: ({ children }: { children?: ReactNode }) => (
-      <h2 className="text-3xl font-bold mt-12 mb-4 text-gray-800">
+    h2: ({ children }) => (
+      <h2 className="text-2xl sm:text-3xl font-bold mt-8 mb-4 text-gray-800 leading-tight">
         {children}
       </h2>
     ),
-    h3: ({ children }: { children?: ReactNode }) => (
-      <h3 className="text-2xl font-bold mt-8 mb-3 text-gray-800">{children}</h3>
+    h3: ({ children }) => (
+      <h3 className="text-xl sm:text-2xl font-bold mt-6 mb-3 text-gray-800">
+        {children}
+      </h3>
     ),
-    h4: ({ children }: { children?: ReactNode }) => (
-      <h4 className="text-xl font-bold mt-6 mb-2 text-gray-800">{children}</h4>
-    ),
-    blockquote: ({ children }: { children?: ReactNode }) => (
-      <blockquote className="border-l-4 border-blue-500 pl-6 my-8 text-xl italic text-gray-700">
+    blockquote: ({ children }) => (
+      <blockquote className="border-l-4 border-blue-500 pl-4 sm:pl-6 my-6 sm:my-8 text-lg italic text-gray-700 bg-gray-50 py-2">
         {children}
       </blockquote>
     ),
-  },
-  marks: {
-    link: ({ children, value }: { children?: ReactNode, value?: { href: string } }) => {
-      if (!value?.href) return <>{children}</>;
-      const rel = !value.href.startsWith("/")
-        ? "noreferrer noopener"
-        : undefined;
-      return (
-        <a
-          href={value.href}
-          rel={rel}
-          className="text-blue-600 hover:underline"
-        >
-          {children}
-        </a>
-      );
-    },
+    normal: ({ children }) => (
+      <p className="mb-4 leading-relaxed">{children}</p>
+    ),
   },
 };
 
-
-// 1. Busca de dados ajustada para o novo Schema
+// --- BUSCA DE DADOS ---
 async function getPost(slug: string): Promise<Post | null> {
   const { isEnabled: isDraftMode } = await draftMode();
   const currentClient = isDraftMode ? previewClient : client;
 
-  const query = `*[_type == "post" && slug.current == $slug][0] {
+  const query = `*[_type == "post" && slug.current == $slug && !(_id in path('drafts.**'))][0] {
     title,
     "slug": slug.current,
     body[]{
       ...,
-      _type == "image" => {
-        ...,
-        asset->{
-          ...,
-          metadata
-        }
-      }
+      _type == "image" => { ..., asset->{ ..., metadata } }
     },
+    contentHtml,
     "imagem": mainImage.asset->url,
     "author": author->name,
     publishedAt,
@@ -158,20 +130,18 @@ async function getPost(slug: string): Promise<Post | null> {
   }`;
 
   if (!slug) return null;
-  return await currentClient.fetch(query, { slug });
+  return await currentClient.fetch(query, { slug }, { cache: "no-store" });
 }
 
-// 2. SEO Dinâmico utilizando os novos campos do Schema
+// --- SEO DINÂMICO ---
 export async function generateMetadata(
-  { params }: PageProps,
+  { params }: { params: { slug: string } },
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const { slug } = params;
+  const { slug } = await params;
   const post = await getPost(slug);
 
-  if (!post) {
-    return { title: "Post não encontrado" };
-  }
+  if (!post) return { title: "Post não encontrado" };
 
   const previousImages = (await parent).openGraph?.images || [];
 
@@ -187,109 +157,96 @@ export async function generateMetadata(
 }
 
 const formatDate = (dateString: string): string => {
-  const options: Intl.DateTimeFormatOptions = {
+  return new Date(dateString).toLocaleDateString("pt-BR", {
     year: "numeric",
     month: "long",
     day: "numeric",
-  };
-  return new Date(dateString).toLocaleDateString("pt-BR", options);
+  });
 };
 
-// 3. Componente de Página Principal
-export default async function PostPage({ params }: PageProps) {
-  const { slug } = params;
-  console.log("Rendering post for slug:", slug);
+// --- COMPONENTE DA PÁGINA ---
+export default async function PostPage({ params }: { params: { slug: string } }) {
+  const { slug } = await params;
   const post = await getPost(slug);
-  console.log("Fetched post data:", post);
 
-  if (!post) {
-    notFound();
-  }
+  if (!post) notFound();
 
   return (
-    <div className="max-w-7xl mx-auto  sm:p-6 lg:p-8">
-      <div className="flex flex-col lg:flex-row gap-8">
+    <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+        
         {/* Coluna Principal do Artigo */}
-        <div className="w-full lg:w-2/3">
-          <article className="bg-white sm:p-8 rounded-xl shadow-sm border border-gray-100">
-            {/* Categorias Dinâmicas */}
-            <div className="mb-6">
-              {post.categories && (
-                <div className="flex flex-wrap gap-2">
-                  {post.categories.map((category: Category) => (
-                    <Link
-                      key={category.slug}
-                      href={`/categorias/${category.slug}`}
-                      className="text-xs font-bold uppercase tracking-wider bg-blue-50 text-blue-600 px-3 py-1 rounded-full hover:bg-blue-100 transition-colors"
-                    >
-                      {category.title}
-                    </Link>
-                  ))}
-                </div>
-              )}
+        <main className="w-full lg:w-2/3">
+          <article className="bg-white rounded-xl">
+            
+            {/* Categorias */}
+            <div className="mb-4 sm:mb-6 flex flex-wrap gap-2">
+              {post.categories?.map((category) => (
+                <Link
+                  key={category.slug}
+                  href={`/categorias/${category.slug}`}
+                  className="text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-blue-50 text-blue-600 px-3 py-1 rounded-full hover:bg-blue-100 transition-colors"
+                >
+                  {category.title}
+                </Link>
+              ))}
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-black text-gray-900 mb-6 leading-tight">
+            {/* Título Responsivo */}
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-4 sm:mb-6 leading-[1.1]">
               {post.title}
             </h1>
 
-            {post.excerpt && (
-              <p className="mt-4 text-lg text-gray-600 leading-relaxed border-b border-gray-200 pb-6 mb-6">
-                {post.excerpt}
-              </p>
-            )}
-
-            {/* Meta Dados: Autor e Data */}
-            <div className="flex items-center text-sm text-gray-500 pb-8 border-b border-gray-300">
-              {post.author && (
-                <span className="font-medium text-gray-900">
-                  Por {post.author}
-                </span>
-              )}
-              {post.author && post.publishedAt && (
-                <span className="mx-3 text-gray-300">•</span>
-              )}
-              {post.publishedAt && (
-                <time dateTime={post.publishedAt} className="italic">
-                  {formatDate(post.publishedAt)}
-                </time>
-              )}
+            {/* Autor e Data */}
+            <div className="flex flex-wrap items-center text-xs sm:text-sm text-gray-500 pb-6 mb-8 border-b border-gray-100 gap-y-2">
+              <span className="font-medium text-gray-900">Por {post.author}</span>
+              <span className="hidden sm:inline mx-3 text-gray-300">•</span>
+              <time className="italic block sm:inline">{formatDate(post.publishedAt)}</time>
             </div>
 
-            {/* Imagem Principal Otimizada */}
+            {/* Imagem de Capa */}
             {post.imagem && (
-              <div className="w-full overflow-hidden rounded-2xl shadow-lg">
+              <div className="w-full overflow-hidden rounded-xl sm:rounded-2xl shadow-lg mb-8 sm:mb-12">
                 <Image
                   src={post.imagem}
                   alt={post.title}
                   width={1200}
                   height={675}
-                  className="w-full h-auto block transition-transform duration-500 hover:scale-105"
-                  loading="eager"
+                  className="w-full h-auto object-cover"
+                  priority
                 />
               </div>
             )}
 
-            {/* Conteúdo Rico (PortableText) com Estilo Profissional */}
-            <div className="prose prose-blue prose-lg max-w-none text-gray-700 leading-relaxed">
-              {console.log("Before rendering PortableText")}
-              <PortableText value={post.body} components={ptComponents} />
-              {console.log("After rendering PortableText")}
+            {/* CONTEÚDO (Suporta Script HTML ou Sanity) */}
+            <div className="prose prose-sm sm:prose-base md:prose-lg prose-blue max-w-none text-gray-700 overflow-hidden">
+              {post.contentHtml ? (
+                <div 
+                  className="article-content" 
+                  dangerouslySetInnerHTML={{ __html: post.contentHtml }} 
+                />
+              ) : (
+                post.body && <PortableText value={post.body} components={ptComponents} />
+              )}
             </div>
           </article>
-        </div>
+        </main>
 
-        {/* Sidebar com AdComponent Sticky */}
+        {/* Sidebar (Empilha abaixo no mobile) */}
         <aside className="w-full lg:w-1/3">
           <div className="lg:sticky lg:top-24 space-y-6">
-            <div className="p-4 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+            <h4 className="text-sm font-bold text-gray-400 uppercase tracking-widest text-center lg:text-left">
+              Publicidade
+            </h4>
+            <div className="p-4 bg-gray-50 rounded-lg border border-dashed border-gray-300 flex justify-center items-center min-h-62.5">
               <AdComponent />
             </div>
-            <div className="p-4 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+            <div className="hidden lg:flex p-4 bg-gray-50 rounded-lg border border-dashed border-gray-300 justify-center items-center min-h-62.5">
               <AdComponent />
             </div>
           </div>
         </aside>
+
       </div>
     </div>
   );
