@@ -1,27 +1,41 @@
 import { NextResponse } from "next/server";
 
 const BAD_WORDS = [
-    'spam', 'golpe', 'fraude', 'pirâmide', 'ganhe dinheiro', 'dinheiro fácil', 
-    'fature', 'renda extra', 'lucro', 'crypto', 'bitcoin', 'ethereum', 
-    'investimento', 'forex', 'trader', 'clique aqui', 'link na bio', 'acesse', 
-    'site oficial', 'seguidores', 'likes', 'visualizações', 'engajamento', 
-    'promoção', 'sorteio', 'grátis', 'oferta', 'desconto', 'whatsapp', 
-    'telegram', 'ligue', 'contato', 'hacker', 'recuperação de conta', 
-    'xxx', 'porn', 'porno', 'pornografia', 'sexo', 'nudes', 'adulto', 
-    'maduras', 'amador', 'casadas', 'incesto', 'hentai', 'erótico', 'sensual', 
-    'acompanhante', 'massagem', 'xvideos', 'onlyfans', 'privacy', 'câmera', 
-    'camgirl', 'merda', 'bosta', 'caguei', 'caralho', 'caralhos', 'porra', 
-    'porras', 'foda', 'foder', 'fuder', 'fodido', 'fudido', 'fodase', 'foda-se', 
-    'cacete', 'k7', 'idiota', 'imbecil', 'burro', 'burra', 'anta', 'animal', 
-    'trouxa', 'otário', 'otária', 'babaca', 'lixo', 'inútil', 'retardado', 
-    'retardada', 'doente', 'escroto', 'escrota', 'nojento', 'nojenta', 
-    'arrombado', 'arrombada', 'corno', 'cornos', 'chifrudo', 'vagabundo', 
-    'vagabunda', 'puta', 'putas', 'prostituta', 'quenga', 'piranha', 'vadia', 
-    'pau', 'pinto', 'rola', 'piroca', 'caceta', 'vara', 'jeba', 'buceta', 
-    'boceta', 'xoxota', 'perereca', 'aranha', 'cu', 'cú', 'anus', 'anal', 
-    'rabo', 'chupa', 'chupar', 'mamada', 'boquete', 'siririca', 'gozar', 
-    'gozo', 'leite', 'esperma', 'tetas', 'peitos', 'bico', 'fdp', 'vtmnc', 
-    'vtnc', 'vsf', 'pqp', 'krl', 'tmnc'
+    // --- 1. SPAM E GOLPES (Financeiro) ---
+    'spam', 'golpe', 'golpista', 'fraude', 'pirâmide', 
+    'ganhe dinheiro', 'dinheiro fácil', 'fature', 'renda extra', 'lucro',
+    'crypto', 'bitcoin', 'ethereum', 'investimento', 'forex', 'trader',
+    'clique aqui', 'link na bio', 'acesse', 'site oficial',
+    'hacker', 'recuperação de conta', 
+
+    // --- 2. OFENSAS PESSOAIS E XINGAMENTOS (Aumentado) ---
+    'vacilão', 'vacilao', 'vacilaum',
+    'safado', 'safada', 'safados',
+    'pilantra', 'picareta', 'ladrão', 'ladrao', 'ladra',
+    'bandido', 'bandida', 'criminoso',
+    'impostor', 'mentiroso', 'mentirosa',
+    'burro', 'burra', 'anta', 'animal', 'jumento',
+    'idiota', 'imbecil', 'trouxa', 'otário', 'otária', 'babaca',
+    'lixo', 'inútil', 'retardado', 'retardada', 'doente',
+    'escroto', 'escrota', 'nojento', 'nojenta',
+    'arrombado', 'arrombada', 
+    'corno', 'cornos', 'chifrudo',
+    'vagabundo', 'vagabunda', 'incompetente',
+
+    // --- 3. BAIXO CALÃO (Gerais) ---
+    'merda', 'bosta', 'caguei',
+    'caralho', 'caralhos', 'krl',
+    'porra', 'porras', 'pqp',
+    'foda', 'foder', 'fuder', 'fodido', 'fudido', 'fodase', 'foda-se', 'vsf',
+    'cacete', 'k7',
+    'cu', 'cú', 'anus', 'anal', 'rabo',
+    'puta', 'putas', 'prostituta', 'quenga', 'piranha', 'vadia',
+    'pau', 'pinto', 'rola', 'piroca', 'caceta', 'vara', 'jeba',
+    'buceta', 'boceta', 'xoxota', 'perereca', 'aranha',
+    'chupa', 'chupar', 'mamada', 'boquete', 'siririca',
+    'gozar', 'gozo', 'leite', 'esperma',
+    'tetas', 'peitos', 'bico',
+    'fdp', 'vtmnc', 'vtnc', 'tmnc'
 ];
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
