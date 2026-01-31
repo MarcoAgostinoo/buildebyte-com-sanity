@@ -45,10 +45,10 @@ export default async function RecentPostsByCategory() {
     <section className="py-12 sm:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+          <h2 className="text-3xl font-extrabold text-primary sm:text-4xl">
             Últimas de Nossas Categorias
           </h2>
-          <p className="mt-4 text-lg text-gray-600">
+          <p className="mt-4 text-lg text-foreground/80">
             Uma seleção dos artigos mais recentes de diversas áreas para você se manter atualizado.
           </p>
         </div>
@@ -57,7 +57,7 @@ export default async function RecentPostsByCategory() {
           {posts.map((post) => (
             <article 
               key={post._id} 
-              className="group relative flex flex-col bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+              className="group relative flex flex-col bg-[var(--card-bg)] rounded-2xl shadow-sm border border-[var(--border)] overflow-hidden transform transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
             >
               <div className="relative">
                 {post.imagem && (
@@ -73,25 +73,25 @@ export default async function RecentPostsByCategory() {
                 )}
                  {/* Tag da Categoria */}
                 <Link href={`/categorias/${encodeURIComponent(post.categoryTitle)}`}>
-                    <span className="absolute top-4 left-4 inline-block bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider transition-transform duration-300 group-hover:bg-blue-700">
+                    <span className="absolute top-4 left-4 inline-block bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider transition-transform duration-300 group-hover:bg-primary-dark">
                         {post.categoryTitle}
                     </span>
                 </Link>
               </div>
               
               <div className="p-5 flex flex-col grow">
-                <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 leading-tight grow">
-                  <Link href={`/post/${post.slug}`} className="hover:text-blue-600 transition-colors">
+                <h3 className="text-lg font-bold text-foreground mb-2 line-clamp-2 leading-tight grow">
+                  <Link href={`/post/${post.slug}`} className="hover:text-primary transition-colors">
                     {post.title}
                   </Link>
                 </h3>
                 
-                <p className="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed">
+                <p className="text-foreground/70 text-sm mb-4 line-clamp-3 leading-relaxed">
                   {post.excerpt}
                 </p>
 
-                <div className="pt-4 border-t border-gray-100 mt-auto">
-                  <time className="text-xs uppercase tracking-wider text-gray-500">
+                <div className="pt-4 border-t border-[var(--border)] mt-auto">
+                  <time className="text-xs uppercase tracking-wider text-foreground/50">
                     {new Date(post.publishedAt).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' })}
                   </time>
                 </div>

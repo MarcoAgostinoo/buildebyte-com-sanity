@@ -105,14 +105,14 @@ export default async function Home() {
       {/* --- SEÇÃO DE DESTAQUES --- */}
       {featuredPosts.length > 0 && (
         <section className="mb-16">
-          <h2 className="text-3xl font-black text-gray-900 mb-8 border-l-4 border-blue-600 pl-4">
+          <h2 className="text-3xl font-black text-primary mb-8 border-l-4 border-secondary pl-4">
             Destaques
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredPosts.map((post) => (
               <article 
                 key={post._id} // Usar ID é mais seguro que slug
-                className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transform hover:shadow-lg transition-all duration-300 group"
+                className="bg-[var(--card-bg)] rounded-xl shadow-sm border border-[var(--border)] overflow-hidden transform hover:shadow-lg transition-all duration-300 group"
               >
                 <Link href={`/post/${post.slug}`}>
                   <div className="cursor-pointer h-full flex flex-col">
@@ -127,14 +127,14 @@ export default async function Home() {
                       </div>
                     )}
                     <div className="p-6 flex flex-col grow">
-                      <h3 className="text-xl font-bold text-gray-800 group-hover:text-blue-600 mb-3 transition-colors leading-tight">
+                      <h3 className="text-xl font-bold text-foreground group-hover:text-primary mb-3 transition-colors leading-tight">
                         {post.title}
                       </h3>
-                      <p className="text-gray-600 text-sm mb-4 line-clamp-3 grow">
+                      <p className="text-foreground/80 text-sm mb-4 line-clamp-3 grow">
                         {post.excerpt}
                       </p>
-                      <div className="text-xs text-gray-400 flex justify-between items-center mt-auto pt-4 border-t border-gray-50">
-                        <span className="font-bold text-gray-500 uppercase tracking-wider">{post.author}</span>
+                      <div className="text-xs text-foreground/50 flex justify-between items-center mt-auto pt-4 border-t border-[var(--border)]">
+                        <span className="font-bold text-foreground/60 uppercase tracking-wider">{post.author}</span>
                         <span>{formatDate(post.publishedAt)}</span>
                       </div>
                     </div>
@@ -165,13 +165,13 @@ export default async function Home() {
           return (
             <div key={cat._id} className="animate-in fade-in duration-700">
               <div className="flex items-center gap-4 mb-8">
-                <h2 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
-                  Últimas de <span className="text-blue-600">{cat.title}</span>
+                <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
+                  Últimas de <span className="text-primary">{cat.title}</span>
                 </h2>
-                <div className="flex-1 h-px bg-gray-200 hidden md:block"></div>
+                <div className="flex-1 h-px bg-[var(--border)] hidden md:block"></div>
                 <Link 
                   href={`/categorias/${encodeURIComponent(cat.title)}`} // Ajuste conforme sua rota de categoria
-                  className="hidden sm:block text-sm font-bold text-blue-600 hover:text-blue-800 uppercase tracking-wider"
+                  className="hidden sm:block text-sm font-bold text-primary hover:text-primary-dark uppercase tracking-wider"
                 >
                   Ver todos &rarr;
                 </Link>

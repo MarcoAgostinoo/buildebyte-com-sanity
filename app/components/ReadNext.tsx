@@ -68,15 +68,15 @@ export default function ReadNext({ categories, currentPostSlug }: ReadNextProps)
 
   return (
     <div
-      className={`fixed bottom-4 right-4 w-80 bg-white rounded-lg shadow-lg p-4 transition-transform duration-500 ease-in-out ${
+      className={`fixed bottom-4 right-4 w-80 bg-[var(--card-bg)] rounded-lg shadow-lg p-4 transition-transform duration-500 ease-in-out border border-[var(--border)] ${
         isVisible ? 'translate-x-0' : 'translate-x-[150%]'
       }`}
     >
-      <h3 className="font-bold text-lg mb-2">Leia a seguir</h3>
+      <h3 className="font-bold text-lg mb-2 text-primary">Leia a seguir</h3>
       <div className="space-y-4">
         {relatedPosts.map(post => (
           <Link href={`/post/${post.slug}`} key={post.slug}>
-            <div className="flex items-center gap-4 hover:bg-gray-50 p-2 rounded-md">
+            <div className="flex items-center gap-4 hover:bg-primary/5 p-2 rounded-md">
               <div className="w-16 h-16 relative flex-shrink-0">
                 <Image
                   src={post.imagem}
@@ -85,7 +85,7 @@ export default function ReadNext({ categories, currentPostSlug }: ReadNextProps)
                   className="rounded-md object-cover"
                 />
               </div>
-              <span className="text-sm font-semibold text-gray-800 line-clamp-3">
+              <span className="text-sm font-semibold text-foreground/80 line-clamp-3">
                 {post.title}
               </span>
             </div>

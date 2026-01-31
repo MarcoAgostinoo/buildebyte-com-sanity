@@ -79,7 +79,7 @@ const ptComponents: PortableTextComponents = {
             className="w-full h-auto"
           />
           {value.caption && (
-            <p className="mt-2 text-center text-xs sm:text-sm text-gray-500 italic px-4">
+            <p className="mt-2 text-center text-xs sm:text-sm text-foreground/60 italic px-4">
               {value.caption}
             </p>
           )}
@@ -89,17 +89,17 @@ const ptComponents: PortableTextComponents = {
   },
   block: {
     h2: ({ children }) => (
-      <h2 className="text-2xl sm:text-3xl font-bold mt-8 mb-4 text-gray-800 leading-tight">
+      <h2 className="text-2xl sm:text-3xl font-bold mt-8 mb-4 text-foreground leading-tight">
         {children}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3 className="text-xl sm:text-2xl font-bold mt-6 mb-3 text-gray-800">
+      <h3 className="text-xl sm:text-2xl font-bold mt-6 mb-3 text-foreground">
         {children}
       </h3>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="border-l-4 border-blue-500 pl-4 sm:pl-6 my-6 sm:my-8 text-lg italic text-gray-700 bg-gray-50 py-2">
+      <blockquote className="border-l-4 border-primary pl-4 sm:pl-6 my-6 sm:my-8 text-lg italic text-foreground/80 bg-primary/5 py-2">
         {children}
       </blockquote>
     ),
@@ -179,7 +179,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
         
         {/* Coluna Principal do Artigo */}
         <main className="w-full lg:w-2/3">
-          <article className="bg-white rounded-xl">
+          <article className="bg-[var(--card-bg)] rounded-xl p-6">
             
             {/* Categorias */}
             <div className="mb-4 sm:mb-6 flex flex-wrap gap-2">
@@ -187,7 +187,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
                 <Link
                   key={category.slug}
                   href={`/categorias/${category.slug}`}
-                  className="text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-blue-50 text-blue-600 px-3 py-1 rounded-full hover:bg-blue-100 transition-colors"
+                  className="text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-primary/10 text-primary px-3 py-1 rounded-full hover:bg-primary/20 transition-colors"
                 >
                   {category.title}
                 </Link>
@@ -195,14 +195,14 @@ export default async function PostPage({ params }: { params: { slug: string } })
             </div>
 
             {/* Título Responsivo */}
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-4 sm:mb-6 leading-[1.1]">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-foreground mb-4 sm:mb-6 leading-[1.1]">
               {post.title}
             </h1>
 
             {/* Autor e Data */}
-            <div className="flex flex-wrap items-center text-xs sm:text-sm text-gray-500 pb-6 mb-8 border-b border-gray-100 gap-y-2">
-              <span className="font-medium text-gray-900">Por {post.author}</span>
-              <span className="hidden sm:inline mx-3 text-gray-300">•</span>
+            <div className="flex flex-wrap items-center text-xs sm:text-sm text-foreground/60 pb-6 mb-8 border-b border-[var(--border)] gap-y-2">
+              <span className="font-medium text-foreground">Por {post.author}</span>
+              <span className="hidden sm:inline mx-3 text-foreground/20">•</span>
               <time className="italic block sm:inline">{formatDate(post.publishedAt)}</time>
             </div>
 
@@ -221,7 +221,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
             )}
 
             {/* CONTEÚDO (Suporta Script HTML ou Sanity) */}
-            <div className="prose prose-sm sm:prose-base md:prose-lg prose-blue max-w-none text-gray-700 overflow-hidden">
+            <div className="prose prose-sm sm:prose-base md:prose-lg prose-blue max-w-none text-foreground/80 overflow-hidden">
               {post.contentHtml ? (
                 <div 
                   className="article-content" 
@@ -238,13 +238,13 @@ export default async function PostPage({ params }: { params: { slug: string } })
         {/* Sidebar (Empilha abaixo no mobile) */}
         <aside className="w-full lg:w-1/3">
           <div className="lg:sticky lg:top-24 space-y-6">
-            <h4 className="text-sm font-bold text-gray-400 uppercase tracking-widest text-center lg:text-left">
+            <h4 className="text-sm font-bold text-foreground/40 uppercase tracking-widest text-center lg:text-left">
               Publicidade
             </h4>
-            <div className="p-4 bg-gray-50 rounded-lg border border-dashed border-gray-300 flex justify-center items-center min-h-62.5">
+            <div className="p-4 bg-[var(--card-bg)] rounded-lg border border-dashed border-[var(--border)] flex justify-center items-center min-h-62.5">
               <AdComponent />
             </div>
-            <div className="hidden lg:flex p-4 bg-gray-50 rounded-lg border border-dashed border-gray-300 justify-center items-center min-h-62.5">
+            <div className="hidden lg:flex p-4 bg-[var(--card-bg)] rounded-lg border border-dashed border-[var(--border)] justify-center items-center min-h-62.5">
               <AdComponent />
             </div>
           </div>

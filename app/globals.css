@@ -3,53 +3,64 @@
 @source "../.flowbite-react/class-list.json";
 
 :root {
-  /* --- LIGHT MODE (Aurora) --- */
-  --background-base: #fafafa;
-  --foreground: #09090b;
-  
-  /* Luz azul na esquerda superior, luz ciano suave na direita inferior */
-  --background-gradient: 
-    radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.05) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.05) 0px, transparent 50%);
+  /* --- Cores Base --- */
+  --color-primary: #0e0e96; /* Azul primário */
+  --color-secondary: #ff1400; /* Vermelho secundário */
+
+  /* --- LIGHT MODE --- */
+  --background-base: #f5f5f5; /* Um cinza muito claro */
+  --foreground: #09090b; /* Preto */
+  --card-bg: #ffffff; /* Branco */
+  --border: #e0e0e0; /* Cinza claro */
+
+  /* Gradiente sutil com as cores da paleta */
+  --background-gradient:
+    radial-gradient(at 0% 0%, rgba(14, 14, 150, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(255, 20, 0, 0.05) 0px, transparent 50%);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* --- DARK MODE (Aurora) --- */
-    --background-base: #09090b;
-    --foreground: #fafafa;
+    /* --- DARK MODE --- */
+    --background-base: #0a0a0a; /* Um preto suave */
+    --foreground: #fafafa; /* Branco */
+    --card-bg: #1a1a1a; /* Cinza escuro */
+    --border: #2e2e2e; /* Cinza mais escuro */
 
-    /* Luz azul profunda na esquerda, luz roxa/índigo na direita */
-    --background-gradient: 
-      radial-gradient(at 0% 0%, rgba(30, 58, 138, 0.2) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, rgba(76, 29, 149, 0.15) 0px, transparent 50%);
+    /* Gradiente mais pronunciado no modo escuro */
+    --background-gradient:
+      radial-gradient(at 0% 0%, rgba(14, 14, 150, 0.3) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(255, 20, 0, 0.1) 0px, transparent 50%);
   }
-}
-/* O restante do CSS (body, @theme) permanece igual ao da Opção 1 */
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 body {
-  background-color: var(--background);
+  background-color: var(--background-base);
   color: var(--foreground);
-  /* Adiciona um gradiente radial sutil para dar profundidade ao site */
-  background-image: radial-gradient(
-    circle at top center,
-    rgba(37, 99, 235, 0.03),
-    transparent 800px
-  );
+  background-image: var(--background-gradient);
   min-height: 100vh;
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Otimização para os cards aparecerem melhor sobre esse fundo */
 .card-style {
   background-color: var(--card-bg);
   border: 1px solid var(--border);
+}
+
+/* Adicionando classes utilitárias para as novas cores */
+.text-primary {
+  color: var(--color-primary);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.text-secondary {
+  color: var(--color-secondary);
+}
+
+.bg-secondary {
+  background-color: var(--color-secondary);
 }

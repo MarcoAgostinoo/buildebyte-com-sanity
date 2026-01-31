@@ -1,9 +1,9 @@
+import ContactForm from "@/app/components/ContactForm";
+
 export default function ContatoPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <h1 className="text-4xl font-bold">Contato</h1>
-      </div>
-    </main>
+    <div className="min-h-screen pt-20 pb-12 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-950">
+      <ContactForm />
+    </div>
   );
 }
