@@ -1,83 +1,68 @@
 import { NextResponse } from "next/server";
 
-// 🔴 CONFIGURAÇÃO
-const BAD_WORDS = [ // --- 1. SPAM, GOLPES E VENDA ---
-    'spam', 'golpe', 'fraude', 'pirâmide', 
-    'ganhe dinheiro', 'dinheiro fácil', 'fature', 'renda extra', 'lucro',
-    'crypto', 'bitcoin', 'ethereum', 'investimento', 'forex', 'trader',
-    'clique aqui', 'link na bio', 'acesse', 'site oficial',
-    'seguidores', 'likes', 'visualizações', 'engajamento',
-    'promoção', 'sorteio', 'grátis', 'oferta', 'desconto',
-    'whatsapp', 'telegram', 'ligue', 'contato',
-    'hacker', 'recuperação de conta', 
-
-    // --- 2. CONTEÚDO ADULTO / PORNOGRAFIA ---
-    'xxx', 'porn', 'porno', 'pornografia', 'sexo', 'nudes',
-    'adulto', 'maduras', 'amador', 'casadas', 'incesto',
-    'hentai', 'erótico', 'sensual', 'acompanhante', 'massagem',
-    'xvideos', 'onlyfans', 'privacy', 'câmera', 'camgirl',
-
-    // --- 3. PALAVRÕES E OFENSAS GERAIS (PT-BR) ---
-    'merda', 'bosta', 'caguei',
-    'caralho', 'caralhos', 
-    'porra', 'porras',
-    'foda', 'foder', 'fuder', 'fodido', 'fudido', 'fodase', 'foda-se',
-    'cacete', 'k7',
-    
-    // --- 4. INSULTOS PESSOAIS ---
-    'idiota', 'imbecil', 'burro', 'burra', 'anta', 'animal',
-    'trouxa', 'otário', 'otária', 'babaca',
-    'lixo', 'inútil', 'retardado', 'retardada', 'doente',
-    'escroto', 'escrota', 'nojento', 'nojenta',
-    'arrombado', 'arrombada', 
-    'corno', 'cornos', 'chifrudo',
-    'vagabundo', 'vagabunda',
-    
-    // --- 5. TERMOS SEXUAIS / ANATÔMICOS (Chulo) ---
-    'puta', 'putas', 'prostituta', 'quenga', 'piranha', 'vadia',
-    'pau', 'pinto', 'rola', 'piroca', 'caceta', 'vara', 'jeba',
-    'buceta', 'boceta', 'xoxota', 'perereca', 'aranha',
-    'cu', 'cú', 'anus', 'anal', 'rabo',
-    'chupa', 'chupar', 'mamada', 'boquete', 'siririca',
-    'gozar', 'gozo', 'leite', 'esperma',
-    'tetas', 'peitos', 'bico',
-
-    // --- 6. SIGLAS E VARIAÇÕES ---
-    'fdp', 'vtmnc', 'vtnc', 'vsf', 'pqp', 'krl', 'tmnc'
+const BAD_WORDS = [
+    'spam', 'golpe', 'fraude', 'pirâmide', 'ganhe dinheiro', 'dinheiro fácil', 
+    'fature', 'renda extra', 'lucro', 'crypto', 'bitcoin', 'ethereum', 
+    'investimento', 'forex', 'trader', 'clique aqui', 'link na bio', 'acesse', 
+    'site oficial', 'seguidores', 'likes', 'visualizações', 'engajamento', 
+    'promoção', 'sorteio', 'grátis', 'oferta', 'desconto', 'whatsapp', 
+    'telegram', 'ligue', 'contato', 'hacker', 'recuperação de conta', 
+    'xxx', 'porn', 'porno', 'pornografia', 'sexo', 'nudes', 'adulto', 
+    'maduras', 'amador', 'casadas', 'incesto', 'hentai', 'erótico', 'sensual', 
+    'acompanhante', 'massagem', 'xvideos', 'onlyfans', 'privacy', 'câmera', 
+    'camgirl', 'merda', 'bosta', 'caguei', 'caralho', 'caralhos', 'porra', 
+    'porras', 'foda', 'foder', 'fuder', 'fodido', 'fudido', 'fodase', 'foda-se', 
+    'cacete', 'k7', 'idiota', 'imbecil', 'burro', 'burra', 'anta', 'animal', 
+    'trouxa', 'otário', 'otária', 'babaca', 'lixo', 'inútil', 'retardado', 
+    'retardada', 'doente', 'escroto', 'escrota', 'nojento', 'nojenta', 
+    'arrombado', 'arrombada', 'corno', 'cornos', 'chifrudo', 'vagabundo', 
+    'vagabunda', 'puta', 'putas', 'prostituta', 'quenga', 'piranha', 'vadia', 
+    'pau', 'pinto', 'rola', 'piroca', 'caceta', 'vara', 'jeba', 'buceta', 
+    'boceta', 'xoxota', 'perereca', 'aranha', 'cu', 'cú', 'anus', 'anal', 
+    'rabo', 'chupa', 'chupar', 'mamada', 'boquete', 'siririca', 'gozar', 
+    'gozo', 'leite', 'esperma', 'tetas', 'peitos', 'bico', 'fdp', 'vtmnc', 
+    'vtnc', 'vsf', 'pqp', 'krl', 'tmnc'
 ];
 
-// ⚠️ IMPORTANTE: O token é lido de .env.local (GITHUB_TOKEN)
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
 export async function POST(request: Request) {
-  // Verificação inicial do token
+  console.log("📥 Webhook recebido! Iniciando processamento...");
+
   if (!GITHUB_TOKEN) {
-    console.error("❌ GITHUB_TOKEN não configurado no ambiente.");
-    return NextResponse.json(
-      { error: "Serviço não configurado: Token ausente." },
-      { status: 500 }
-    );
+    console.error("❌ ERRO FATAL: GITHUB_TOKEN não encontrado.");
+    return NextResponse.json({ error: "Token ausente" }, { status: 500 });
   }
 
   try {
     const payload = await request.json();
+    const { action, comment } = payload;
 
-    // Verificação de segurança básica
-    if (!payload.comment || !payload.comment.body || !payload.comment.node_id) {
+    // 1. Filtrar Ação: Só queremos moderar quando Cria ou Edita
+    if (action !== 'created' && action !== 'edited') {
+        console.log(`ℹ️ Ação ignorada: ${action}`);
+        return NextResponse.json({ message: "Ação ignorada" });
+    }
+
+    if (!comment || !comment.body || !comment.node_id) {
+      console.error("❌ Payload inválido ou incompleto:", payload);
       return NextResponse.json({ message: "Payload inválido" }, { status: 400 });
     }
 
-    const commentBody = payload.comment.body.toLowerCase();
-    const hasBadWord = BAD_WORDS.some((word) => commentBody.includes(word));
+    const commentBody = comment.body.toLowerCase();
+    
+    // Log para debug (não mostra o texto todo por privacidade, só o início)
+    console.log(`🔎 Analisando comentário ID: ${comment.id}`);
 
-    if (hasBadWord) {
-      console.log(`🚨 PALAVRA PROIBIDA: Comentário com node_id ${payload.comment.node_id}`);
+    const foundBadWord = BAD_WORDS.find((word) => commentBody.includes(word));
 
-      const nodeId = payload.comment.node_id;
+    if (foundBadWord) {
+      console.log(`🚨 PALAVRA PROIBIDA ENCONTRADA: "${foundBadWord}"`);
+      console.log(`🗑️ Tentando apagar comentário (NodeID: ${comment.node_id})...`);
 
       const mutation = JSON.stringify({
         query: `mutation($id: ID!) { deleteDiscussionComment(input: {id: $id}) { clientMutationId } }`,
-        variables: { id: nodeId },
+        variables: { id: comment.node_id },
       });
 
       const response = await fetch("https://api.github.com/graphql", {
@@ -92,18 +77,19 @@ export async function POST(request: Request) {
       const responseData = await response.json();
 
       if (responseData.errors) {
-        console.error("❌ Erro do GitHub:", responseData.errors);
+        console.error("❌ Erro na API do GitHub:", JSON.stringify(responseData.errors));
         return NextResponse.json({ error: "Falha ao apagar no GitHub" }, { status: 500 });
       }
 
-      console.log("✅ Comentário apagado com sucesso via GraphQL!");
-      return NextResponse.json({ message: "Comentário moderado e apagado." });
+      console.log("✅ SUCESSO! Comentário ofensivo removido.");
+      return NextResponse.json({ message: "Moderado com sucesso" });
     }
 
-    return NextResponse.json({ message: "Comentário limpo." });
+    console.log("👍 Comentário limpo. Nenhuma ação necessária.");
+    return NextResponse.json({ message: "Comentário permitido" });
 
   } catch (error) {
-    console.error("Erro interno:", error);
-    return NextResponse.json({ error: "Erro interno no servidor" }, { status: 500 });
+    console.error("❌ Erro interno do servidor:", error);
+    return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }
