@@ -2,6 +2,8 @@ import { client, previewClient } from "@/app/lib/sanity";
 import { PortableText, PortableTextComponents } from "@portabletext/react";
 import { notFound } from "next/navigation";
 import AdComponent from "@/app/components/AdComponent";
+import ReadNext from "@/app/components/ReadNext";
+import Comments from "@/app/components/Comments";
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata, ResolvingMetadata } from "next";
@@ -230,6 +232,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
               )}
             </div>
           </article>
+          <Comments />
         </main>
 
         {/* Sidebar (Empilha abaixo no mobile) */}
@@ -248,6 +251,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
         </aside>
 
       </div>
+      <ReadNext categories={post.categories} currentPostSlug={slug} />
     </div>
   );
 }
