@@ -2,6 +2,7 @@ import { client } from "@/app/lib/sanity";
 import Link from "next/link";
 import Image from "next/image";
 import RecentPostsByCategory from "@/app/components/RecentPostsByCategory";
+import OfertasBuildEByte from "./components/OfertasBuildEByte";
 
 // --- INTERFACES ---
 interface FeaturedPost {
@@ -161,27 +162,11 @@ export default async function Home() {
 
           // Se sobrou posts, adicione os IDs deles ao Set para que não apareçam nas próximas categorias
           postsToRender.forEach(p => renderedPostIds.add(p._id));
-
-          return (
-            <div key={cat._id} className="animate-in fade-in duration-700">
-              <div className="flex items-center gap-4 mb-8">
-                <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
-                  Últimas de <span className="text-primary">{cat.title}</span>
-                </h2>
-                <div className="flex-1 h-px bg-[var(--border)] hidden md:block"></div>
-                <Link 
-                  href={`/categorias/${encodeURIComponent(cat.title)}`} // Ajuste conforme sua rota de categoria
-                  className="hidden sm:block text-sm font-bold text-primary hover:text-primary-dark uppercase tracking-wider"
-                >
-                  Ver todos &rarr;
-                </Link>
-              </div>
-              
-              {/* O componente foi movido para o topo da página e agora busca seus próprios dados */}
-            </div>
-          );
         })}
       </section>
+      <div>
+        <OfertasBuildEByte />
+      </div>
     </div>
   );
 }

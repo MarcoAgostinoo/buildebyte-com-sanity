@@ -15,7 +15,7 @@ interface PostWithCategory {
 // A nova função de busca de dados
 async function getLatestPostFromCategories(): Promise<PostWithCategory[]> {
   const query = `
-    *[_type == "category" && !(_id in path('drafts.**')) && count(*[_type == "post" && references(^._id)]) > 0] | order(title asc) [0...8] {
+    *[_type == "category" && _id != "0ccd6fba-e143-46b4-919f-dbe37ff25327" && !(_id in path('drafts.**')) && count(*[_type == "post" && references(^._id)]) > 0] | order(title asc) [0...8] {
       // Pega o post mais recente de cada uma das 8 categorias
       "latestPost": *[_type == "post" && references(^._id)] | order(publishedAt desc) [0] {
         _id,
