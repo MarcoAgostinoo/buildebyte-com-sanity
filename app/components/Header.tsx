@@ -10,7 +10,7 @@ export default function Header() {
       className="sticky w-full z-20 top-0 start-0 border-b border-[var(--border)] bg-[var(--card-bg)]/80 backdrop-blur-md"
     >
       <NavbarBrand href="/">
-        <Image src="/next.svg" width={36} height={36} className="mr-3" alt="Buildebite Logo" />
+        <Image src="/bblogo.png" width={36} height={36} className="mr-3" alt="Buildebite Logo" />
         {/* O texto agora usa a cor primária */}
         <span className="self-center whitespace-nowrap text-xl font-bold tracking-tight text-primary dark:text-white">
           Buildebite
@@ -29,6 +29,12 @@ export default function Header() {
         {/* Links com a cor primária no hover */}
         <NavbarLink href="/" className="hover:text-primary dark:hover:text-blue-400 transition-colors duration-200">
           INÍCIO
+        </NavbarLink>
+        <NavbarLink
+          href="/destaques"
+          className="hover:text-primary dark:hover:text-blue-400 transition-colors duration-200"
+        >
+          DESTAQUES
         </NavbarLink>
         <NavbarLink
           href="/videos"

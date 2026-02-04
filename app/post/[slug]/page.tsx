@@ -2,6 +2,7 @@ import { client, previewClient } from "@/app/lib/sanity";
 import { PortableText, PortableTextComponents } from "@portabletext/react";
 import { notFound } from "next/navigation";
 import AdComponent from "@/app/components/AdComponent";
+import SecondAdComponent from "@/app/components/SecondAdComponent";
 import ReadNext from "@/app/components/ReadNext";
 import Comments from "@/app/components/Comments";
 import Image from "next/image";
@@ -236,16 +237,13 @@ export default async function PostPage({ params }: { params: { slug: string } })
         </main>
 
         {/* Sidebar (Empilha abaixo no mobile) */}
-        <aside className="w-full lg:w-1/3">
-          <div className="lg:sticky lg:top-24 space-y-6">
-            <h4 className="text-sm font-bold text-foreground/40 uppercase tracking-widest text-center lg:text-left">
-              Publicidade
-            </h4>
+        <aside className="w-full lg:w-1/3 p-10">
+          <div className="lg:sticky lg:top-4 space-y-6">
             <div className="p-4 bg-[var(--card-bg)] rounded-lg border border-dashed border-[var(--border)] flex justify-center items-center min-h-62.5">
               <AdComponent />
             </div>
             <div className="hidden lg:flex p-4 bg-[var(--card-bg)] rounded-lg border border-dashed border-[var(--border)] justify-center items-center min-h-62.5">
-              <AdComponent />
+              <SecondAdComponent />
             </div>
           </div>
         </aside>

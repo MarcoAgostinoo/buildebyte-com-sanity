@@ -1,8 +1,8 @@
 import { client } from "@/app/lib/sanity";
 import Link from "next/link";
 import Image from "next/image";
-import RecentPostsByCategory from "@/app/components/RecentPostsByCategory";
 import OfertasBuildEByte from "./components/OfertasBuildEByte";
+import LatestPosts from "./components/LatestPosts";
 
 // --- INTERFACES ---
 interface FeaturedPost {
@@ -46,7 +46,7 @@ const formatDate = (dateString: string) => {
 
 // 1. Busca Destaques (Adicionei _id na query)
 async function getFeaturedPosts(): Promise<FeaturedPost[]> {
-  const query = `*[_type == "post" && featured == true && !(_id in path('drafts.**'))] {
+  const query = `*[_type == "post" && featured == true && !(_id in path('drafts.**'))] | order(publishedAt desc) [0...6] {
     _id, 
     title,
     "slug": slug.current,
@@ -106,9 +106,14 @@ export default async function Home() {
       {/* --- SEÇÃO DE DESTAQUES --- */}
       {featuredPosts.length > 0 && (
         <section className="mb-16">
-          <h2 className="text-3xl font-black text-primary mb-8 border-l-4 border-secondary pl-4">
+          <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-black text-primary border-l-4 border-secondary pl-4">
             Destaques
           </h2>
+          <Link href="/destaques" className="text-primary hover:underline">
+            Ver todos
+          </Link>
+        </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredPosts.map((post) => (
               <article 
@@ -148,7 +153,7 @@ export default async function Home() {
       )}
 
       {/* --- SEÇÃO DE POSTS RECENTES POR CATEGORIA --- */}
-      <RecentPostsByCategory />
+      
 
       {/* --- FEED POR CATEGORIAS --- */}
       <section className="space-y-20 mt-16">
@@ -167,6 +172,7 @@ export default async function Home() {
       <div>
         <OfertasBuildEByte />
       </div>
+      <LatestPosts />
     </div>
   );
 }
