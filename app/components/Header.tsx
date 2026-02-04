@@ -7,10 +7,10 @@ export default function Header() {
       fluid
       rounded
       // Usa as novas variáveis para o fundo e a borda
-      className="sticky w-full z-20 top-0 start-0 border-b border-[var(--border)] bg-[var(--card-bg)]/80 backdrop-blur-md"
+      className="sticky w-full z-20 top-0 start-0 border-b border-[var(--border)] bg-[var(--card-bg)]/80"
     >
       <NavbarBrand href="/">
-        <Image src="/bblogo.png" width={36} height={36} className="mr-3" alt="Buildebite Logo" />
+        <Image src="/logo.png" width={60} height={60} className="mr-0" alt="Buildebite Logo" />
         {/* O texto agora usa a cor primária */}
         <span className="self-center whitespace-nowrap text-xl font-bold tracking-tight text-primary dark:text-white">
           Buildebite
