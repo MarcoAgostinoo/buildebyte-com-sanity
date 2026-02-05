@@ -1,0 +1,52 @@
+@import "tailwindcss";
+@import "flowbite-react/plugin/tailwindcss";
+@source "../.flowbite-react/class-list.json";
+
+:root {
+  /* --- Cores Base --- */
+  --color-primary: #0e0e96; /* Azul primário */
+  --color-secondary: #ff1400; /* Vermelho secundário */
+
+  /* --- LIGHT MODE --- */
+  --background-base: #f5f5f5; /* Um cinza muito claro */
+  --foreground: #09090b; /* Preto */
+  --card-bg: #ffffff; /* Branco */
+  --border: #e0e0e0; /* Cinza claro */
+
+  /* Gradiente sutil com as cores da paleta */
+  --background-gradient:
+    radial-gradient(at 0% 0%, rgba(14, 14, 150, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(255, 20, 0, 0.05) 0px, transparent 50%);
+}
+
+
+body {
+  background-color: var(--background-base);
+  color: var(--foreground);
+  background-image: var(--background-gradient);
+  min-height: 100vh;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card-style {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border);
+}
+
+/* Adicionando classes utilitárias para as novas cores */
+.text-primary {
+  color: var(--color-primary);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.text-secondary {
+  color: var(--color-secondary);
+}
+
+.bg-secondary {
+  background-color: var(--color-secondary);
+}
