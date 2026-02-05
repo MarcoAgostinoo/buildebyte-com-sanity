@@ -12,7 +12,7 @@
     "FooterLink",
     "FooterLinkGroup"
   ],
-  "dark": true,
+  "dark": false,
   "path": "app/components",
   "prefix": "",
   "rsc": true,
