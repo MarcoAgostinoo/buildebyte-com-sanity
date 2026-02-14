@@ -1,0 +1,21 @@
+{
+  "$schema": "https://unpkg.com/flowbite-react/schema.json",
+  "components": [
+    "Button",
+    "Navbar",
+    "NavbarBrand",
+    "NavbarCollapse",
+    "NavbarLink",
+    "NavbarToggle",
+    "Footer",
+    "FooterCopyright",
+    "FooterLink",
+    "FooterLinkGroup"
+  ],
+  "dark": false,
+  "path": "app/components",
+  "prefix": "",
+  "rsc": true,
+  "tsx": true,
+  "version": 4
+}
