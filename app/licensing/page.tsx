@@ -1,8 +1,13 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Licenciamento | Build&Byte",
-  description: "Dossiê sobre direitos autorais e as regras de engajamento com o conteúdo técnico do portal Build&Byte.",
+  title: "Licenciamento & Propriedade Intelectual | Build&Byte",
+  description: "Dossiê oficial sobre direitos autorais, regras de uso e licenciamento do conteúdo técnico do Build&Byte. Saiba o que é permitido e proibido.",
+  openGraph: {
+    title: "Licenciamento | Build&Byte",
+    description: "Protocolo de uso e reprodução de dados, análises e ativos digitais do portal Build&Byte.",
+    type: "article",
+  },
 };
 
 export default function LicensingPage() {
@@ -12,7 +17,7 @@ export default function LicensingPage() {
         {/* Cabeçalho de Estilo Dossiê */}
         <header className="mb-12 border-b border-[var(--border)] pb-8">
           <div className="flex items-center gap-2 mb-4">
-            <span className="bg-secondary text-white text-xs font-bold px-2 py-1 rounded-sm uppercase tracking-widest">
+            <span className="bg-secondary text-white text-xs font-bold px-2 py-1 rounded-sm uppercase tracking-widest font-mono">
               Documento Oficial
             </span>
           </div>
@@ -45,15 +50,19 @@ export default function LicensingPage() {
               02. Regras de Engajamento
             </h2>
             <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-[var(--card-bg)]/50 p-6 border border-[var(--border)] rounded-sm shadow-sm">
-                <h3 className="text-secondary font-bold uppercase text-sm mb-3 tracking-wider">Proibido</h3>
-                <p className="text-sm">
+              <div className="bg-red-50/50 dark:bg-red-900/10 p-6 border border-red-200 dark:border-red-900/50 rounded-sm shadow-sm">
+                <h3 className="text-red-600 dark:text-red-400 font-bold uppercase text-sm mb-3 tracking-wider flex items-center gap-2">
+                  <span className="text-lg">✕</span> Proibido
+                </h3>
+                <p className="text-sm text-zinc-700 dark:text-zinc-300">
                   Reproduzir, minerar dados (scraping), modificar ou comercializar qualquer fragmento deste dossiê sem autorização expressa. O uso de nosso conteúdo para treinamento de LLMs externos sem licenciamento é estritamente monitorado.
                 </p>
               </div>
-              <div className="bg-[var(--card-bg)]/50 p-6 border border-[var(--border)] rounded-sm shadow-sm">
-                <h3 className="text-primary font-bold uppercase text-sm mb-3 tracking-wider">Permitido</h3>
-                <p className="text-sm">
+              <div className="bg-emerald-50/50 dark:bg-emerald-900/10 p-6 border border-emerald-200 dark:border-emerald-900/50 rounded-sm shadow-sm">
+                <h3 className="text-emerald-600 dark:text-emerald-400 font-bold uppercase text-sm mb-3 tracking-wider flex items-center gap-2">
+                  <span className="text-lg">✓</span> Permitido
+                </h3>
+                <p className="text-sm text-zinc-700 dark:text-zinc-300">
                   Compartilhar links diretos em redes sociais ou newsletters, desde que o <span className="font-bold underline decoration-primary">crédito ao Build&Byte</span> como fonte original seja mantido de forma clara, proeminente e inalterada.
                 </p>
               </div>
@@ -87,6 +96,17 @@ export default function LicensingPage() {
             </h2>
             <p className="bg-zinc-900 text-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 p-6 rounded-sm font-medium">
               Diferente de fazendas de conteúdo, o Build&Byte utiliza IA como ferramenta de suporte, não como autor. Cada artigo passa por uma auditoria humana rigorosa para garantir que a <span className="text-secondary uppercase font-black italic">intuição técnica</span> e a <span className="text-primary uppercase font-black italic">veracidade dos fatos</span> permaneçam inegociáveis.
+            </p>
+          </section>
+
+          {/* Seção 5: Disclaimer de Afiliados (Novo) */}
+          <section className="relative pl-6">
+            <div className="absolute left-0 top-0 h-full w-1 bg-orange-500"></div>
+            <h2 className="text-xl font-bold text-zinc-900 dark:text-white uppercase tracking-tight mb-4">
+              05. Transparência Comercial & Afiliados
+            </h2>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">
+              Em conformidade com as diretrizes de publicidade digital, informamos que o Build&Byte participa de programas de afiliados. Links marcados como ofertas ou promoções podem gerar comissões para o site. Isso não afeta o preço final para o usuário, nem influencia nossa opinião editorial ou técnica sobre os produtos analisados. A integridade da engenharia vem antes do lucro.
             </p>
           </section>
 

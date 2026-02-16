@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import { Metadata } from "next";
 import { client } from "@/app/lib/sanity";
 import Link from "next/link";
 import Image from "next/image";
@@ -5,56 +7,20 @@ import OfertasBuildEByte from "./components/OfertasBuildEByte"; // Verifique se 
 import LatestPosts from "./components/LatestPosts"; // Verifique se o caminho está certo
 import { WebStoriesCarousel } from "./components/WebStoriesCarousel";
 import LeadCapture from "./components/LeadCapture";
+import { formatDate } from "@/app/lib/utils";
+import { FeaturedPost, CategoryWithPosts, WebStory } from "@/app/lib";
 
-// --- INTERFACES ---
-interface FeaturedPost {
-  _id: string;
-  title: string;
-  slug: string;
-  excerpt: string;
-  imagem: string;
-  publishedAt: string;
-  author: string;
-}
-
-interface Post {
-  _id: string;
-  title: string;
-  slug: string;
-  imagem: string;
-  excerpt: string;
-  author: string;
-  publishedAt: string;
-  editorialType?: string;
-}
-
-interface CategoryWithPosts {
-  _id: string;
-  title: string;
-  slug: string;
-  posts: Post[];
-}
-
-interface WebStory {
-  _id: string;
-  title: string;
-  slug: string;
-  coverImage: string;
-}
-
-// --- HELPERS ---
-const formatDate = (dateString: string) => {
-  if (!dateString) return "";
-  const options: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  };
-  return new Date(dateString).toLocaleDateString("pt-BR", options);
+export const metadata: Metadata = {
+  title: "Build&Byte - Tecnologia, Hardware e Reviews",
+  description: "As últimas novidades em tecnologia, reviews de hardware e guias técnicos.",
+  openGraph: {
+    images: ["/og-image.jpg"],
+  },
 };
 
-// --- QUERIES ---
+const DEFAULT_IMAGE = "/images/placeholder.jpg";
 
+// --- QUERIES ---
 // 1. Busca Destaques
 async function getFeaturedPosts(): Promise<FeaturedPost[]> {
   const query = `*[_type == "post" && featured == true && !(_id in path('drafts.**'))] | order(publishedAt desc) [0...3] {
@@ -63,10 +29,11 @@ async function getFeaturedPosts(): Promise<FeaturedPost[]> {
     "slug": slug.current,
     excerpt,
     "imagem": mainImage.asset->url,
+    "imagemAlt": mainImage.alt,
     publishedAt,
     "author": author->name
   }`;
-  return await client.fetch(query, {}, { next: { revalidate: 60 } });
+  return await client.fetch(query, {}, { next: { revalidate: 300 } });
 }
 
 // 2. Busca Categorias
@@ -80,6 +47,7 @@ async function getCategories(): Promise<CategoryWithPosts[]> {
       title,
       "slug": slug.current,
       "imagem": mainImage.asset->url,
+      "imagemAlt": mainImage.alt,
       excerpt,
       "author": author->name,
       publishedAt,
@@ -89,7 +57,7 @@ async function getCategories(): Promise<CategoryWithPosts[]> {
   const categories = await client.fetch(
     query,
     {},
-    { next: { revalidate: 60 } },
+    { next: { revalidate: 300 } },
   );
 
   // Remove categorias com títulos duplicados
@@ -109,9 +77,10 @@ async function getWebStories(): Promise<WebStory[]> {
     _id,
     title,
     "slug": slug.current,
-    "coverImage": coverImage.asset->url
+    "coverImage": coverImage.asset->url,
+    "targetPostSlug": targetPost->slug.current
   }`;
-  return await client.fetch(query, {}, { next: { revalidate: 60 } });
+  return await client.fetch(query, {}, { next: { revalidate: 300 } });
 }
 
 // --- COMPONENTE PRINCIPAL ---
@@ -132,11 +101,17 @@ export default async function Home() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-      {/* CSS Inline para esconder a barra de rolagem horizontal dos Stories */}
-      <style>{`
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-      `}</style>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "Build&Byte",
+            url: "https://buildbyte.com.br",
+          }),
+        }}
+      />
 
       {/* --- 1. SEÇÃO DE DESTAQUES --- */}
       {featuredPosts.length > 0 && (
@@ -147,9 +122,10 @@ export default async function Home() {
             </h2>
             <Link
               href="/destaques"
+              aria-label="Ver todos os destaques"
               className="text-primary hover:underline text-sm font-bold"
             >
-              Ver todos →
+              Ver todos <span aria-hidden="true">→</span>
             </Link>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -171,26 +147,24 @@ export default async function Home() {
                   >
                     {/* Imagem com Overlay Gradiente para leitura */}
                     <div className="absolute inset-0 z-0">
-                      {post.imagem && (
-                        <Image
-                          src={post.imagem}
-                          alt={post.title}
-                          fill
-                          className="object-cover transition-transform duration-700 group-hover:scale-105"
-                          sizes={
-                            isHero
-                              ? "(max-width: 768px) 100vw, 50vw"
-                              : "(max-width: 768px) 100vw, 25vw"
-                          }
-                          priority={isHero}
-                        />
-                      )}
+                      <Image
+                        src={post.imagem || DEFAULT_IMAGE}
+                        alt={post.imagemAlt || post.title || "Imagem do artigo"}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        sizes={
+                          isHero
+                            ? "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw"
+                            : "(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 25vw"
+                        }
+                        priority={isHero}
+                      />
                       <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent" />
                     </div>
 
                     {/* Texto sobre a imagem (Estilo Manchete) */}
                     <div className="absolute bottom-0 left-0 p-6 z-10 w-full">
-                      <span className="inline-block px-2 py-1 mb-3 text-xs font-bold text-white bg-blue-600 rounded">
+                      <span className="inline-block px-2 py-1 mb-3 text-xs font-bold text-white bg-orange-600 rounded font-mono tracking-wider">
                         {isHero ? "MANCHETE" : "EM ALTA"}
                       </span>
                       <h3
@@ -203,7 +177,7 @@ export default async function Home() {
                           {post.excerpt}
                         </p>
                       )}
-                      <div className="mt-3 text-xs text-gray-400 font-mono">
+                      <div className="mt-3 text-xs text-gray-300 font-mono tracking-tight">
                         {post.author} • {formatDate(post.publishedAt)}
                       </div>
                     </div>
@@ -234,7 +208,7 @@ export default async function Home() {
               {/* CABEÇALHO DA CATEGORIA - Estilo Revista */}
               <div className="flex items-end justify-between mb-10 border-b-2 border-(--border) pb-4">
                 <div className="space-y-1">
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary font-mono">
                     Seção Técnica
                   </span>
                   <h2 className="text-3xl font-black text-foreground uppercase tracking-tighter">
@@ -243,7 +217,7 @@ export default async function Home() {
                 </div>
                 <Link
                   href={`/categorias/${cat.slug}`}
-                  className="text-xs font-bold uppercase text-primary hover:underline tracking-widest transition-all"
+                  className="text-xs font-bold uppercase text-primary hover:underline tracking-widest transition-all font-mono"
                 >
                   Explorar Tudo +
                 </Link>
@@ -259,19 +233,17 @@ export default async function Home() {
                     >
                       {/* CONTAINER DA IMAGEM - Bordas mais suaves e Zoom */}
                       <div className="relative aspect-video rounded-2xl overflow-hidden mb-5 bg-(--border) shadow-sm group-hover:shadow-md transition-all">
-                        {post.imagem && (
-                          <Image
-                            src={post.imagem}
-                            alt={post.title}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 25vw"
-                            className="object-cover group-hover:scale-105 transition-transform duration-500 group-hover:brightness-90"
-                          />
-                        )}
+                        <Image
+                          src={post.imagem || DEFAULT_IMAGE}
+                          alt={post.imagemAlt || post.title || "Imagem do artigo"}
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-500 group-hover:brightness-90"
+                        />
                         {/* Badge de tipo opcional se o seu schema suportar */}
                         {post.editorialType && (
                           <div className="absolute top-3 left-3">
-                            <span className="bg-black/80 backdrop-blur-md text-white text-[9px] font-black px-2 py-0.5 rounded uppercase border border-white/10 tracking-widest">
+                            <span className="bg-black/80 backdrop-blur-md text-white text-[9px] font-black px-2 py-0.5 rounded uppercase border border-white/10 tracking-widest font-mono">
                               {post.editorialType}
                             </span>
                           </div>
@@ -279,7 +251,7 @@ export default async function Home() {
                       </div>
 
                       {/* META INFO */}
-                      <div className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest mb-2 flex items-center gap-2">
+                      <div className="text-[10px] font-bold text-foreground/60 uppercase tracking-widest mb-2 flex items-center gap-2 font-mono">
                         <span>{post.author}</span>
                         <span className="w-1 h-1 bg-(--border) rounded-full"></span>
                         <time>
@@ -301,7 +273,7 @@ export default async function Home() {
                       </p>
 
                       {/* INDICADOR DE LEITURA */}
-                      <div className="mt-4 flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-primary/0 group-hover:text-primary transition-all duration-300">
+                      <div className="mt-4 flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-primary/0 group-hover:text-primary transition-all duration-300 font-mono">
                         Acessar Relatório
                         <svg
                           className="w-3 h-3 ml-1"
@@ -328,15 +300,34 @@ export default async function Home() {
 
       {/* --- 3 SEÇÕES EXTRAS --- */}
       <div className="mt-20">
-        <OfertasBuildEByte />
+        <Suspense fallback={<div className="h-40 animate-pulse bg-gray-100 dark:bg-zinc-800 rounded" />}>
+          <OfertasBuildEByte />
+        </Suspense>
       </div>
       {/* --- 4. SEÇÃO DE WEB STORIES (ESTILO INSTAGRAM) --- */}
-      {webStories.length > 0 && <WebStoriesCarousel webStories={webStories} />}
+      {webStories.length > 0 && (
+        <Suspense fallback={<div className="h-60 animate-pulse bg-gray-100 dark:bg-zinc-800 rounded mt-10" />}>
+          <WebStoriesCarousel webStories={webStories} />
+        </Suspense>
+      )}
       <div className="mt-10">
-        <LatestPosts />
+        <Suspense fallback={<div className="h-96 animate-pulse bg-gray-100 dark:bg-zinc-800 rounded" />}>
+          <LatestPosts />
+        </Suspense>
       </div>
 
-      <LeadCapture />
+      <Suspense fallback={null}>
+        <LeadCapture />
+      </Suspense>
+
+      {/* --- 5. DISCLAIMER DE AFILIADOS (P0) --- */}
+      <div className="mt-16 py-6 border-t border-zinc-200 dark:border-zinc-800 text-center">
+        <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-3xl mx-auto font-mono">
+          <span className="font-bold text-orange-600 dark:text-orange-500">NOTA DE TRANSPARÊNCIA:</span> O Build&Byte participa de programas de afiliados. 
+          Ao comprar através de links em nossas ofertas (&quot;Pegar Promoção&quot;), podemos receber uma comissão, sem custo adicional para você. 
+          Isso financia nossa infraestrutura de testes e servidores.
+        </p>
+      </div>
     </div>
   );
 }
