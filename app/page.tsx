@@ -145,7 +145,6 @@ export default async function Home() {
           }),
         }}
       />
-
       {/* --- 1. SEÇÃO DE DESTAQUES --- */}
       {featuredPosts.length > 0 && (
         <section className="mb-16">
@@ -220,9 +219,7 @@ export default async function Home() {
             })}
           </div>
         </section>
-      )}
-
-      <OfertasBuildEByte />
+      )}     
 
         {/* 2. SEÇÃO TECNOBLOG: POPULARES (SANITY) + CAST (API) */}
       <section className="mt-12 mb-16">
@@ -286,6 +283,7 @@ export default async function Home() {
           <h2 className="text-2xl font-black uppercase tracking-tighter mt-12 mb-8 text-center">
             Mais Ofertas em Tempo Real
           </h2>
+          <OfertasBuildEByte />
         </Suspense>
       </div>
       {/* --- 4. SEÇÃO DE WEB STORIES (ESTILO INSTAGRAM) --- */}
