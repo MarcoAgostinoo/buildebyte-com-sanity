@@ -10,6 +10,7 @@ import LeadCapture from "./components/LeadCapture";
 import { formatDate } from "@/app/lib/utils";
 import { FeaturedPost, CategoryWithPosts, WebStory } from "@/app/lib";
 import PodcastCarousel from "./components/PodcastCarousel";
+import { getPodcastEpisodes, Episode } from "@/app/lib/podcast-service";
 
 export const metadata: Metadata = {
   title: "Build&Byte - Tecnologia, Hardware e Reviews",
@@ -21,30 +22,6 @@ export const metadata: Metadata = {
 };
 
 const DEFAULT_IMAGE = "/images/placeholder.jpg";
-
-interface Episode {
-  id: string;
-  title: string;
-  link: string;
-  audio: string;
-  pubDate: string;
-  content: string;
-  image?: string;
-}
-
-// --- FUNÇÃO PARA BUSCAR PODCASTS DA SUA API ---
-async function getExternalPodcasts(): Promise<Episode[]> {
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-  try {
-    const res = await fetch(`${baseUrl}/api/podcasts`, { next: { revalidate: 3600 } });
-    if (!res.ok) return [];
-    const data = await res.json();
-    return data.episodes.slice(0, 4); // Pegamos os 4 últimos
-  } catch (error) {
-    console.error('Erro ao buscar podcasts:', error);
-    return [];
-  }
-}
 
 // --- QUERIES ---
 // 1. Busca Destaques
@@ -115,7 +92,7 @@ export default async function Home() {
     getFeaturedPosts(),
     getCategories(),
     getWebStories(),
-    getExternalPodcasts(),
+    getPodcastEpisodes(),
   ]);
 
   // SET PARA CONTROLE DE DUPLICATAS
