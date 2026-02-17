@@ -283,7 +283,9 @@ export default async function Home() {
             <div className="h-40 animate-pulse bg-gray-100 dark:bg-zinc-800 rounded" />
           }
         >
-          <OfertasBuildEByte />
+          <h2 className="text-2xl font-black uppercase tracking-tighter mt-12 mb-8 text-center">
+            Mais Ofertas em Tempo Real
+          </h2>
         </Suspense>
       </div>
       {/* --- 4. SEÇÃO DE WEB STORIES (ESTILO INSTAGRAM) --- */}
