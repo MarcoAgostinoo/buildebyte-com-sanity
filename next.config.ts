@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "romantic-frog-d139ad790e.media.strapiapp.com",
       },
+      {
+        protocol: 'https',
+        hostname: 'http2.mlstatic.com',
+        pathname: '/**',
+      },
     ],
   },
 };

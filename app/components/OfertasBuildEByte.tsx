@@ -5,7 +5,15 @@ import { OfertasCarousel } from './OfertasCarousel';
 export default async function OfertasBuildEByte() {
   const ofertas = await getLiveOfertas(FEATURED_ML_IDS);
 
-  if (!ofertas || ofertas.length === 0) return null;
+  // Debug: Exibir mensagem caso não haja ofertas, em vez de retornar null
+  if (!ofertas || ofertas.length === 0) {
+    return (
+      <div className="text-center py-10">
+        <p className="text-zinc-500 dark:text-zinc-400 font-medium">Nenhuma oferta ativa no momento.</p>
+        <p className="text-xs text-zinc-400 mt-2">Verifique os IDs no products-config.ts ou o status da API do Mercado Livre.</p>
+      </div>
+    );
+  }
 
   return (
     <section className="py-12 border-y border-(--border) bg-linear-to-b from-transparent via-blue-50/5 to-transparent">
