@@ -1,4 +1,4 @@
-import { ML_AFFILIATE_ID, ML_APP_ID, ML_SECRET } from './products-config';
+import { AFFILIATE_PRODUCTS_MAP, ML_APP_ID, ML_SECRET } from './products-config';
 
 // Cache simples em memória para o token
 let cachedToken: string | null = null;
@@ -36,6 +36,7 @@ interface MLResponseItem {
   body: {
     id: string;
     title: string;
+    status: string;
     permalink: string;
     thumbnail: string;
     price: number;
@@ -60,9 +61,11 @@ export async function getLiveOfertas(ids: string[]) {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
+    // Filtramos atributos para otimizar a resposta e evitar dados desnecessários
+    const attributes = 'id,title,price,original_price,thumbnail,status,installments,permalink';
     const idsQuery = ids.join(',');
     // Buscamos os dados sem precisar de Token para informações públicas
-    const response = await fetch(`https://api.mercadolibre.com/items?ids=${idsQuery}`, {
+    const response = await fetch(`https://api.mercadolibre.com/items?ids=${idsQuery}&attributes=${attributes}`, {
       headers,
       next: { 
         revalidate: 3600, // O Next.js guardará esses dados por 1 hora (cache)
@@ -78,19 +81,16 @@ export async function getLiveOfertas(ids: string[]) {
     const data: MLResponseItem[] = await response.json();
 
     return data.map((res) => {
-      if (res.code !== 200) {
-        console.warn(`⚠️ Item ignorado (Erro ${res.code}):`, res.body?.id || 'ID desconhecido');
+      // Validamos se o item está ativo no marketplace
+      if (res.code !== 200 || res.body.status !== 'active') {
+        if (res.code !== 200) console.warn(`⚠️ Item ignorado (Erro ${res.code}):`, res.body?.id || 'ID desconhecido');
         return null;
       }
       const item = res.body;
       
-      // Gerando link de afiliado simples
-      // Se tiver um ID de afiliado configurado, adiciona o parâmetro matt_tool
-      // Cast to string to avoid type overlap error if config is literal
-      const isPlaceholder = (ML_AFFILIATE_ID as string) === "SEU_ID_DE_AFILIADO_AQUI";
-      const affiliateLink = ML_AFFILIATE_ID && !isPlaceholder
-        ? `${item.permalink}?matt_tool=${ML_AFFILIATE_ID}`
-        : item.permalink;
+      // Busca o link de afiliado correto para este MLB ID específico
+      const mapping = AFFILIATE_PRODUCTS_MAP.find(p => p.mlbId === item.id);
+      const affiliateLink = mapping ? mapping.affiliateLink : item.permalink;
 
       return {
         _id: item.id,
