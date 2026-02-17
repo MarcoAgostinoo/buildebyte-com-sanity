@@ -1,25 +1,12 @@
-import { getLiveOfertas } from '@/app/lib/ml-service';
-import { FEATURED_ML_IDS } from '@/app/lib/products-config';
-import { OfertasCarousel } from './OfertasCarousel'; 
+// Server Component simplificado — sem fetch server-side
+import { OfertasCarousel } from './OfertasCarousel';
 
-export default async function OfertasBuildEByte() {
-  const ofertas = await getLiveOfertas(FEATURED_ML_IDS);
-
-  // Debug: Exibir mensagem caso não haja ofertas, em vez de retornar null
-  if (!ofertas || ofertas.length === 0) {
-    return (
-      <div className="text-center py-10">
-        <p className="text-zinc-500 dark:text-zinc-400 font-medium">Nenhuma oferta ativa no momento.</p>
-        <p className="text-xs text-zinc-400 mt-2">Verifique os IDs no products-config.ts ou o status da API do Mercado Livre.</p>
-      </div>
-    );
-  }
-
+export default function OfertasBuildEByte() {
   return (
     <section className="py-12 border-y border-(--border) bg-linear-to-b from-transparent via-blue-50/5 to-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Header (Mantendo seu estilo original) */}
+
+        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
@@ -35,16 +22,15 @@ export default async function OfertasBuildEByte() {
               Melhores <span className="text-[#0070f3]">Ofertas</span>
             </h2>
           </div>
-          
           <p className="text-sm text-foreground/60 max-w-md md:text-right font-medium">
             Hardware selecionado e preços validados em tempo real com o Mercado Livre.
           </p>
         </div>
-        
-        {/* Carousel */}
+
+        {/* Carousel — todo o fetch acontece no browser do usuário */}
         <div className="relative p-1 rounded-[2.5rem] bg-(--border)/30 shadow-inner">
           <div className="bg-(--card-bg) rounded-[2.2rem] p-4 sm:p-8 border border-(--border) shadow-2xl">
-            <OfertasCarousel ofertas={ofertas} />
+            <OfertasCarousel />
           </div>
         </div>
 
