@@ -9,6 +9,7 @@ import PreviewBanner from "./components/PreviewBanner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://buildbyte.com.br"),
   title: "build-e-byte - Novidades do mundo da Tecnologia",
   description: "Seu portal de notícias sobre programação, hardware e tudo que acontece no mundo da tecnologia.",
 };

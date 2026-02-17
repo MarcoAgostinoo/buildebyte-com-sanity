@@ -9,16 +9,42 @@ import { WebStoriesCarousel } from "./components/WebStoriesCarousel";
 import LeadCapture from "./components/LeadCapture";
 import { formatDate } from "@/app/lib/utils";
 import { FeaturedPost, CategoryWithPosts, WebStory } from "@/app/lib";
+import PodcastCarousel from "./components/PodcastCarousel";
 
 export const metadata: Metadata = {
   title: "Build&Byte - Tecnologia, Hardware e Reviews",
-  description: "As últimas novidades em tecnologia, reviews de hardware e guias técnicos.",
+  description:
+    "As últimas novidades em tecnologia, reviews de hardware e guias técnicos.",
   openGraph: {
     images: ["/og-image.jpg"],
   },
 };
 
 const DEFAULT_IMAGE = "/images/placeholder.jpg";
+
+interface Episode {
+  id: string;
+  title: string;
+  link: string;
+  audio: string;
+  pubDate: string;
+  content: string;
+  image?: string;
+}
+
+// --- FUNÇÃO PARA BUSCAR PODCASTS DA SUA API ---
+async function getExternalPodcasts(): Promise<Episode[]> {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+  try {
+    const res = await fetch(`${baseUrl}/api/podcasts`, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.episodes.slice(0, 4); // Pegamos os 4 últimos
+  } catch (error) {
+    console.error('Erro ao buscar podcasts:', error);
+    return [];
+  }
+}
 
 // --- QUERIES ---
 // 1. Busca Destaques
@@ -85,10 +111,11 @@ async function getWebStories(): Promise<WebStory[]> {
 
 // --- COMPONENTE PRINCIPAL ---
 export default async function Home() {
-  const [featuredPosts, categories, webStories] = await Promise.all([
+  const [featuredPosts, categories, webStories, episodes] = await Promise.all([
     getFeaturedPosts(),
     getCategories(),
     getWebStories(),
+    getExternalPodcasts(),
   ]);
 
   // SET PARA CONTROLE DE DUPLICATAS
@@ -99,8 +126,14 @@ export default async function Home() {
     renderedPostIds.add(post._id);
   });
 
+  // Pegamos os 5 últimos artigos gerais para a lateral esquerda (estilo Tecnoblog)
+  const popularPosts = categories.flatMap(c => c.posts)
+    .filter(p => !renderedPostIds.has(p._id))
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+    .slice(0, 5);
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 bg-white dark:bg-zinc-950">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -189,129 +222,87 @@ export default async function Home() {
         </section>
       )}
 
-      {/* --- 2. FEED POR CATEGORIAS (ESTILO EDITORIAL) --- */}
-      <section className="space-y-24 mt-20">
-        {categories.map((cat) => {
-          // Filtragem Inteligente: Remove posts que já apareceram nos destaques ou em outras categorias
-          const postsToRender = cat.posts.filter(
-            (p) => !renderedPostIds.has(p._id),
-          );
+      <OfertasBuildEByte />
 
-          // Se a categoria ficar vazia após o filtro, não renderiza nada
-          if (postsToRender.length === 0) return null;
-
-          // Adiciona os posts exibidos ao conjunto de IDs renderizados
-          postsToRender.forEach((p) => renderedPostIds.add(p._id));
-
-          return (
-            <div key={cat._id} className="relative">
-              {/* CABEÇALHO DA CATEGORIA - Estilo Revista */}
-              <div className="flex items-end justify-between mb-10 border-b-2 border-(--border) pb-4">
-                <div className="space-y-1">
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary font-mono">
-                    Seção Técnica
-                  </span>
-                  <h2 className="text-3xl font-black text-foreground uppercase tracking-tighter">
-                    {cat.title} <span className="text-primary">.</span>
-                  </h2>
-                </div>
-                <Link
-                  href={`/categorias/${cat.slug}`}
-                  className="text-xs font-bold uppercase text-primary hover:underline tracking-widest transition-all font-mono"
-                >
-                  Explorar Tudo +
-                </Link>
-              </div>
-
-              {/* GRID DE CARDS */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
-                {postsToRender.map((post) => (
-                  <article key={post._id} className="group flex flex-col">
-                    <Link
-                      href={`/post/${post.slug}`}
-                      className="flex flex-col h-full"
-                    >
-                      {/* CONTAINER DA IMAGEM - Bordas mais suaves e Zoom */}
-                      <div className="relative aspect-video rounded-2xl overflow-hidden mb-5 bg-(--border) shadow-sm group-hover:shadow-md transition-all">
-                        <Image
-                          src={post.imagem || DEFAULT_IMAGE}
-                          alt={post.imagemAlt || post.title || "Imagem do artigo"}
-                          fill
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                          className="object-cover group-hover:scale-105 transition-transform duration-500 group-hover:brightness-90"
-                        />
-                        {/* Badge de tipo opcional se o seu schema suportar */}
-                        {post.editorialType && (
-                          <div className="absolute top-3 left-3">
-                            <span className="bg-black/80 backdrop-blur-md text-white text-[9px] font-black px-2 py-0.5 rounded uppercase border border-white/10 tracking-widest font-mono">
-                              {post.editorialType}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* META INFO */}
-                      <div className="text-[10px] font-bold text-foreground/60 uppercase tracking-widest mb-2 flex items-center gap-2 font-mono">
-                        <span>{post.author}</span>
-                        <span className="w-1 h-1 bg-(--border) rounded-full"></span>
-                        <time>
-                          {new Date(post.publishedAt).toLocaleDateString(
-                            "pt-BR",
-                            { day: "2-digit", month: "short" },
-                          )}
-                        </time>
-                      </div>
-
-                      {/* TÍTULO - Negrito e sublinhado no hover */}
-                      <h3 className="font-black text-xl leading-tight text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-3 decoration-primary/30 decoration-2 underline-offset-4 group-hover:underline">
-                        {post.title}
-                      </h3>
-
-                      {/* RESUMO - Texto mais limpo */}
-                      <p className="text-sm text-foreground/60 line-clamp-2 leading-relaxed font-medium">
-                        {post.excerpt}
-                      </p>
-
-                      {/* INDICADOR DE LEITURA */}
-                      <div className="mt-4 flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-primary/0 group-hover:text-primary transition-all duration-300 font-mono">
-                        Acessar Relatório
-                        <svg
-                          className="w-3 h-3 ml-1"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={3}
-                            d="M14 5l7 7m0 0l-7 7m7-7H3"
-                          />
-                        </svg>
-                      </div>
-                    </Link>
-                  </article>
-                ))}
-              </div>
+        {/* 2. SEÇÃO TECNOBLOG: POPULARES (SANITY) + CAST (API) */}
+      <section className="mt-12 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          
+          {/* LADO ESQUERDO: MAIS POPULARES */}
+          <aside className="lg:col-span-3 lg:border-r lg:border-zinc-200 lg:dark:border-zinc-800 lg:pr-12">
+            <h2 className="text-[#0070f3] text-xl font-black mb-8 uppercase tracking-tighter">Mais Populares</h2>
+            <div className="flex flex-col gap-8">
+              {popularPosts.map((post: CategoryWithPosts['posts'][number], index: number) => (
+                <article key={post._id} className="flex gap-4 group">
+                  <span className="text-3xl font-black text-zinc-200 dark:text-zinc-800 group-hover:text-[#0070f3] leading-none transition-colors">{index + 1}</span>
+                  <Link href={`/post/${post.slug}`}>
+                    <h4 className="font-bold text-[15px] leading-tight text-zinc-800 dark:text-zinc-100 group-hover:text-[#0070f3] transition-colors">{post.title}</h4>
+                  </Link>
+                </article>
+              ))}
             </div>
-          );
-        })}
+          </aside>
+
+          {/* LADO DIREITO: GRID DO BUILD & BYTE CAST */}
+          <main className="lg:col-span-9 flex flex-col gap-10">
+             <div className="flex items-center justify-between mb-8">
+                <h2 className="text-2xl font-black uppercase tracking-tighter">Build & Byte Cast</h2>
+                <span className="bg-green-500/10 text-green-500 text-[10px] font-bold px-2 py-1 rounded animate-pulse uppercase">Ao Vivo / Recentes</span>
+             </div>
+
+            {/* Desktop Grid 2x2 */}
+            <div className="hidden md:grid grid-cols-2 gap-x-8 gap-y-12">
+              {episodes.map((ep: Episode) => (
+                <article key={ep.id} className="group">
+                  <a href={ep.link} target="_blank" rel="noopener noreferrer" className="block relative aspect-video overflow-hidden rounded-sm mb-4">
+                    <Image src={ep.image || DEFAULT_IMAGE} alt={ep.title} fill className="object-cover transition-transform group-hover:scale-105" />
+                    <span className="absolute bottom-3 left-3 bg-[#0070f3] text-white text-[10px] font-black px-2 py-0.5 uppercase tracking-widest">PODCAST</span>
+                  </a>
+                  <a href={ep.link} target="_blank" rel="noopener noreferrer">
+                    <h3 className="text-2xl font-black leading-tight text-zinc-900 dark:text-white group-hover:text-[#0070f3] transition-colors mb-2">{ep.title}</h3>
+                  </a>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400 font-medium">
+                    Postado em {formatDate(ep.pubDate)} • <span className="text-zinc-800 dark:text-zinc-200">Build & Byte Cast</span>
+                  </p>
+                </article>
+              ))}
+            </div>
+
+            {/* Mobile Carousel */}
+            <div className="md:hidden">
+              <PodcastCarousel episodes={episodes} defaultImage={DEFAULT_IMAGE} />
+            </div>
+          </main>
+        </div>
       </section>
 
       {/* --- 3 SEÇÕES EXTRAS --- */}
       <div className="mt-20">
-        <Suspense fallback={<div className="h-40 animate-pulse bg-gray-100 dark:bg-zinc-800 rounded" />}>
+        <Suspense
+          fallback={
+            <div className="h-40 animate-pulse bg-gray-100 dark:bg-zinc-800 rounded" />
+          }
+        >
           <OfertasBuildEByte />
         </Suspense>
       </div>
       {/* --- 4. SEÇÃO DE WEB STORIES (ESTILO INSTAGRAM) --- */}
       {webStories.length > 0 && (
-        <Suspense fallback={<div className="h-60 animate-pulse bg-gray-100 dark:bg-zinc-800 rounded mt-10" />}>
+        <Suspense
+          fallback={
+            <div className="h-60 animate-pulse bg-gray-100 dark:bg-zinc-800 rounded mt-10" />
+          }
+        >
           <WebStoriesCarousel webStories={webStories} />
         </Suspense>
       )}
+
       <div className="mt-10">
-        <Suspense fallback={<div className="h-96 animate-pulse bg-gray-100 dark:bg-zinc-800 rounded" />}>
+        <Suspense
+          fallback={
+            <div className="h-96 animate-pulse bg-gray-100 dark:bg-zinc-800 rounded" />
+          }
+        >
           <LatestPosts />
         </Suspense>
       </div>
@@ -323,9 +314,13 @@ export default async function Home() {
       {/* --- 5. DISCLAIMER DE AFILIADOS (P0) --- */}
       <div className="mt-16 py-6 border-t border-zinc-200 dark:border-zinc-800 text-center">
         <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-3xl mx-auto font-mono">
-          <span className="font-bold text-orange-600 dark:text-orange-500">NOTA DE TRANSPARÊNCIA:</span> O Build&Byte participa de programas de afiliados. 
-          Ao comprar através de links em nossas ofertas (&quot;Pegar Promoção&quot;), podemos receber uma comissão, sem custo adicional para você. 
-          Isso financia nossa infraestrutura de testes e servidores.
+          <span className="font-bold text-orange-600 dark:text-orange-500">
+            NOTA DE TRANSPARÊNCIA:
+          </span>{" "}
+          O Build&Byte participa de programas de afiliados. Ao comprar através
+          de links em nossas ofertas (&quot;Pegar Promoção&quot;), podemos
+          receber uma comissão, sem custo adicional para você. Isso financia
+          nossa infraestrutura de testes e servidores.
         </p>
       </div>
     </div>
