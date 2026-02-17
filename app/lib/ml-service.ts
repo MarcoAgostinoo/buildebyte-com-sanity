@@ -78,7 +78,10 @@ export async function getLiveOfertas(ids: string[]) {
     const data: MLResponseItem[] = await response.json();
 
     return data.map((res) => {
-      if (res.code !== 200) return null;
+      if (res.code !== 200) {
+        console.warn(`⚠️ Item ignorado (Erro ${res.code}):`, res.body?.id || 'ID desconhecido');
+        return null;
+      }
       const item = res.body;
       
       // Gerando link de afiliado simples
