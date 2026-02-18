@@ -34,7 +34,7 @@ export default function ContatoPage() {
       {/* Rodapé de contato secundário */}
       <div className="mt-12 text-center">
         <p className="text-xs font-mono text-zinc-500">
-          PREFERE CRIPTOGRAFIA? ENVIE PGP KEY PARA <span className="text-zinc-900 dark:text-zinc-300">security@Build&Byte.com</span>
+          PREFERE CRIPTOGRAFIA? ENVIE PGP KEY PARA <span className="text-zinc-900 dark:text-zinc-300">security@Vetor Estratégico.com</span>
         </p>
       </div>
     </div>

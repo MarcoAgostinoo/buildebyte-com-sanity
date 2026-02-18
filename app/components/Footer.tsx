@@ -20,8 +20,8 @@ export default function SimpleFooter() {
             <FooterBrand
               href="/"
               src="/logo.png" 
-              alt="Build&Byte Logo"
-              name="Build&Byte"
+              alt="Vetor Estratégico Logo"
+              name="Vetor Estratégico"
               className="mb-4 flex items-center"
             />
             <p className="text-zinc-500 dark:text-zinc-400 text-sm max-w-xs leading-relaxed">
@@ -57,7 +57,7 @@ export default function SimpleFooter() {
           
           <FooterCopyright 
             href="/" 
-            by="Build&Byte™ Media." 
+            by="Vetor Estratégico™ Media." 
             year={new Date().getFullYear()} 
             className="text-zinc-400 dark:text-zinc-500 text-xs font-mono"
           />

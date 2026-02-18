@@ -10,10 +10,10 @@ export default function Header() {
       className="sticky w-full z-20 top-0 start-0 border-b border-gray-200 bg-white dark:bg-white md:bg-white/80 md:dark:bg-white/80"
     >
       <NavbarBrand href="/">
-        <Image src="/logo.png" width={60} height={60} className="mr-0" alt="Build&Byte Logo" />
+        <Image src="/logo.png" width={60} height={60} className="mr-0" alt="Vetor Estratégico Logo" />
         {/* AQUI: "text-primary dark:text-primary" garante texto azul SEMPRE. */}
         <span className="self-center whitespace-nowrap text-xl font-bold tracking-tight text-primary dark:text-primary">
-          Build&Byte
+          Vetor Estratégico
         </span>
       </NavbarBrand>
 

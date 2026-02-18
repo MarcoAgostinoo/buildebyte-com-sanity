@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     // 4. Prepara o Lote (Batch Sending do Resend)
     // O Resend aceita arrays de até 100 emails por request.
     const emailBatch = leads.map((email: string) => ({
-      from: 'Build & Byte <news@Build&Byte.com>', // SEU DOMÍNIO VALIDADO NO RESEND
+      from: 'Build & Byte <news@Vetor Estratégico.com>', // SEU DOMÍNIO VALIDADO NO RESEND
       to: email,
       subject: newsletter.subject,
       html: `
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
           <p>Acesse agora para conferir.</p>
 
           <br/>
-          <a href="https://Build&Byte.com" style="background: #000; color: #fff; padding: 10px 20px; text-decoration: none;">Ler Artigos</a>
+          <a href="https://Vetor Estratégico.com" style="background: #000; color: #fff; padding: 10px 20px; text-decoration: none;">Ler Artigos</a>
           
           <br/><br/>
           <small><a href="%unsubscribe_url%">Descadastrar</a></small>

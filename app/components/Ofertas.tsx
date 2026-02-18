@@ -1,7 +1,7 @@
 // Server Component simplificado — sem fetch server-side
 import { OfertasCarousel } from './OfertasCarousel';
 
-export default function OfertasBuildEByte() {
+export default function Ofertas() {
   return (
     <section className="py-12 border-y border-(--border) bg-linear-to-b from-transparent via-blue-50/5 to-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

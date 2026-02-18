@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Inteligência Artificial na Prática | Build&Byte",
+  title: "Inteligência Artificial na Prática | Vetor Estratégico",
   description: "Análises técnicas sobre LLMs locais, agentes autônomos e o impacto real da IA na engenharia de software.",
 };
 

@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     const data = await resend.emails.send({
       from: 'Contato Site <onboarding@resend.dev>', // Use esse email padrão por enquanto
       to: [process.env.EMAIL_TO as string], // 🔴 TROQUE PELO SEU EMAIL REAL
-      subject: `Nova mensagem de ${nome} via Build&Byte`,
+      subject: `Nova mensagem de ${nome} via Vetor Estratégico`,
       replyTo: email, // Isso permite que você clique em "Responder" e vá para o email da pessoa
       text: `
         Nome: ${nome}

@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import { client } from "@/app/lib/sanity";
 import Link from "next/link";
 import Image from "next/image";
-import OfertasBuildEByte from "./components/OfertasBuildEByte"; // Verifique se o caminho está certo
+import Ofertas from "./components/Ofertas"; // Verifique se o caminho está certo
 import LatestPosts from "./components/LatestPosts"; // Verifique se o caminho está certo
 import { WebStoriesCarousel } from "./components/WebStoriesCarousel";
 import LeadCapture from "./components/LeadCapture";
@@ -13,7 +13,7 @@ import PodcastCarousel from "./components/PodcastCarousel";
 import { getPodcastEpisodes, Episode } from "@/app/lib/podcast-service";
 
 export const metadata: Metadata = {
-  title: "Build&Byte - Tecnologia, Hardware e Reviews",
+  title: "Vetor Estratégico - Tecnologia, Hardware e Reviews",
   description:
     "As últimas novidades em tecnologia, reviews de hardware e guias técnicos.",
   openGraph: {
@@ -117,7 +117,7 @@ export default async function Home() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebSite",
-            name: "Build&Byte",
+            name: "Vetor Estratégico",
             url: "https://buildbyte.com.br",
           }),
         }}
@@ -260,7 +260,7 @@ export default async function Home() {
           <h2 className="text-2xl font-black uppercase tracking-tighter mt-12 mb-8 text-center">
             Mais Ofertas em Tempo Real
           </h2>
-          <OfertasBuildEByte />
+          <Ofertas />
         </Suspense>
       </div>
       {/* --- 4. SEÇÃO DE WEB STORIES (ESTILO INSTAGRAM) --- */}
@@ -294,7 +294,7 @@ export default async function Home() {
           <span className="font-bold text-orange-600 dark:text-orange-500">
             NOTA DE TRANSPARÊNCIA:
           </span>{" "}
-          O Build&Byte participa de programas de afiliados. Ao comprar através
+          O Vetor Estratégico participa de programas de afiliados. Ao comprar através
           de links em nossas ofertas (&quot;Pegar Promoção&quot;), podemos
           receber uma comissão, sem custo adicional para você. Isso financia
           nossa infraestrutura de testes e servidores.

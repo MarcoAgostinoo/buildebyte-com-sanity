@@ -1,11 +1,21 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Licenciamento & Propriedade Intelectual | Build&Byte",
-  description: "Dossiê oficial sobre direitos autorais, regras de uso e licenciamento do conteúdo técnico do Build&Byte. Saiba o que é permitido e proibido.",
+  title: "Licenciamento & Propriedade Intelectual | Vetor Estratégico",
+  description:
+    "Política oficial de propriedade intelectual do Vetor Estratégico. Regras de uso, reprodução, scraping, IA e licenciamento comercial.",
+  keywords: [
+    "propriedade intelectual",
+    "licenciamento de conteúdo",
+    "direitos autorais Brasil",
+    "uso de conteúdo digital",
+    "scraping ilegal",
+    "treinamento de IA sem autorização"
+  ],
   openGraph: {
-    title: "Licenciamento | Build&Byte",
-    description: "Protocolo de uso e reprodução de dados, análises e ativos digitais do portal Build&Byte.",
+    title: "Licenciamento Oficial | Vetor Estratégico",
+    description:
+      "Protocolo formal de uso, reprodução e exploração comercial do conteúdo do Vetor Estratégico.",
     type: "article",
   },
 };
@@ -14,112 +24,170 @@ export default function LicensingPage() {
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 py-12 px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        {/* Cabeçalho de Estilo Dossiê */}
+
+        {/* HEADER */}
         <header className="mb-12 border-b border-[var(--border)] pb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="bg-secondary text-white text-xs font-bold px-2 py-1 rounded-sm uppercase tracking-widest font-mono">
-              Documento Oficial
-            </span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-zinc-900 dark:text-white uppercase">
+          <span className="bg-zinc-900 text-white text-xs font-bold px-2 py-1 rounded-sm uppercase tracking-widest font-mono">
+            Documento Jurídico Oficial
+          </span>
+
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-zinc-900 dark:text-white uppercase mt-6">
             Licenciamento & <br />
             <span className="text-primary">Propriedade Intelectual</span>
           </h1>
+
           <p className="mt-4 text-zinc-600 dark:text-zinc-400 font-medium">
-            Protocolo de uso e reprodução de dados, análises e ativos digitais do portal Build&Byte.
+            Política formal de uso, reprodução e exploração dos ativos editoriais do Vetor Estratégico.
           </p>
         </header>
 
-        <div className="space-y-12 text-zinc-800 dark:text-zinc-300 leading-relaxed">
-          
-          {/* Seção 1 */}
+        <div className="space-y-14 text-zinc-800 dark:text-zinc-300 leading-relaxed">
+
+          {/* 1 */}
           <section className="relative pl-6">
             <div className="absolute left-0 top-0 h-full w-1 bg-primary"></div>
-            <h2 className="text-xl font-bold text-zinc-900 dark:text-white uppercase tracking-tight mb-4">
-              01. Soberania do Conteúdo
+
+            <h2 className="text-xl font-bold uppercase mb-4">
+              01. Titularidade e Soberania Intelectual
             </h2>
+
             <p>
-              Todo o ecossistema original do portal <strong className="text-zinc-900 dark:text-white">Build&Byte</strong> — incluindo textos, investigações técnicas, gráficos e o selo <em className="text-primary font-semibold">"Visão do Analista"</em> — é protegido por leis internacionais de propriedade intelectual. Não somos apenas um agregador; somos os arquitetos de cada linha de análise publicada aqui.
+              Todo conteúdo original publicado pelo <strong>Vetor Estratégico</strong> —
+              incluindo análises técnicas, relatórios, gráficos, estrutura editorial,
+              metodologia analítica e a marca registrada
+              <em className="text-primary font-semibold"> “Visão do Analista™” </em>
+              — é protegido pela legislação brasileira de direitos autorais
+              (Lei nº 9.610/98) e tratados internacionais aplicáveis.
+            </p>
+
+            <p className="mt-4">
+              Não atuamos como agregador de notícias.
+              Produzimos análise original baseada em método próprio.
+              A arquitetura intelectual do conteúdo é parte essencial do ativo protegido.
             </p>
           </section>
 
-          {/* Seção 2 */}
+          {/* 2 */}
           <section className="relative pl-6">
             <div className="absolute left-0 top-0 h-full w-1 bg-primary"></div>
-            <h2 className="text-xl font-bold text-zinc-900 dark:text-white uppercase tracking-tight mb-4">
-              02. Regras de Engajamento
-            </h2>
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-red-50/50 dark:bg-red-900/10 p-6 border border-red-200 dark:border-red-900/50 rounded-sm shadow-sm">
-                <h3 className="text-red-600 dark:text-red-400 font-bold uppercase text-sm mb-3 tracking-wider flex items-center gap-2">
-                  <span className="text-lg">✕</span> Proibido
-                </h3>
-                <p className="text-sm text-zinc-700 dark:text-zinc-300">
-                  Reproduzir, minerar dados (scraping), modificar ou comercializar qualquer fragmento deste dossiê sem autorização expressa. O uso de nosso conteúdo para treinamento de LLMs externos sem licenciamento é estritamente monitorado.
-                </p>
-              </div>
-              <div className="bg-emerald-50/50 dark:bg-emerald-900/10 p-6 border border-emerald-200 dark:border-emerald-900/50 rounded-sm shadow-sm">
-                <h3 className="text-emerald-600 dark:text-emerald-400 font-bold uppercase text-sm mb-3 tracking-wider flex items-center gap-2">
-                  <span className="text-lg">✓</span> Permitido
-                </h3>
-                <p className="text-sm text-zinc-700 dark:text-zinc-300">
-                  Compartilhar links diretos em redes sociais ou newsletters, desde que o <span className="font-bold underline decoration-primary">crédito ao Build&Byte</span> como fonte original seja mantido de forma clara, proeminente e inalterada.
-                </p>
-              </div>
-            </div>
-          </section>
 
-          {/* Seção 3: Citação com o estilo do seu portal */}
-          <section className="relative pl-6">
-            <div className="absolute left-0 top-0 h-full w-1 bg-primary"></div>
-            <h2 className="text-xl font-bold text-zinc-900 dark:text-white uppercase tracking-tight mb-4">
-              03. Atribuição de Fonte
+            <h2 className="text-xl font-bold uppercase mb-6">
+              02. Uso Não Autorizado
             </h2>
-            <p className="mb-6">
-              Citações parciais são permitidas para fins críticos ou educacionais, seguindo o padrão de <em>Fair Use</em>. A atribuição deve seguir o modelo abaixo:
-            </p>
-            <blockquote className="bg-zinc-100 dark:bg-zinc-900 border-l-4 border-secondary p-6 rounded-r-md shadow-inner">
-              <p className="italic font-medium text-zinc-700 dark:text-zinc-400">
-                "O código não mente, mas o marketing da tecnologia muitas vezes alucina."
+
+            <div className="bg-red-50 dark:bg-red-900/10 p-6 border border-red-200 dark:border-red-900/40 rounded-sm">
+              <p className="font-semibold mb-4 text-red-600 dark:text-red-400 uppercase text-sm">
+                É expressamente proibido:
               </p>
-              <cite className="block mt-4 text-sm font-bold uppercase not-italic text-zinc-900 dark:text-white">
-                — Build&Byte (Dossiê Vibe Coding, 2026)
+
+              <ul className="space-y-3 text-sm">
+                <li>• Reproduzir integralmente artigos ou relatórios.</li>
+                <li>• Realizar scraping automatizado para mineração de dados.</li>
+                <li>• Utilizar conteúdo para treinamento de modelos de IA externos sem licença formal.</li>
+                <li>• Modificar ou republicar análises sob outra autoria.</li>
+                <li>• Comercializar trechos ou relatórios derivados.</li>
+              </ul>
+            </div>
+
+            <p className="mt-6 text-sm text-zinc-600 dark:text-zinc-400">
+              Monitoramos padrões automatizados de coleta de dados.
+              Violações poderão resultar em medidas técnicas e jurídicas cabíveis.
+            </p>
+          </section>
+
+          {/* 3 */}
+          <section className="relative pl-6">
+            <div className="absolute left-0 top-0 h-full w-1 bg-emerald-500"></div>
+
+            <h2 className="text-xl font-bold uppercase mb-6">
+              03. Uso Permitido & Atribuição
+            </h2>
+
+            <p>
+              É permitido:
+            </p>
+
+            <ul className="mt-4 space-y-3 text-sm">
+              <li>• Compartilhar links diretos para artigos.</li>
+              <li>• Citar trechos curtos para fins educacionais ou críticos.</li>
+              <li>• Referenciar dados com atribuição clara e visível.</li>
+            </ul>
+
+            <p className="mt-6">
+              Modelo de atribuição recomendado:
+            </p>
+
+            <blockquote className="bg-zinc-100 dark:bg-zinc-900 border-l-4 border-primary p-6 rounded-r-md mt-4">
+              <p className="italic">
+                “Tecnologia não é neutra. Ela desloca poder.”
+              </p>
+              <cite className="block mt-4 text-sm font-bold not-italic">
+                — Vetor Estratégico, 2026
               </cite>
             </blockquote>
           </section>
 
-          {/* Seção 4: O "Diferencial" IA */}
+          {/* 4 */}
           <section className="relative pl-6">
-            <div className="absolute left-0 top-0 h-full w-1 bg-primary"></div>
-            <h2 className="text-xl font-bold text-zinc-900 dark:text-white uppercase tracking-tight mb-4">
-              04. Manifesto sobre IA Generativa
+            <div className="absolute left-0 top-0 h-full w-1 bg-indigo-600"></div>
+
+            <h2 className="text-xl font-bold uppercase mb-4">
+              04. Política sobre IA Generativa
             </h2>
-            <p className="bg-zinc-900 text-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 p-6 rounded-sm font-medium">
-              Diferente de fazendas de conteúdo, o Build&Byte utiliza IA como ferramenta de suporte, não como autor. Cada artigo passa por uma auditoria humana rigorosa para garantir que a <span className="text-secondary uppercase font-black italic">intuição técnica</span> e a <span className="text-primary uppercase font-black italic">veracidade dos fatos</span> permaneçam inegociáveis.
+
+            <p>
+              O Vetor Estratégico utiliza ferramentas de IA como apoio operacional,
+              jamais como substituição da análise humana.
+            </p>
+
+            <p className="mt-4">
+              Cada publicação passa por auditoria editorial,
+              verificação de dados e validação metodológica.
+              A responsabilidade intelectual é exclusivamente humana.
+            </p>
+
+            <p className="mt-4 text-sm text-zinc-600 dark:text-zinc-400">
+              A reprodução para treinamento de modelos de linguagem
+              requer contrato específico de licenciamento.
             </p>
           </section>
 
-          {/* Seção 5: Disclaimer de Afiliados (Novo) */}
+          {/* 5 */}
           <section className="relative pl-6">
             <div className="absolute left-0 top-0 h-full w-1 bg-orange-500"></div>
-            <h2 className="text-xl font-bold text-zinc-900 dark:text-white uppercase tracking-tight mb-4">
-              05. Transparência Comercial & Afiliados
+
+            <h2 className="text-xl font-bold uppercase mb-4">
+              05. Transparência Comercial
             </h2>
+
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Em conformidade com as diretrizes de publicidade digital, informamos que o Build&Byte participa de programas de afiliados. Links marcados como ofertas ou promoções podem gerar comissões para o site. Isso não afeta o preço final para o usuário, nem influencia nossa opinião editorial ou técnica sobre os produtos analisados. A integridade da engenharia vem antes do lucro.
+              O Vetor Estratégico pode participar de programas de afiliados.
+              Links promocionais são claramente identificados.
+              A remuneração não influencia metodologia, análise ou conclusão editorial.
+              Integridade técnica é prioridade absoluta.
             </p>
           </section>
 
-          {/* Seção 5 */}
-          <footer className="pt-8 border-t border-[var(--border)] text-center md:text-left">
-            <h2 className="text-sm font-black uppercase text-zinc-500 mb-2">Contato para Licenciamento</h2>
+          {/* FOOTER */}
+          <footer className="pt-10 border-t border-[var(--border)]">
+            <h2 className="text-sm font-black uppercase text-zinc-500 mb-4">
+              Licenciamento Comercial
+            </h2>
+
             <p className="text-zinc-600 dark:text-zinc-400">
-              Precisa de uma licença comercial ou republicação completa? 
-              <a href="/contato" className="ml-2 text-primary font-bold hover:underline">
-                Abra um chamado com nossa equipe editorial.
-              </a>
+              Para republicação integral, relatórios corporativos,
+              uso acadêmico ampliado ou treinamento de sistemas de IA,
+              entre em contato com a equipe editorial.
             </p>
+
+            <a
+              href="/contato"
+              className="inline-block mt-6 bg-primary text-white px-6 py-3 text-sm font-bold uppercase tracking-wider hover:opacity-90 transition"
+            >
+              Solicitar Licença Formal
+            </a>
           </footer>
+
         </div>
       </div>
     </div>

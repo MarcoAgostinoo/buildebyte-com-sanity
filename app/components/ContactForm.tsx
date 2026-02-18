@@ -84,7 +84,7 @@ export default function ContactForm() {
                 id="email"
                 required
                 className="w-full px-4 py-3 rounded-sm bg-zinc-50 dark:bg-black border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:ring-1 focus:ring-primary focus:border-primary transition-all outline-none font-mono text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-600"
-                placeholder="admin@Build&Byte.com"
+                placeholder="admin@Vetor Estratégico.com"
               />
             </div>
           </div>
