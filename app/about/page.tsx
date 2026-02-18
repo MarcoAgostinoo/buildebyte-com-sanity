@@ -60,14 +60,14 @@ export default function AboutPage() {
       <div className="max-w-5xl mx-auto">
 
         {/* HEADER */}
-        <header className="mb-16 border-b border-[var(--border)] pb-8">
+        <header className="mb-16 border-b border-(--border) pb-8">
           <span className="text-secondary font-bold tracking-widest text-xs uppercase mb-2 block font-mono">
             VetorEstratégico.System
           </span>
 
           <h1 className="text-4xl md:text-6xl font-black text-zinc-900 dark:text-white tracking-tight">
             Não analisamos o evento. <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-indigo-600 to-red-600">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-700 via-indigo-600 to-red-600">
               Analisamos o vetor.
             </span>
           </h1>
@@ -113,7 +113,7 @@ export default function AboutPage() {
 
           {/* VISÃO DO ANALISTA */}
           <div className="md:col-span-5 relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-blue-700 to-red-600 rounded-lg blur opacity-25"></div>
+            <div className="absolute -inset-1 bg-linear-to-r from-blue-700 to-red-600 rounded-lg blur opacity-25"></div>
             <div className="relative bg-zinc-900 p-6 rounded-lg border border-zinc-800 shadow-2xl">
               <h3 className="text-white font-bold text-lg mb-4">
                 Visão do Analista™
@@ -143,7 +143,7 @@ export default function AboutPage() {
             {pillars.map((pillar, index) => (
               <div
                 key={index}
-                className="p-6 bg-[var(--card-bg)] border border-[var(--border)] rounded-md hover:border-blue-600 transition-all duration-300"
+                className="p-6 bg-(--card-bg) border border-(--border) rounded-md hover:border-blue-600 transition-all duration-300"
               >
                 <span className="text-xs font-mono text-red-500">
                   {pillar.group}
@@ -160,7 +160,7 @@ export default function AboutPage() {
         </section>
 
         {/* DIFERENCIAL */}
-        <section className="mt-20 text-center border-t border-[var(--border)] pt-12">
+        <section className="mt-20 text-center border-t border-(--border) pt-12">
           <h2 className="text-2xl font-bold mb-4">
             Tecnologia. Poder. Direção.
           </h2>

@@ -6,45 +6,47 @@ export default function Header() {
     <Navbar
       fluid
       rounded
-      // AQUI: "bg-white dark:bg-white" garante fundo branco SEMPRE.
-      className="sticky w-full z-20 top-0 start-0 border-b border-gray-200 bg-white dark:bg-white md:bg-white/80 md:dark:bg-white/80"
+      // Mantendo o header sempre branco conforme seu pedido anterior
+      className="sticky w-full z-20 top-0 start-0 border-b border-gray-200 bg-white md:bg-white/80"
     >
-      <NavbarBrand href="/">
-        <Image src="/logo.png" width={60} height={60} className="mr-0" alt="Vetor Estratégico Logo" />
-        {/* AQUI: "text-primary dark:text-primary" garante texto azul SEMPRE. */}
-        <span className="self-center whitespace-nowrap text-xl font-bold tracking-tight text-primary dark:text-primary">
-          Vetor Estratégico
-        </span>
+      <NavbarBrand href="/" className="flex items-center">
+        {/* O Logo de imagem permanece aqui */}
+        <Image src="/logo.png" width={60} height={60} className="mr-3" style={{ height: "auto" }} alt="Vetor Estratégico Logo" />
+
+        {/* --- INÍCIO DA MUDANÇA DA TAGLINE --- */}
+        {/* Criamos uma DIV para agrupar o Título e a Tagline em uma coluna vertical */}
+        <div className="flex flex-col justify-center">
+            {/* Título Principal (Seu span original com pequenos ajustes de espaçamento) */}
+            <span className="whitespace-nowrap text-xl font-bold tracking-tight text-primary leading-tight">
+              Vetor Estratégico
+            </span>
+
+            {/* NOVA TAGLINE AQUI */}
+            {/* text-sm (menor), text-gray-600 (cinza para contraste), font-medium (peso médio) */}
+            <span className="text-sm text-gray-600 font-medium whitespace-nowrap hidden md:block">
+              Inteligência, Defesa e Tecnologia
+            </span>
+             {/* Versão mobile da Tagline (opcional: pode ser menor ou escondida) */}
+            <span className="text-xs text-gray-600 font-medium whitespace-nowrap md:hidden">
+              Inteligência & Tecnologia
+            </span>
+        </div>
+        {/* --- FIM DA MUDANÇA DA TAGLINE --- */}
+
       </NavbarBrand>
 
       <div className="flex md:order-2 gap-2">
-        {/* AQUI: Ícone do menu azul SEMPRE */}
-        <NavbarToggle className="text-primary dark:text-primary hover:bg-gray-100 focus:ring-gray-200" />
+        <NavbarToggle className="text-primary hover:!bg-gray-100 focus:!ring-gray-200" />
       </div>
 
-      {/* AQUI: Fundo do menu aberto branco SEMPRE */}
-      <NavbarCollapse className="bg-white dark:bg-white">
-        <NavbarLink href="/" className="text-gray-800 dark:text-gray-800 hover:text-primary dark:hover:text-primary">
-          INÍCIO
-        </NavbarLink>
-        <NavbarLink href="/destaques" className="text-gray-800 dark:text-gray-800 hover:text-primary dark:hover:text-primary">
-          DESTAQUES
-        </NavbarLink>
-        <NavbarLink href="/videos" className="text-gray-800 dark:text-gray-800 hover:text-primary dark:hover:text-primary">
-          VIDEOS
-        </NavbarLink>
-        <NavbarLink href="/achados" className="text-gray-800 dark:text-gray-800 hover:text-primary dark:hover:text-primary">
-          ACHADOS
-        </NavbarLink>
-        <NavbarLink href="/ia" className="text-gray-800 dark:text-gray-800 hover:text-primary dark:hover:text-primary">
-          IA
-        </NavbarLink>
-        <NavbarLink href="/mundo" className="text-gray-800 dark:text-gray-800 hover:text-primary dark:hover:text-primary">
-          MUNDO
-        </NavbarLink>
-        <NavbarLink href="/contato" className="text-gray-800 dark:text-gray-800 hover:text-primary dark:hover:text-primary">
-          CONTATO
-        </NavbarLink>
+      <NavbarCollapse className="bg-white">
+        <NavbarLink href="/" className="text-gray-800 hover:text-primary">INÍCIO</NavbarLink>
+        <NavbarLink href="/destaques" className="text-gray-800 hover:text-primary">DESTAQUES</NavbarLink>
+        <NavbarLink href="/videos" className="text-gray-800 hover:text-primary">VIDEOS</NavbarLink>
+        <NavbarLink href="/achados" className="text-gray-800 hover:text-primary">ACHADOS</NavbarLink>
+        <NavbarLink href="/ia" className="text-gray-800 hover:text-primary">IA</NavbarLink>
+        <NavbarLink href="/mundo" className="text-gray-800 hover:text-primary">MUNDO</NavbarLink>
+        <NavbarLink href="/contato" className="text-gray-800 hover:text-primary">CONTATO</NavbarLink>
       </NavbarCollapse>
     </Navbar>
   );

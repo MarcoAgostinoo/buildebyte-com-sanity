@@ -8,7 +8,17 @@ export const metadata: Metadata = {
   description: "Análises técnicas sobre LLMs locais, agentes autônomos e o impacto real da IA na engenharia de software.",
 };
 
-async function getIAPosts() {
+interface Post {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  imagem: string;
+  publishedAt: string;
+  author: string;
+}
+
+async function getIAPosts(): Promise<Post[]> {
   // Filtra posts do pilar BYTE que tenham categoria relacionada a IA ou tag IA
   // Ajuste o filtro 'category match' conforme sua taxonomia real no Sanity
   const query = `*[_type == "post" && (title match "IA" || title match "AI" || title match "GPT" || title match "LLM" || categories[]->title match "IA" || categories[]->title match "Inteligência Artificial")] | order(publishedAt desc) {
@@ -30,13 +40,13 @@ export default async function IAPage() {
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         
-        <header className="mb-16 border-b border-[var(--border)] pb-8">
+        <header className="mb-16 border-b border-(--border) pb-8">
           <span className="text-primary font-bold tracking-widest text-xs uppercase mb-2 block">
             Pilar BYTE
           </span>
           <h1 className="text-4xl md:text-6xl font-black text-zinc-900 dark:text-white tracking-tighter uppercase">
             Inteligência <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-blue-500">
               Artificial Real
             </span>
           </h1>
@@ -47,8 +57,8 @@ export default async function IAPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.length > 0 ? (
-            posts.map((post: any) => (
-              <article key={post._id} className="group bg-[var(--card-bg)] border border-[var(--border)] rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+            posts.map((post) => (
+              <article key={post._id} className="group bg-(--card-bg) border border-(--border) rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300">
                 <Link href={`/post/${post.slug}`}>
                   <div className="relative h-48 overflow-hidden">
                     {post.imagem && (

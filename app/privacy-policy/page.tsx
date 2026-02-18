@@ -27,7 +27,7 @@ export default function PrivacyPolicyPage() {
       <div className="max-w-4xl mx-auto">
 
         {/* HEADER */}
-        <header className="mb-12 border-b border-[var(--border)] pb-8">
+        <header className="mb-12 border-b border-(--border) pb-8">
           <div className="flex items-center gap-3 mb-4">
             <span className="bg-green-600/10 text-green-600 dark:text-green-400 border border-green-600/20 text-xs font-bold px-2 py-1 rounded-sm uppercase tracking-widest">
               Política Ativa
@@ -60,7 +60,7 @@ export default function PrivacyPolicyPage() {
             <div className="grid md:grid-cols-2 gap-6">
 
               {/* Coletamos */}
-              <div className="bg-[var(--card-bg)] p-6 rounded-sm border-l-4 border-green-600">
+              <div className="bg-(--card-bg) p-6 rounded-sm border-l-4 border-green-600">
                 <h3 className="font-bold text-lg mb-4">
                   Dados Coletados
                 </h3>
@@ -76,7 +76,7 @@ export default function PrivacyPolicyPage() {
               </div>
 
               {/* Não coletamos */}
-              <div className="bg-[var(--card-bg)] p-6 rounded-sm border-l-4 border-red-600">
+              <div className="bg-(--card-bg) p-6 rounded-sm border-l-4 border-red-600">
                 <h3 className="font-bold text-lg mb-4">
                   Dados Não Coletados
                 </h3>
@@ -93,7 +93,7 @@ export default function PrivacyPolicyPage() {
           </section>
 
           {/* 2 */}
-          <section className="border-t border-[var(--border)] pt-8">
+          <section className="border-t border-(--border) pt-8">
             <h2 className="text-xl font-bold uppercase mb-4">
               02. Cookies & Telemetria
             </h2>
@@ -111,7 +111,7 @@ export default function PrivacyPolicyPage() {
           </section>
 
           {/* 3 */}
-          <section className="border-t border-[var(--border)] pt-8">
+          <section className="border-t border-(--border) pt-8">
             <h2 className="text-xl font-bold uppercase mb-6">
               03. Infraestrutura de Segurança
             </h2>
@@ -123,20 +123,20 @@ export default function PrivacyPolicyPage() {
             </p>
 
             <ul className="grid sm:grid-cols-3 gap-4 text-sm font-mono text-center">
-              <li className="p-4 border border-[var(--border)] rounded bg-zinc-100 dark:bg-zinc-900">
+              <li className="p-4 border border-(--border) rounded bg-zinc-100 dark:bg-zinc-900">
                 TLS 1.3<br/>Obrigatório
               </li>
-              <li className="p-4 border border-[var(--border)] rounded bg-zinc-100 dark:bg-zinc-900">
+              <li className="p-4 border border-(--border) rounded bg-zinc-100 dark:bg-zinc-900">
                 Banco de Dados<br/>Criptografado
               </li>
-              <li className="p-4 border border-[var(--border)] rounded bg-zinc-100 dark:bg-zinc-900">
+              <li className="p-4 border border-(--border) rounded bg-zinc-100 dark:bg-zinc-900">
                 Controle de Acesso<br/>Restritivo
               </li>
             </ul>
           </section>
 
           {/* 4 */}
-          <section className="border-t border-[var(--border)] pt-8">
+          <section className="border-t border-(--border) pt-8">
             <h2 className="text-xl font-bold uppercase mb-4">
               04. Direitos do Titular (LGPD)
             </h2>
@@ -159,7 +159,7 @@ export default function PrivacyPolicyPage() {
           </section>
 
           {/* 5 */}
-          <section className="border-t border-[var(--border)] pt-8">
+          <section className="border-t border-(--border) pt-8">
             <h2 className="text-xl font-bold uppercase mb-4">
               05. Base Legal do Tratamento
             </h2>

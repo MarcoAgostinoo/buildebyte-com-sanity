@@ -10,6 +10,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email inválido' }, { status: 400 });
     }
 
+    if (!writeClient) {
+      return NextResponse.json({ error: 'Erro de configuração: writeClient não disponível' }, { status: 500 });
+    }
+
     // 1. Verifica se já existe esse email no banco (para não duplicar)
     // Aqui usamos o writeClient também, mas poderia ser o client normal
     const existingLead = await writeClient.fetch(

@@ -1,92 +1,153 @@
-# Vetor Estratégico - Portal de Notícias de Tecnologia
+# Vetor Estratégico — Portal Brasileiro de Análise Estratégica
 
-Este é um projeto de blog e portal de notícias de tecnologia focado em análises técnicas, hardware e estratégia digital. O sistema é construído com **Next.js** para alta performance e **Sanity.io** como gerenciador de conteúdo.
+O Vetor Estratégico é um portal brasileiro de análise aplicada sobre tecnologia, defesa, infraestrutura crítica e economia de poder.
+
+Não é um blog de notícias rápidas.
+Não é agregador de conteúdo internacional.
+
+É uma plataforma editorial focada em direção, magnitude e impacto sistêmico, com ênfase no que afeta o Brasil nos próximos 2–3 anos.
+
+O projeto é construído com **Next.js** para alta performance e **Sanity.io** como gerenciador de conteúdo (Headless CMS).
+
+## 🎯 Perfil Editorial do Projeto
+
+O Vetor Estratégico parte de um princípio simples:
+
+> Tecnologia deixou de ser ferramenta. Tornou-se instrumento de poder.
+
+O portal analisa:
+- Defesa e tecnologia militar
+- Infraestrutura crítica (energia, semicondutores, cabos submarinos)
+- Cadeias globais de produção
+- Sanções e instrumentos econômicos estratégicos
+- Disputa tecnológica entre Estados
+- Base industrial de defesa brasileira
+- Soberania tecnológica
+
+Cada artigo segue quatro camadas analíticas:
+1. Fato
+2. Contexto histórico
+3. Impacto sistêmico
+4. Projeção futura
+
+A abordagem é técnica, baseada em dados e orientada ao impacto no Brasil.
 
 ## 🛠 Como o Projeto Funciona
 
 O projeto opera em uma arquitetura moderna e desacoplada (Headless):
 
-1.  **Gerenciamento de Conteúdo (Sanity.io):**
-    -   **Funcionamento:** Atua como o banco de dados de conteúdo (Headless CMS). O Next.js se conecta à API do Sanity para buscar artigos, autores e configurações globais.
-    -   **Variáveis de Ambiente:**
-        -   `NEXT_PUBLIC_SANITY_PROJECT_ID`: Identificador público do projeto no Sanity.
-        -   `NEXT_PUBLIC_SANITY_DATASET`: O conjunto de dados (dataset) onde o conteúdo reside (ex: "production").
-        -   `SANITY_API_READ_TOKEN`: Token de segurança que permite ao Next.js ler os dados do CMS (necessário para operações de build e leitura de dados privados).
+1. **Gerenciamento de Conteúdo (Sanity.io)**
+   - **Funcionamento:** Atua como o banco de dados de conteúdo (Headless CMS). O Next.js se conecta à API do Sanity para buscar artigos, autores e configurações globais.
+   - **Variáveis de Ambiente:**
+     - `NEXT_PUBLIC_SANITY_PROJECT_ID`: Identificador público do projeto no Sanity.
+     - `NEXT_PUBLIC_SANITY_DATASET`: O conjunto de dados (dataset) onde o conteúdo reside (ex: "production").
+     - `SANITY_API_READ_TOKEN`: Token de segurança que permite ao Next.js ler os dados do CMS (necessário para operações de build e leitura de dados privados).
 
-2.  **Frontend (Next.js 15+):**
-    -   **Funcionamento:** Utiliza o **App Router** para roteamento e renderização (SSR/ISR). Consome as variáveis públicas (iniciadas com `NEXT_PUBLIC_`) no cliente e as demais no servidor.
-    -   **Integrações:** Estilização com Tailwind CSS, componentes Flowbite React e feeds RSS para podcasts.
+2. **Frontend (Next.js 15+)**
+   - **Funcionamento:** Utiliza o App Router para roteamento e renderização (SSR/ISR). Consome as variáveis públicas (iniciadas com `NEXT_PUBLIC_`) no cliente e as demais no servidor.
+   - **Integrações:** Estilização com Tailwind CSS, componentes Flowbite React e feeds RSS para podcasts.
 
-3.  **Sistema de Newsletter (Resend):**
-    -   **Funcionamento:** O Resend é o provedor de e-mail transacional. Quando uma newsletter é disparada (rota `/api/admin/send-blast`), o sistema usa a chave de API para autenticar o envio.
-    -   **Variáveis de Ambiente:**
-        -   `RESEND_API_KEY`: Chave privada (API Key) gerada no painel do Resend para autorizar o envio de e-mails.
+3. **Sistema de Newsletter (Resend)**
+   - **Funcionamento:** O Resend é o provedor de e-mail transacional. Quando uma newsletter é disparada (rota `/api/admin/send-blast`), o sistema usa a chave de API para autenticar o envio.
+   - **Variáveis de Ambiente:**
+     - `RESEND_API_KEY`: Chave privada (API Key) gerada no painel do Resend para autorizar o envio de e-mails.
 
-4.  **Segurança e Automação (Cron Jobs):**
-    -   **Funcionamento:** Rotas administrativas sensíveis (como disparo de e-mails em massa) são protegidas para evitar execução pública não autorizada.
-    -   **Variáveis de Ambiente:**
-        -   `MY_CRON_SECRET`: Uma senha forte definida por você. Deve ser enviada no cabeçalho de autorização ou como parâmetro ao chamar rotas administrativas (Cron Jobs).
+4. **Segurança e Automação (Cron Jobs)**
+   - **Funcionamento:** Rotas administrativas sensíveis (como disparo de e-mails em massa) são protegidas para evitar execução pública não autorizada.
+   - **Variáveis de Ambiente:**
+     - `MY_CRON_SECRET`: Uma senha forte definida por você. Deve ser enviada no cabeçalho de autorização ou como parâmetro ao chamar rotas administrativas (Cron Jobs).
 
 ## 🚀 Começando
 
 Para rodar o projeto localmente, siga estes passos:
 
-1.  **Clone o repositório:**
+1. **Clone o repositório**
+   ```bash
+   git clone <URL_DO_REPOSITORIO>
+   cd Vetor-Estrategico-front
+   ```
 
-    ```bash
-    git clone <URL_DO_REPOSITORIO>
-    cd Vetor Estratégico-front
-    ```
+2. **Instale as dependências**
+   ```bash
+   npm install
+   ```
 
-2.  **Instale as dependências:**
+3. **Configure as variáveis de ambiente**
 
-    ```bash
-    npm install
-    ```
+   Crie um arquivo `.env.local` na raiz do projeto e adicione as seguintes variáveis:
 
-3.  **Configure as variáveis de ambiente:**
+   ```env
+   # --- Sanity (CMS) ---
+   NEXT_PUBLIC_SANITY_PROJECT_ID="seu-project-id"
+   NEXT_PUBLIC_SANITY_DATASET="production"
+   SANITY_API_READ_TOKEN="seu-read-token"
 
-    Crie um arquivo `.env.local` na raiz do projeto e adicione as seguintes variáveis. É essencial preencher todas para o funcionamento correto do CMS e do sistema de e-mails.
+   # --- Resend (E-mails) ---
+   RESEND_API_KEY="sua-api-key-do-resend"
 
-    ```env
-    # --- Sanity (CMS) ---
-    NEXT_PUBLIC_SANITY_PROJECT_ID="seu-project-id"
-    NEXT_PUBLIC_SANITY_DATASET="production"
-    SANITY_API_READ_TOKEN="seu-read-token"
+   # --- Segurança (API Routes & Cron Jobs) ---
+   MY_CRON_SECRET="crie-uma-senha-forte-para-proteger-rotas-admin"
+   ```
 
-    # --- Resend (E-mails) ---
-    RESEND_API_KEY="sua-api-key-do-resend"
+4. **Rode o servidor de desenvolvimento**
+   ```bash
+   npm run dev
+   ```
 
-    # --- Segurança (API Routes & Cron Jobs) ---
-    MY_CRON_SECRET="crie-uma-senha-forte-para-proteger-rotas-admin"
-    ```
+   Abra: http://localhost:3000
 
-4.  **Rode o servidor de desenvolvimento:**
+## 🧱 Estrutura do Projeto
 
-    ```bash
-    npm run dev
-    ```
+- `app/` — Rotas, páginas e layouts (App Router)
+- `app/lib/sanity.ts` — Configuração do cliente Sanity
+- `app/components/` — Componentes React reutilizáveis
+- `public/` — Arquivos estáticos
+- `sanity/` — (Opcional) Configuração do Sanity Studio
 
-    Abra [http://localhost:3000](http://localhost:3000) no seu navegador para ver o resultado.
+## 🧭 Estrutura Editorial do Portal
 
-## Estrutura do Projeto
+Seções principais:
+- Defesa
+- Infraestrutura
+- Economia de Poder
+- Brasil Estratégico
+- Tecnologia & Soberania
+- Cenário Global
+- Relatórios Estratégicos
 
--   `app/`: Contém todas as rotas, páginas e layouts (App Router).
--   `app/lib/sanity.ts`: Configuração do cliente Sanity.
--   `app/components/`: Componentes React reutilizáveis.
--   `public/`: Arquivos estáticos.
--   `sanity/`: (Se você tiver o Sanity Studio no mesmo projeto) a configuração do Sanity Studio.
+O foco não é volume de notícias, mas profundidade analítica.
 
-## Tecnologias Utilizadas
+## 🧠 Público-Alvo
 
--   **Core:** [Next.js](https://nextjs.org/), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/)
--   **Estilo:** [Tailwind CSS](https://tailwindcss.com/), [Flowbite React](https://www.flowbite-react.com/)
--   **Dados & CMS:** [Sanity.io](https://www.sanity.io/), [Next-Sanity](https://github.com/sanity-io/next-sanity)
--   **E-mail & Marketing:** [Resend](https://resend.com/)
--   **Utilitários:** [RSS Parser](https://www.npmjs.com/package/rss-parser) (para Podcasts), [Embla Carousel](https://www.embla-carousel.com/)
+- Profissionais de tecnologia
+- Analistas de mercado
+- Estudantes de Relações Internacionais
+- Entusiastas de defesa
+- Empreendedores atentos à macroeconomia
+- Leitores que buscam contexto, não manchetes
 
-## Deploy na Vercel
+## ⚙ Tecnologias Utilizadas
 
-A maneira mais fácil de fazer o deploy do seu aplicativo Next.js é usar a [Plataforma Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) dos criadores do Next.js.
+- **Core:** Next.js, React, TypeScript
+- **Estilo:** Tailwind CSS, Flowbite React
+- **Dados & CMS:** Sanity.io, Next-Sanity
+- **E-mail & Marketing:** Resend
+- **Utilitários:** RSS Parser, Embla Carousel
 
-Confira nossa [documentação de deploy do Next.js](https://nextjs.org/docs/app/building-your-application/deploying) para mais detalhes.
+## 🚀 Deploy na Vercel
+
+A maneira mais simples de fazer o deploy do aplicativo Next.js é utilizando a plataforma Vercel.
+
+Consulte a documentação oficial do Next.js para detalhes sobre build, SSR, ISR e configuração de ambiente em produção.
+
+## 📌 Visão do Projeto
+
+O Vetor Estratégico busca se consolidar como:
+
+- Referência brasileira em análise estratégica aplicada à tecnologia
+- Plataforma de relatórios técnicos aprofundados
+- Fonte consultiva para profissionais e estudantes
+- Núcleo de debate técnico sério sobre poder, infraestrutura e soberania
+
+**Tecnologia. Poder. Direção.**
+
