@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     // 1. Verifica se já existe esse email no banco (para não duplicar)
     // Aqui usamos o writeClient também, mas poderia ser o client normal
     const existingLead = await writeClient.fetch(
-      `*[_type == "lead" && email == $email][0]`,
+      `*[_type == "lead" && email == $email][0]`,   
       { email }
     );
 

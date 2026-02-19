@@ -11,6 +11,7 @@ import { formatDate } from "@/app/lib/utils";
 import { FeaturedPost, CategoryWithPosts, WebStory } from "@/app/lib";
 import PodcastCarousel from "./components/PodcastCarousel";
 import { getPodcastEpisodes, Episode } from "@/app/lib/podcast-service";
+import AffiliateProducts from "./components/AffiliateProducts"; // Verifique se o caminho está correto
 
 export const metadata: Metadata = {
   title: "Vetor Estratégico - Tecnologia, Hardware e Reviews",
@@ -250,7 +251,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* --- 3 SEÇÕES EXTRAS --- */}
+      {/* --- 3 SEÇÕES EXTRAS ---
       <div className="mt-20">
         <Suspense
           fallback={
@@ -262,7 +263,11 @@ export default async function Home() {
           </h2>
           <Ofertas />
         </Suspense>
-      </div>
+      </div> */}
+
+      {/* Seção de ofertas */}
+      <AffiliateProducts />
+
       {/* --- 4. SEÇÃO DE WEB STORIES (ESTILO INSTAGRAM) --- */}
       {webStories.length > 0 && (
         <Suspense

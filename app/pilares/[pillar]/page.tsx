@@ -8,11 +8,6 @@ import type { Metadata } from "next";
 // INTERFACES
 // ---------------------------------------------------------------------------
 
-interface Category {
-  title: string;
-  description?: string;
-}
-
 interface PostCard {
   title: string;
   slug: string;
@@ -21,7 +16,7 @@ interface PostCard {
   imagemLqip?: string;
   publishedAt: string;
   editorialType?: string;
-  categories?: { title: string; slug: string }[];
+  topics?: { title: string; slug: string }[];
   author?: { name: string };
 }
 
@@ -47,20 +42,47 @@ const EDITORIAL_COLORS: Record<string, string> = {
   opiniao:    "bg-orange-600",
 };
 
+// Mapeamento entre o SLUG da URL (kebab-case) e o VALOR no Sanity (snake_case)
+const PILLAR_DATA: Record<string, { title: string; value: string; description: string }> = {
+  "defesa-tecnologia": { 
+    title: "Defesa & Tecnologia", 
+    value: "defesa_tecnologia", 
+    description: "Análises sobre sistemas de defesa, soberania militar e tecnologias de dissuasão." 
+  },
+  "infraestrutura-digital": { 
+    title: "Infraestrutura Digital", 
+    value: "infraestrutura_digital", 
+    description: "Cabos submarinos, datacenters, 5G e a espinha dorsal da conectividade estratégica." 
+  },
+  "ia-automacao": { 
+    title: "IA & Automação", 
+    value: "ia_automacao", 
+    description: "O impacto da inteligência artificial e automação na economia e no poder estatal." 
+  },
+  "economia-poder": { 
+    title: "Economia de Poder", 
+    value: "economia_poder", 
+    description: "Sanções, guerras comerciais, commodities e a geoeconomia como arma." 
+  },
+  "brasil": { 
+    title: "Brasil Estratégico", 
+    value: "brasil", 
+    description: "O papel do Brasil no tabuleiro global, base industrial e soberania nacional." 
+  },
+  "global": { 
+    title: "Cenário Global", 
+    value: "global", 
+    description: "Movimentos geopolíticos, alianças e tensões entre grandes potências." 
+  },
+};
+
 // ---------------------------------------------------------------------------
 // DATA
 // ---------------------------------------------------------------------------
 
-async function getCategory(slug: string): Promise<Category | null> {
-  const query = `*[_type == "category" && slug.current == $slug][0] {
-    title,
-    description
-  }`;
-  return await client.fetch(query, { slug });
-}
-
-async function getCategoryPosts(slug: string): Promise<PostCard[]> {
-  const query = `*[_type == "post" && $slug in categories[]->slug.current] | order(publishedAt desc) {
+async function getPillarPosts(pillarValue: string): Promise<PostCard[]> {
+  // Filtra pelo campo 'pillar' (string) em vez de referência de categoria
+  const query = `*[_type == "post" && pillar == $pillarValue] | order(publishedAt desc) {
     title,
     "slug": slug.current,
     excerpt,
@@ -68,16 +90,14 @@ async function getCategoryPosts(slug: string): Promise<PostCard[]> {
     "imagemLqip": mainImage.asset->metadata.lqip,
     publishedAt,
     editorialType,
-    categories[]->{title, "slug": slug.current},
+    "topics": categories[]->{title, "slug": slug.current},
     "author": author->{ name }
   }`;
-  return await client.fetch(query, { slug });
+  return await client.fetch(query, { pillarValue });
 }
 
 export async function generateStaticParams() {
-  const query = `*[_type == "category"]{ "slug": slug.current }`;
-  const categories = await client.fetch(query);
-  return categories.map((c: { slug: string }) => ({ slug: c.slug }));
+  return Object.keys(PILLAR_DATA).map((slug) => ({ pillar: slug }));
 }
 
 // ---------------------------------------------------------------------------
@@ -87,14 +107,14 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ pillar: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const category = await getCategory(slug);
-  if (!category) return { title: "Categoria não encontrada" };
+  const { pillar } = await params;
+  const data = PILLAR_DATA[pillar];
+  if (!data) return { title: "Pilar não encontrado" };
   return {
-    title: `${category.title} — Vetor Estratégico`,
-    description: category.description || `Artigos sobre ${category.title}`,
+    title: `${data.title} — Vetor Estratégico`,
+    description: data.description,
   };
 }
 
@@ -102,35 +122,33 @@ export async function generateMetadata({
 // PAGE
 // ---------------------------------------------------------------------------
 
-export default async function CategoryPage({
+export default async function PillarPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ pillar: string }>;
 }) {
-  const { slug } = await params;
+  const { pillar } = await params;
+  const data = PILLAR_DATA[pillar];
 
-  const [category, posts] = await Promise.all([
-    getCategory(slug),
-    getCategoryPosts(slug),
-  ]);
-
-  if (!category) notFound();
+  if (!data) notFound();
+  
+  const posts = await getPillarPosts(data.value);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 sm:px-6 lg:px-8">
 
-      {/* ── HEADER DA CATEGORIA ─────────────────────────────────────────── */}
+      {/* ──HEADER DO PILAR EDITORIAL ─────────────────────────────────────────── */}
       <header className="mb-12">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-xs text-foreground/40 font-bold uppercase tracking-widest mb-6">
           <Link href="/" className="hover:text-primary transition-colors">Início</Link>
           <span>›</span>
-          <span className="text-foreground/60">Categorias</span>
+          <span className="text-foreground/60">Pilares</span>
           <span>›</span>
-          <span className="text-primary">{category.title}</span>
+          <span className="text-primary">{data.title}</span>
         </nav>
 
-        {/* Hero da categoria */}
+        {/* Hero do Pilar */}
         <div className="relative overflow-hidden rounded-2xl border border-(--border) bg-(--card-bg) p-8 sm:p-12">
           {/* Gradiente decorativo */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
@@ -138,21 +156,21 @@ export default async function CategoryPage({
           <div className="relative">
             <div className="flex items-start gap-4 mb-4">
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-2xl shrink-0">
-                📂
+                🎯
               </div>
               <div>
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 mb-1">
-                  Categoria
+                  PILAR EDITORIAL
                 </p>
                 <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-foreground leading-tight">
-                  {category.title}
+                  {data.title}
                 </h1>
               </div>
             </div>
 
-            {category.description && (
+            {data.description && (
               <p className="text-base sm:text-lg text-foreground/60 leading-relaxed max-w-2xl">
-                {category.description}
+                {data.description}
               </p>
             )}
 
@@ -169,7 +187,7 @@ export default async function CategoryPage({
       {/* ── GRID DE ARTIGOS ─────────────────────────────────────────────── */}
       {posts.length === 0 ? (
         <div className="text-center py-20 text-foreground/40">
-          <p className="text-lg font-bold">Nenhuma publicação encontrada nesta categoria.</p>
+          <p className="text-lg font-bold">Nenhuma publicação encontrada neste pilar.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -222,10 +240,10 @@ function PostCard({ post }: { post: PostCard }) {
 
       {/* Conteúdo */}
       <div className="flex flex-col flex-1 p-5">
-        {/* Categorias */}
-        {post.categories && post.categories.length > 0 && (
+        {/* Pilares */}
+        {post.topics && post.topics.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-3">
-            {post.categories.map((cat) => (
+            {post.topics.map((cat) => (
               <span
                 key={cat.slug}
                 className="text-[9px] font-bold text-foreground/40 uppercase tracking-widest"

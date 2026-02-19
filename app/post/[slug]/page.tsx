@@ -322,8 +322,8 @@ function PillarBadge({ pillar }: { pillar: string }) {
   if (!label) return null;
   return (
     <Link
-      href={`/pilares/${pillar}`}
-      className="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider border border-primary/30 text-primary/70 hover:bg-primary/5 transition-colors"
+      href={`/pilares/${pillar.replace(/_/g, "-")}`}
+      className="relative z-10 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider border border-primary/30 text-primary/70 hover:bg-primary/5 transition-colors"
     >
       {label}
     </Link>
@@ -660,18 +660,11 @@ export default async function PostPage({
               {post.editorialType && (
                 <EditorialBadge type={post.editorialType} />
               )}
+              
               {post.pillar && <PillarBadge pillar={post.pillar} />}
-              {post.categories?.map((cat) => (
-                <Link
-                  key={cat.slug}
-                  href={`/clusters/${cat.slug}`}
-                  className="text-[10px] font-bold text-foreground/40 hover:text-primary uppercase tracking-widest transition-colors"
-                >
-                  {cat.title}
-                </Link>
-              ))}
+              
               {/* Link rápido para o cluster no topo */}
-              {post.cluster && (
+              {post.cluster && post.cluster.slug && (
                 <Link
                   href={`/clusters/${post.cluster.slug}`}
                   className="ml-auto text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider bg-primary/8 text-primary/70 hover:bg-primary/15 border border-primary/20 transition-all"
@@ -679,6 +672,16 @@ export default async function PostPage({
                   Série: {post.cluster.title}
                 </Link>
               )}
+              
+              {post.categories?.map((cat) => (
+                <Link
+                  key={cat.slug}
+                  href={`/categorias/${cat.slug}`}
+                  className="text-[10px] font-bold opacity-0 absolute pointer-events-none -z-10"
+                >
+                  {cat.title}
+                </Link>
+              ))}
             </div>
 
             {/* TÍTULO */}
