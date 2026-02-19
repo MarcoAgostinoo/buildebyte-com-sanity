@@ -23,13 +23,13 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 py-12 px-6 lg:px-8">
+    <div className="min-h-screen bg-zinc-50 py-12 px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
 
         {/* HEADER */}
         <header className="mb-12 border-b border-(--border) pb-8">
           <div className="flex items-center gap-3 mb-4">
-            <span className="bg-green-600/10 text-green-600 dark:text-green-400 border border-green-600/20 text-xs font-bold px-2 py-1 rounded-sm uppercase tracking-widest">
+            <span className="bg-green-600/10 text-green-600 border border-green-600/20 text-xs font-bold px-2 py-1 rounded-sm uppercase tracking-widest">
               Política Ativa
             </span>
             <span className="text-zinc-400 text-xs font-mono">
@@ -37,19 +37,19 @@ export default function PrivacyPolicyPage() {
             </span>
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-black text-zinc-900 dark:text-white uppercase tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-black text-zinc-900 uppercase tracking-tight">
             Privacidade & <br />
             <span className="text-primary">Proteção de Dados</span>
           </h1>
 
-          <p className="mt-6 text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed">
+          <p className="mt-6 text-lg text-zinc-600 leading-relaxed">
             O Vetor Estratégico adota o princípio da <strong>minimização de dados</strong>.
             Coletamos apenas o estritamente necessário para operação do portal.
             Privacidade não é recurso opcional. É arquitetura.
           </p>
         </header>
 
-        <div className="space-y-14 text-zinc-800 dark:text-zinc-300 leading-relaxed">
+        <div className="space-y-14 text-zinc-800 leading-relaxed">
 
           {/* 1 */}
           <section>
@@ -103,7 +103,7 @@ export default function PrivacyPolicyPage() {
               necessários para funcionamento técnico do portal.
             </p>
 
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 border border-blue-200 dark:border-blue-800 rounded-sm text-sm">
+            <div className="bg-blue-50 p-4 border border-blue-200 rounded-sm text-sm">
               Não utilizamos redes de recomendação invasivas,
               nem scripts de rastreamento comportamental de terceiros
               para monetização baseada em perfil.
@@ -123,13 +123,13 @@ export default function PrivacyPolicyPage() {
             </p>
 
             <ul className="grid sm:grid-cols-3 gap-4 text-sm font-mono text-center">
-              <li className="p-4 border border-(--border) rounded bg-zinc-100 dark:bg-zinc-900">
+              <li className="p-4 border border-(--border) rounded bg-zinc-100">
                 TLS 1.3<br/>Obrigatório
               </li>
-              <li className="p-4 border border-(--border) rounded bg-zinc-100 dark:bg-zinc-900">
+              <li className="p-4 border border-(--border) rounded bg-zinc-100">
                 Banco de Dados<br/>Criptografado
               </li>
-              <li className="p-4 border border-(--border) rounded bg-zinc-100 dark:bg-zinc-900">
+              <li className="p-4 border border-(--border) rounded bg-zinc-100">
                 Controle de Acesso<br/>Restritivo
               </li>
             </ul>
@@ -153,7 +153,7 @@ export default function PrivacyPolicyPage() {
               <li>• Revogar consentimento previamente concedido.</li>
             </ul>
 
-            <p className="mt-6 text-sm text-zinc-600 dark:text-zinc-400">
+            <p className="mt-6 text-sm text-zinc-600">
               As solicitações serão respondidas dentro dos prazos legais aplicáveis.
             </p>
           </section>
@@ -172,7 +172,7 @@ export default function PrivacyPolicyPage() {
           </section>
 
           {/* FOOTER CTA */}
-          <div className="mt-12 bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-900 p-8 rounded-sm text-center">
+          <div className="mt-12 bg-zinc-900 text-zinc-100 p-8 rounded-sm text-center">
             <h3 className="text-2xl font-bold mb-3">
               Solicitação de Privacidade
             </h3>

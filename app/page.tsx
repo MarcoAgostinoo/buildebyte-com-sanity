@@ -11,7 +11,6 @@ import { formatDate } from "@/app/lib/utils";
 import { FeaturedPost, CategoryWithPosts, WebStory } from "@/app/lib";
 import PodcastCarousel from "./components/PodcastCarousel";
 import { getPodcastEpisodes, Episode } from "@/app/lib/podcast-service";
-import AffiliateProducts from "./components/AffiliateProducts"; // Verifique se o caminho está correto
 
 export const metadata: Metadata = {
   title: "Vetor Estratégico - Tecnologia, Hardware e Reviews",
@@ -111,7 +110,7 @@ export default async function Home() {
     .slice(0, 5);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 bg-white dark:bg-zinc-950">
+    <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 bg-white">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -204,14 +203,14 @@ export default async function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           
           {/* LADO ESQUERDO: MAIS POPULARES */}
-          <aside className="lg:col-span-3 lg:border-r lg:border-zinc-200 lg:dark:border-zinc-800 lg:pr-12">
+          <aside className="lg:col-span-3 lg:border-r lg:border-zinc-200 lg:pr-12">
             <h2 className="text-[#0070f3] text-xl font-black mb-8 uppercase tracking-tighter">Mais Populares</h2>
             <div className="flex flex-col gap-8">
               {popularPosts.map((post: CategoryWithPosts['posts'][number], index: number) => (
                 <article key={post._id} className="flex gap-4 group">
-                  <span className="text-3xl font-black text-zinc-200 dark:text-zinc-800 group-hover:text-[#0070f3] leading-none transition-colors">{index + 1}</span>
+                  <span className="text-3xl font-black text-zinc-200 group-hover:text-[#0070f3] leading-none transition-colors">{index + 1}</span>
                   <Link href={`/post/${post.slug}`}>
-                    <h4 className="font-bold text-[15px] leading-tight text-zinc-800 dark:text-zinc-100 group-hover:text-[#0070f3] transition-colors">{post.title}</h4>
+                    <h4 className="font-bold text-[15px] leading-tight text-zinc-800 group-hover:text-[#0070f3] transition-colors">{post.title}</h4>
                   </Link>
                 </article>
               ))}
@@ -234,10 +233,10 @@ export default async function Home() {
                     <span className="absolute bottom-3 left-3 bg-[#0070f3] text-white text-[10px] font-black px-2 py-0.5 uppercase tracking-widest">PODCAST</span>
                   </a>
                   <a href={ep.link} target="_blank" rel="noopener noreferrer">
-                    <h3 className="text-2xl font-black leading-tight text-zinc-900 dark:text-white group-hover:text-[#0070f3] transition-colors mb-2">{ep.title}</h3>
+                    <h3 className="text-2xl font-black leading-tight text-zinc-900 group-hover:text-[#0070f3] transition-colors mb-2">{ep.title}</h3>
                   </a>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400 font-medium">
-                    Postado em {formatDate(ep.pubDate)} • <span className="text-zinc-800 dark:text-zinc-200">Build & Byte Cast</span>
+                  <p className="text-sm text-zinc-500 font-medium">
+                    Postado em {formatDate(ep.pubDate)} • <span className="text-zinc-800">Build & Byte Cast</span>
                   </p>
                 </article>
               ))}
@@ -251,28 +250,22 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* --- 3 SEÇÕES EXTRAS ---
+      {/* --- 3 SEÇÕES EXTRAS --- */}
       <div className="mt-20">
         <Suspense
           fallback={
-            <div className="h-40 animate-pulse bg-gray-100 dark:bg-zinc-800 rounded" />
+            <div className="h-40 animate-pulse bg-gray-100 rounded" />
           }
         >
-          <h2 className="text-2xl font-black uppercase tracking-tighter mt-12 mb-8 text-center">
-            Mais Ofertas em Tempo Real
-          </h2>
           <Ofertas />
         </Suspense>
-      </div> */}
-
-      {/* Seção de ofertas */}
-      <AffiliateProducts />
-
+      </div>
+      
       {/* --- 4. SEÇÃO DE WEB STORIES (ESTILO INSTAGRAM) --- */}
       {webStories.length > 0 && (
         <Suspense
           fallback={
-            <div className="h-60 animate-pulse bg-gray-100 dark:bg-zinc-800 rounded mt-10" />
+            <div className="h-60 animate-pulse bg-gray-100 rounded mt-10" />
           }
         >
           <WebStoriesCarousel webStories={webStories} />
@@ -282,7 +275,7 @@ export default async function Home() {
       <div className="mt-10">
         <Suspense
           fallback={
-            <div className="h-96 animate-pulse bg-gray-100 dark:bg-zinc-800 rounded" />
+            <div className="h-96 animate-pulse bg-gray-100 rounded" />
           }
         >
           <LatestPosts />
@@ -294,9 +287,9 @@ export default async function Home() {
       </Suspense>
 
       {/* --- 5. DISCLAIMER DE AFILIADOS (P0) --- */}
-      <div className="mt-16 py-6 border-t border-zinc-200 dark:border-zinc-800 text-center">
-        <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-3xl mx-auto font-mono">
-          <span className="font-bold text-orange-600 dark:text-orange-500">
+      <div className="mt-16 py-6 border-t border-zinc-200 text-center">
+        <p className="text-xs text-zinc-500 max-w-3xl mx-auto font-mono">
+          <span className="font-bold text-orange-600">
             NOTA DE TRANSPARÊNCIA:
           </span>{" "}
           O Vetor Estratégico participa de programas de afiliados. Ao comprar através

@@ -56,7 +56,7 @@ const pillars = [
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 py-12 px-6 lg:px-8">
+    <div className="min-h-screen bg-zinc-50 py-12 px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
 
         {/* HEADER */}
@@ -65,14 +65,14 @@ export default function AboutPage() {
             VetorEstratégico.System
           </span>
 
-          <h1 className="text-4xl md:text-6xl font-black text-zinc-900 dark:text-white tracking-tight">
+          <h1 className="text-4xl md:text-6xl font-black text-zinc-900 tracking-tight">
             Não analisamos o evento. <br />
             <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-700 via-indigo-600 to-red-600">
               Analisamos o vetor.
             </span>
           </h1>
 
-          <p className="mt-6 text-lg text-zinc-600 dark:text-zinc-400 max-w-3xl leading-relaxed">
+          <p className="mt-6 text-lg text-zinc-600 max-w-3xl leading-relaxed">
             O <strong>Vetor Estratégico</strong> é um portal brasileiro de análise
             sobre tecnologia, defesa, infraestrutura e poder global.
             Nosso foco não é a manchete.
@@ -84,7 +84,7 @@ export default function AboutPage() {
         {/* MISSÃO */}
         <section className="mb-20 grid md:grid-cols-12 gap-12 items-start">
 
-          <div className="md:col-span-7 space-y-6 text-zinc-800 dark:text-zinc-300 leading-relaxed text-lg">
+          <div className="md:col-span-7 space-y-6 text-zinc-800 leading-relaxed text-lg">
             <p>
               Tecnologia deixou de ser ferramenta. Tornou-se instrumento de poder.
             </p>
@@ -135,7 +135,7 @@ export default function AboutPage() {
 
         {/* PILARES */}
         <section>
-          <h2 className="text-3xl font-bold text-zinc-900 dark:text-white mb-8">
+          <h2 className="text-3xl font-bold text-zinc-900 mb-8">
             Pilares do Vetor Estratégico
           </h2>
 
@@ -151,7 +151,7 @@ export default function AboutPage() {
                 <h3 className="text-lg font-bold mt-2 mb-2">
                   {pillar.title}
                 </h3>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                <p className="text-sm text-zinc-600">
                   {pillar.desc}
                 </p>
               </div>
@@ -165,7 +165,7 @@ export default function AboutPage() {
             Tecnologia. Poder. Direção.
           </h2>
 
-          <p className="text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">
+          <p className="text-zinc-600 max-w-2xl mx-auto">
             Enquanto muitos discutem o que aconteceu,
             analisamos o que pode acontecer.
             Nosso compromisso é clareza estratégica para quem

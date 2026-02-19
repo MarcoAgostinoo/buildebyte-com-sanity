@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 
 export default function LicensingPage() {
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 py-12 px-6 lg:px-8">
+    <div className="min-h-screen bg-zinc-50 py-12 px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
 
         {/* HEADER */}
@@ -31,17 +31,17 @@ export default function LicensingPage() {
             Documento Jurídico Oficial
           </span>
 
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-zinc-900 dark:text-white uppercase mt-6">
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-zinc-900 uppercase mt-6">
             Licenciamento & <br />
             <span className="text-primary">Propriedade Intelectual</span>
           </h1>
 
-          <p className="mt-4 text-zinc-600 dark:text-zinc-400 font-medium">
+          <p className="mt-4 text-zinc-600 font-medium">
             Política formal de uso, reprodução e exploração dos ativos editoriais do Vetor Estratégico.
           </p>
         </header>
 
-        <div className="space-y-14 text-zinc-800 dark:text-zinc-300 leading-relaxed">
+        <div className="space-y-14 text-zinc-800 leading-relaxed">
 
           {/* 1 */}
           <section className="relative pl-6">
@@ -55,7 +55,7 @@ export default function LicensingPage() {
               Todo conteúdo original publicado pelo <strong>Vetor Estratégico</strong> —
               incluindo análises técnicas, relatórios, gráficos, estrutura editorial,
               metodologia analítica e a marca registrada
-              <em className="text-primary font-semibold"> “Visão do Analista™” </em>
+              <em className="text-primary font-semibold"> "Visão do Analista™" </em>
               — é protegido pela legislação brasileira de direitos autorais
               (Lei nº 9.610/98) e tratados internacionais aplicáveis.
             </p>
@@ -75,8 +75,8 @@ export default function LicensingPage() {
               02. Uso Não Autorizado
             </h2>
 
-            <div className="bg-red-50 dark:bg-red-900/10 p-6 border border-red-200 dark:border-red-900/40 rounded-sm">
-              <p className="font-semibold mb-4 text-red-600 dark:text-red-400 uppercase text-sm">
+            <div className="bg-red-50 p-6 border border-red-200 rounded-sm">
+              <p className="font-semibold mb-4 text-red-600 uppercase text-sm">
                 É expressamente proibido:
               </p>
 
@@ -89,7 +89,7 @@ export default function LicensingPage() {
               </ul>
             </div>
 
-            <p className="mt-6 text-sm text-zinc-600 dark:text-zinc-400">
+            <p className="mt-6 text-sm text-zinc-600">
               Monitoramos padrões automatizados de coleta de dados.
               Violações poderão resultar em medidas técnicas e jurídicas cabíveis.
             </p>
@@ -117,9 +117,9 @@ export default function LicensingPage() {
               Modelo de atribuição recomendado:
             </p>
 
-            <blockquote className="bg-zinc-100 dark:bg-zinc-900 border-l-4 border-primary p-6 rounded-r-md mt-4">
+            <blockquote className="bg-zinc-100 border-l-4 border-primary p-6 rounded-r-md mt-4">
               <p className="italic">
-                “Tecnologia não é neutra. Ela desloca poder.”
+                "Tecnologia não é neutra. Ela desloca poder."
               </p>
               <cite className="block mt-4 text-sm font-bold not-italic">
                 — Vetor Estratégico, 2026
@@ -146,7 +146,7 @@ export default function LicensingPage() {
               A responsabilidade intelectual é exclusivamente humana.
             </p>
 
-            <p className="mt-4 text-sm text-zinc-600 dark:text-zinc-400">
+            <p className="mt-4 text-sm text-zinc-600">
               A reprodução para treinamento de modelos de linguagem
               requer contrato específico de licenciamento.
             </p>
@@ -160,7 +160,7 @@ export default function LicensingPage() {
               05. Transparência Comercial
             </h2>
 
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
+            <p className="text-sm text-zinc-600">
               O Vetor Estratégico pode participar de programas de afiliados.
               Links promocionais são claramente identificados.
               A remuneração não influencia metodologia, análise ou conclusão editorial.
@@ -174,7 +174,7 @@ export default function LicensingPage() {
               Licenciamento Comercial
             </h2>
 
-            <p className="text-zinc-600 dark:text-zinc-400">
+            <p className="text-zinc-600">
               Para republicação integral, relatórios corporativos,
               uso acadêmico ampliado ou treinamento de sistemas de IA,
               entre em contato com a equipe editorial.

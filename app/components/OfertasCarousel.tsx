@@ -5,29 +5,59 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { FaChevronLeft, FaChevronRight, FaShoppingCart, FaStore } from "react-icons/fa";
 import Image from "next/image";
-import { AFFILIATE_PRODUCTS_MAP } from "@/app/lib/products-config";
+import { client } from "@/app/lib/sanity";
+import imageUrlBuilder from "@sanity/image-url";
 
-interface OfertaItem {
-  _id: string;
-  title: string;
-  imagem: string;
-  price: number;
-  storeName: string;
-  affiliateLink: string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const builder = imageUrlBuilder(client as any);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function urlFor(source: any) {
+  return builder.image(source).width(400).height(400).fit("fillmax").url();
 }
 
-// Dados estáticos iniciais — renderiza imediatamente com títulos e fallback de imagem
-const STATIC_OFERTAS: OfertaItem[] = AFFILIATE_PRODUCTS_MAP.map(p => ({
-  _id: p.mlbId,
-  title: p.title,
-  imagem: p.imagemFallback,
-  price: 0,
-  storeName: "Mercado Livre",
-  affiliateLink: p.affiliateLink,
-}));
+interface Oferta {
+  _id: string;
+  title: string;
+  price: number;
+  originalPrice?: number;
+  installments?: string;
+  storeName?: string;
+  affiliateLink: string;
+  mainImage?: object;
+  description?: string;
+}
+
+const QUERY = `*[_type == "oferta"] | order(publishedAt desc) {
+  _id, title, price, originalPrice, installments,
+  storeName, affiliateLink, mainImage, description
+}`;
+
+function formatMoney(value: number) {
+  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
+}
+
+function calcDiscount(original: number, current: number) {
+  return Math.round(((original - current) / original) * 100);
+}
+
+function SkeletonCard() {
+  return (
+    <div className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_25%] min-w-0 pl-4 py-4">
+      <div className="flex flex-col bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden h-full animate-pulse">
+        <div className="aspect-square bg-zinc-100 dark:bg-zinc-800" />
+        <div className="p-4 flex flex-col gap-3">
+          <div className="h-3 bg-zinc-200 dark:bg-zinc-700 rounded w-full" />
+          <div className="h-3 bg-zinc-200 dark:bg-zinc-700 rounded w-3/4" />
+          <div className="h-6 bg-zinc-200 dark:bg-zinc-700 rounded w-1/2 mt-2" />
+          <div className="h-9 bg-zinc-200 dark:bg-zinc-700 rounded w-full mt-auto" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function OfertasCarousel() {
-  const [ofertas, setOfertas] = useState<OfertaItem[]>(STATIC_OFERTAS);
+  const [ofertas, setOfertas] = useState<Oferta[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
@@ -38,142 +68,146 @@ export function OfertasCarousel() {
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
-  // Busca direta do browser → ML API aceita CORS, sem passar pelo servidor Next.js
   useEffect(() => {
-    const ids = AFFILIATE_PRODUCTS_MAP.map(p => p.mlbId);
-
-    Promise.all(
-      ids.map(async (mlbId) => {
-        try {
-          const res = await fetch(
-            `https://api.mercadolibre.com/items/${mlbId}?attributes=id,title,price,thumbnail,thumbnail_id,permalink`
-          );
-          if (!res.ok) return null;
-          const item = await res.json();
-          const mapping = AFFILIATE_PRODUCTS_MAP.find(p => p.mlbId === item.id);
-
-          const imagem = item.thumbnail_id
-            ? `https://http2.mlstatic.com/D_NQ_NP_${item.thumbnail_id}-V.jpg`
-            : item.thumbnail?.replace("-I.jpg", "-O.jpg") || mapping?.imagemFallback || "";
-
-          return {
-            _id: item.id,
-            title: item.title,
-            imagem,
-            price: item.price,
-            storeName: "Mercado Livre",
-            affiliateLink: mapping?.affiliateLink || item.permalink,
-          } as OfertaItem;
-        } catch {
-          return null;
-        }
-      })
-    ).then(results => {
-      const valid = results.filter((r): r is OfertaItem => r !== null);
-      if (valid.length > 0) setOfertas(valid);
-    }).finally(() => setLoading(false));
+    client.fetch(QUERY)
+      .then((data: Oferta[]) => setOfertas(data))
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
-  const formatMoney = (value: number) =>
-    new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
-
   return (
-    <div className="relative group/carousel max-w-7xl mx-auto px-4">
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex touch-pan-y -ml-4">
-          {ofertas.map((oferta) => (
-            <div
-              key={oferta._id}
-              className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_25%] min-w-0 pl-4 py-4"
-            >
-              <article className="flex flex-col bg-white dark:bg-neutral-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden hover:border-primary transition-colors duration-300 shadow-sm h-full">
+    <div className="w-full">
+      {/* Aviso legal */}
+      <div className="relative group/carousel max-w-7xl mx-auto px-4">
+        <div className="overflow-hidden" ref={emblaRef}>
+          <div className="flex touch-pan-y -ml-4">
 
-                {/* Imagem */}
-                <div className="relative aspect-[4/3] bg-white p-4">
-                  <div className="absolute top-2 left-2 z-10 bg-black/80 text-white text-[10px] px-2 py-1 rounded flex items-center gap-1">
-                    <FaStore /> {oferta.storeName}
-                  </div>
-                  <a
-                    href={oferta.affiliateLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block w-full h-full relative"
-                  >
-                    {oferta.imagem ? (
-                      <Image
-                        src={oferta.imagem}
-                        alt={oferta.title}
-                        fill
-                        className="object-contain hover:scale-105 transition-transform duration-300"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                        unoptimized // imagens externas do ML, sem necessidade de otimização Next
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-neutral-800 rounded">
-                        <FaStore className="text-4xl text-gray-300" />
-                      </div>
-                    )}
-                  </a>
-                </div>
+            {loading
+              ? Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)
+              : ofertas.map((oferta) => {
+                  const hasDiscount = !!oferta.originalPrice && oferta.originalPrice > oferta.price;
+                  const discount    = hasDiscount ? calcDiscount(oferta.originalPrice!, oferta.price) : 0;
+                  const imgUrl      = oferta.mainImage ? urlFor(oferta.mainImage) : null;
 
-                {/* Conteúdo */}
-                <div className="p-4 flex flex-col grow">
-                  <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-100 line-clamp-2 min-h-[2.5rem] mb-2">
-                    <a
-                      href={oferta.affiliateLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-primary"
+                  return (
+                    <div
+                      key={oferta._id}
+                      className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_25%] min-w-0 pl-4 py-4"
                     >
-                      {oferta.title}
-                    </a>
-                  </h3>
+                      <article className="flex flex-col bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-lg hover:border-zinc-400 dark:hover:border-zinc-600 transition-all duration-300 h-full">
 
-                  {/* Preço */}
-                  <div className="mt-auto mb-3">
-                    {oferta.price > 0 ? (
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-lg font-bold text-green-600 dark:text-green-500">
-                          {formatMoney(oferta.price)}
-                        </span>
-                        <span className="text-xs text-gray-500">à vista</span>
-                      </div>
-                    ) : (
-                      <span className={`text-sm ${loading ? "text-gray-300 animate-pulse" : "text-gray-400 italic"}`}>
-                        {loading ? "Carregando..." : "Ver preço no site"}
-                      </span>
-                    )}
-                  </div>
+                        {/* Imagem */}
+                        <div className="relative aspect-square bg-zinc-50 dark:bg-zinc-950 p-4">
+                          {/* Badge loja */}
+                          <div className="absolute top-2 left-2 z-10 bg-black/70 text-white text-[10px] px-2 py-1 rounded flex items-center gap-1">
+                            <FaStore size={9} />
+                            {oferta.storeName || "Mercado Livre"}
+                          </div>
 
-                  {/* Botão */}
-                  <a
-                    href={oferta.affiliateLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-2 rounded flex items-center justify-center gap-2 transition-colors text-sm"
-                  >
-                    <FaShoppingCart />
-                    Pegar Promoção
-                  </a>
-                </div>
-              </article>
-            </div>
-          ))}
+                          {/* Badge desconto */}
+                          {discount > 0 && (
+                            <div className="absolute top-2 right-2 z-10 bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded-full">
+                              -{discount}%
+                            </div>
+                          )}
+
+                          <a
+                            href={oferta.affiliateLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block w-full h-full relative"
+                          >
+                            {imgUrl ? (
+                              <Image
+                                src={imgUrl}
+                                alt={oferta.title}
+                                fill
+                                className="object-contain hover:scale-105 transition-transform duration-300"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <FaStore className="text-4xl text-zinc-300 dark:text-zinc-700" />
+                              </div>
+                            )}
+                          </a>
+                        </div>
+
+                        {/* Conteúdo */}
+                        <div className="p-4 flex flex-col flex-1">
+                          <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100 line-clamp-2 min-h-[2.5rem] mb-2">
+                            <a
+                              href={oferta.affiliateLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="hover:text-[#0070f3] transition-colors"
+                            >
+                              {oferta.title}
+                            </a>
+                          </h3>
+
+                          {oferta.description && (
+                            <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-2 mb-2">
+                              {oferta.description}
+                            </p>
+                          )}
+
+                          {/* Preço */}
+                          <div className="mt-auto mb-4">
+                            {hasDiscount && (
+                              <p className="text-xs text-zinc-400 line-through">
+                                {formatMoney(oferta.originalPrice!)}
+                              </p>
+                            )}
+                            <div className="flex items-baseline gap-1 flex-wrap">
+                              <span className="text-xl font-black text-green-600 dark:text-green-400">
+                                {formatMoney(oferta.price)}
+                              </span>
+                              <span className="text-[10px] text-zinc-400">*</span>
+                            </div>
+                            {oferta.installments && (
+                              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                                {oferta.installments}
+                              </p>
+                            )}
+                          </div>
+
+                          {/* Botão */}
+                          <a
+                            href={oferta.affiliateLink}
+                            target="_blank"
+                            rel="noopener noreferrer sponsored"
+                            className="w-full bg-yellow-400 hover:bg-yellow-500 text-zinc-900 font-bold py-2 rounded-lg flex items-center justify-center gap-2 transition-colors text-sm"
+                          >
+                            <FaShoppingCart size={13} />
+                            Pegar Promoção
+                          </a>
+                        </div>
+                      </article>
+                    </div>
+                  );
+                })}
+          </div>
         </div>
+
+        {/* Setas */}
+        <button
+          onClick={scrollPrev}
+          className="absolute top-1/2 -left-2 md:-left-4 -translate-y-1/2 p-2 bg-white dark:bg-zinc-800 rounded-full shadow-lg text-zinc-700 dark:text-zinc-200 hover:bg-yellow-400 hover:text-zinc-900 transition-all z-20"
+        >
+          <FaChevronLeft />
+        </button>
+        <button
+          onClick={scrollNext}
+          className="absolute top-1/2 -right-2 md:-right-4 -translate-y-1/2 p-2 bg-white dark:bg-zinc-800 rounded-full shadow-lg text-zinc-700 dark:text-zinc-200 hover:bg-yellow-400 hover:text-zinc-900 transition-all z-20"
+        >
+          <FaChevronRight />
+        </button>
       </div>
 
-      <button
-        onClick={scrollPrev}
-        className="absolute top-1/2 -left-2 md:-left-4 -translate-y-1/2 p-2 bg-white rounded-full shadow-lg text-primary hover:bg-primary hover:text-white transition-all z-20"
-      >
-        <FaChevronLeft />
-      </button>
-      <button
-        onClick={scrollNext}
-        className="absolute top-1/2 -right-2 md:-right-4 -translate-y-1/2 p-2 bg-white rounded-full shadow-lg text-primary hover:bg-primary hover:text-white transition-all z-20"
-      >
-        <FaChevronRight />
-      </button>
+      <p className="text-xs text-zinc-400 mt-2 text-center font-mono">
+        * Preços atualizados manualmente • Links de afiliado — podemos receber comissão sem custo adicional para você
+      </p>
     </div>
   );
 }
