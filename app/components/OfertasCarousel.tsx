@@ -1,21 +1,21 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { FaChevronLeft, FaChevronRight, FaShoppingCart, FaStore } from "react-icons/fa";
 import Image from "next/image";
 import { client } from "@/app/lib/sanity";
-import imageUrlBuilder from "@sanity/image-url";
+import { createImageUrlBuilder } from "@sanity/image-url";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const builder = imageUrlBuilder(client as any);
+const builder = createImageUrlBuilder(client as any);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function urlFor(source: any) {
   return builder.image(source).width(400).height(400).fit("fillmax").url();
 }
 
-interface Oferta {
+export interface Oferta {
   _id: string;
   title: string;
   price: number;
@@ -27,11 +27,6 @@ interface Oferta {
   description?: string;
 }
 
-const QUERY = `*[_type == "oferta"] | order(publishedAt desc) {
-  _id, title, price, originalPrice, installments,
-  storeName, affiliateLink, mainImage, description
-}`;
-
 function formatMoney(value: number) {
   return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
 }
@@ -40,26 +35,7 @@ function calcDiscount(original: number, current: number) {
   return Math.round(((original - current) / original) * 100);
 }
 
-function SkeletonCard() {
-  return (
-    <div className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_25%] min-w-0 pl-4 py-4">
-      <div className="flex flex-col bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden h-full animate-pulse">
-        <div className="aspect-square bg-zinc-100 dark:bg-zinc-800" />
-        <div className="p-4 flex flex-col gap-3">
-          <div className="h-3 bg-zinc-200 dark:bg-zinc-700 rounded w-full" />
-          <div className="h-3 bg-zinc-200 dark:bg-zinc-700 rounded w-3/4" />
-          <div className="h-6 bg-zinc-200 dark:bg-zinc-700 rounded w-1/2 mt-2" />
-          <div className="h-9 bg-zinc-200 dark:bg-zinc-700 rounded w-full mt-auto" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function OfertasCarousel() {
-  const [ofertas, setOfertas] = useState<Oferta[]>([]);
-  const [loading, setLoading] = useState(true);
-
+export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true, align: "start", slidesToScroll: 1 },
     [Autoplay({ delay: 5000, stopOnInteraction: false })]
@@ -68,13 +44,6 @@ export function OfertasCarousel() {
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
-  useEffect(() => {
-    client.fetch(QUERY)
-      .then((data: Oferta[]) => setOfertas(data))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, []);
-
   return (
     <div className="w-full">
       {/* Aviso legal */}
@@ -82,9 +51,7 @@ export function OfertasCarousel() {
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex touch-pan-y -ml-4">
 
-            {loading
-              ? Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)
-              : ofertas.map((oferta) => {
+            {ofertas.map((oferta) => {
                   const hasDiscount = !!oferta.originalPrice && oferta.originalPrice > oferta.price;
                   const discount    = hasDiscount ? calcDiscount(oferta.originalPrice!, oferta.price) : 0;
                   const imgUrl      = oferta.mainImage ? urlFor(oferta.mainImage) : null;

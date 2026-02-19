@@ -1,7 +1,15 @@
 // app/components/Ofertas.tsx
+import { client } from "@/app/lib/sanity";
 import { OfertasCarousel } from './OfertasCarousel';
 
-export default function Ofertas() {
+const QUERY = `*[_type == "oferta"] | order(publishedAt desc) {
+  _id, title, price, originalPrice, installments,
+  storeName, affiliateLink, mainImage, description
+}`;
+
+export default async function Ofertas() {
+  const ofertas = await client.fetch(QUERY, {}, { next: { revalidate: 3600 } });
+
   return (
     <section className="py-12 border-y border-(--border) bg-linear-to-b from-transparent via-blue-50/5 to-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,7 +44,7 @@ export default function Ofertas() {
         {/* Carousel */}
         <div className="relative p-1 rounded-[2.5rem] bg-(--border)/30 shadow-inner">
           <div className="bg-(--card-bg) rounded-[2.2rem] p-4 sm:p-8 border border-(--border) shadow-2xl">
-            <OfertasCarousel />
+            <OfertasCarousel ofertas={ofertas} />
           </div>
         </div>
 

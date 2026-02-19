@@ -43,8 +43,6 @@ export default function Header() {
         <NavbarLink href="/" className="text-gray-800 hover:text-primary">INÍCIO</NavbarLink>
         <NavbarLink href="/destaques" className="text-gray-800 hover:text-primary">DESTAQUES</NavbarLink>
         <NavbarLink href="/videos" className="text-gray-800 hover:text-primary">VIDEOS</NavbarLink>
-        <NavbarLink href="/achados" className="text-gray-800 hover:text-primary">ACHADOS</NavbarLink>
-        <NavbarLink href="/ia" className="text-gray-800 hover:text-primary">IA</NavbarLink>
         <NavbarLink href="/mundo" className="text-gray-800 hover:text-primary">MUNDO</NavbarLink>
         <NavbarLink href="/contato" className="text-gray-800 hover:text-primary">CONTATO</NavbarLink>
       </NavbarCollapse>
