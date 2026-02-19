@@ -1,27 +1,58 @@
 // app/api/ml-products/route.ts
-// Proxy server-side: faz o fetch com token OAuth, sem CORS
-
 import { NextRequest, NextResponse } from "next/server";
 
+// Cache em memória do token (válido por 6h)
+let cachedToken: string | null = null;
+let tokenExpiry = 0;
+
 async function getAccessToken(): Promise<string | null> {
-  const appId     = process.env.ML_APP_ID;
-  const appSecret = process.env.ML_SECRET;
-  if (!appId || !appSecret) return null;
+  // Retorna token cacheado se ainda válido
+  if (cachedToken && Date.now() < tokenExpiry) return cachedToken;
 
-  const res = await fetch("https://api.mercadolibre.com/oauth/token", {
-    method:  "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body:    new URLSearchParams({
-      grant_type:    "client_credentials",
-      client_id:     appId,
-      client_secret: appSecret,
-    }).toString(),
-    cache: "no-store",
-  });
+  const appId        = process.env.ML_APP_ID;
+  const appSecret    = process.env.ML_SECRET;
+  const refreshToken = process.env.ML_REFRESH_TOKEN;
 
-  if (!res.ok) return null;
-  const data = await res.json();
-  return data.access_token ?? null;
+  if (!appId || !appSecret || !refreshToken) {
+    console.error("[ML] Variáveis de ambiente faltando");
+    return null;
+  }
+
+  try {
+    const res = await fetch("https://api.mercadolibre.com/oauth/token", {
+      method:  "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body:    new URLSearchParams({
+        grant_type:    "refresh_token",
+        client_id:     appId,
+        client_secret: appSecret,
+        refresh_token: refreshToken,
+      }).toString(),
+      cache: "no-store",
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error("[ML] Erro ao renovar token:", data);
+      return null;
+    }
+
+    cachedToken = data.access_token;
+    // Renova 10min antes de expirar
+    tokenExpiry = Date.now() + (data.expires_in - 600) * 1000;
+
+    // Atualiza o refresh_token se vier um novo
+    if (data.refresh_token) {
+      process.env.ML_REFRESH_TOKEN = data.refresh_token;
+    }
+
+    console.log("[ML] ✅ Token renovado com sucesso");
+    return cachedToken;
+  } catch (err) {
+    console.error("[ML] Exceção ao renovar token:", err);
+    return null;
+  }
 }
 
 export async function GET(req: NextRequest) {
@@ -29,18 +60,19 @@ export async function GET(req: NextRequest) {
   if (!ids) return NextResponse.json([], { status: 400 });
 
   const token = await getAccessToken();
-
-  const headers: Record<string, string> = { Accept: "application/json" };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
+  if (!token) return NextResponse.json([], { status: 401 });
 
   try {
     const res = await fetch(
       `https://api.mercadolibre.com/items?ids=${ids}&attributes=id,title,price,original_price,thumbnail`,
-      { headers, next: { revalidate: 3600 } }
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        next: { revalidate: 3600 },
+      }
     );
 
     if (!res.ok) {
-      console.error("[ML Proxy] status:", res.status, await res.text());
+      console.error("[ML] Erro nos itens:", res.status);
       return NextResponse.json([], { status: res.status });
     }
 
@@ -50,19 +82,25 @@ export async function GET(req: NextRequest) {
       .filter((e) => e.code === 200)
       .map((e) => {
         const b = e.body as {
-          id: string; title: string; price: number;
-          original_price: number | null; thumbnail: string;
+          id: string;
+          title: string;
+          price: number;
+          original_price: number | null;
+          thumbnail: string;
         };
         return {
-          id: b.id, title: b.title, price: b.price,
+          id:             b.id,
+          title:          b.title,
+          price:          b.price,
           original_price: b.original_price ?? null,
-          thumbnail: b.thumbnail,
+          thumbnail:      b.thumbnail,
         };
       });
 
+    console.log(`[ML] ✅ ${products.length}/${ids.split(",").length} produtos retornados`);
     return NextResponse.json(products);
   } catch (err) {
-    console.error("[ML Proxy] erro:", err);
+    console.error("[ML] Exceção:", err);
     return NextResponse.json([], { status: 500 });
   }
 }

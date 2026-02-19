@@ -1,6 +1,5 @@
 "use client";
 // app/components/AffiliateProducts.tsx
-// Busca via proxy interno (/api/ml-product) para evitar bloqueio CORS do ML
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -68,17 +67,16 @@ export default function AffiliateProducts({ category, title }: Props) {
   useEffect(() => {
     const ids = filtered.map((p) => p.itemId).join(",");
 
-    // Chama nossa API route interna — ela faz o fetch server-side sem CORS
     fetch(`/api/ml-products?ids=${ids}`)
       .then((r) => r.json())
       .then((data: Array<{ id: string; title: string; price: number; original_price: number | null; thumbnail: string }>) => {
         const loaded: MLProduct[] = data
-          .filter((item) => item && item.title)
+          .filter((item) => item?.title)
           .map((item) => {
             const affiliate = filtered.find((p) => p.itemId === item.id)!;
             return {
               ...item,
-              thumbnail: item.thumbnail?.replace("I.jpg", "O.jpg") ?? "",
+              thumbnail:    item.thumbnail?.replace("I.jpg", "O.jpg") ?? "",
               affiliateLink: affiliate.affiliateLink,
             };
           });
