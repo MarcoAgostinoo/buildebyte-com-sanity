@@ -47,7 +47,7 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
   return (
     <div className="w-full">
       {/* Aviso legal */}
-      <div className="relative group/carousel max-w-7xl mx-auto px-4">
+      <div className="relative group/carousel max-w-9xl mx-auto px-4">
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex touch-pan-y -ml-4">
 

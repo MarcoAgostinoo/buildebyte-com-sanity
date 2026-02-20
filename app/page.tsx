@@ -110,7 +110,7 @@ export default async function Home() {
     .slice(0, 5);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 bg-white-opacity">
+    <div className="max-w-9xl mx-auto px-4 py-8 sm:px-6 lg:px-8 bg-white-opacity">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

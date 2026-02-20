@@ -12,7 +12,7 @@ import {
 export default function SimpleFooter() {
   return (
     <Footer container className="rounded-none bg-amber-50 dark:bg-zinc-950 shadow-none border-t border-[var(--border)] pt-12 pb-8">
-      <div className="w-full max-w-7xl mx-auto">
+      <div className="w-full max-w-9xl mx-auto">
         
         <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1 gap-8">  
           {/* Marca / Identidade */}
