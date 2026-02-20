@@ -40,7 +40,7 @@ export default function Header() {
                   VETOR ESTRATÉGICO
                 </span>
                 <span className="text-xs text-zinc-400 tracking-widest uppercase">
-                  Análise Geopolítica
+                  Análise de Impacto Sistêmico
                 </span>
               </div>
             </Link>

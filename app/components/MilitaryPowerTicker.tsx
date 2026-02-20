@@ -35,7 +35,7 @@ export default function MilitaryPowerTicker() {
 
       if (!json[1]) return { nome, valor: null };
 
-      const latest = json[1].find((item: any) => item.value !== null);
+      const latest = json[1].find((item: { value: number | null }) => item.value !== null);
 
       return {
         nome,
