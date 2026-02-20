@@ -15,7 +15,7 @@ export default function Header() {
               year: "numeric",
             })}
           </span>
-          <span className="uppercase tracking-wider hidden md:block">
+          <span className="uppercase tracking-widest hidden md:block">
             Inteligência • Defesa • Tecnologia
           </span>
         </div>
@@ -24,8 +24,12 @@ export default function Header() {
       {/* HEADER */}
       <header className="sticky top-0 z-50 bg-[#0b0f14] border-b border-zinc-800">
         <div className="max-w-7xl mx-auto px-4">
+
+          {/* INPUT PARA TOGGLE */}
+          <input type="checkbox" id="menu-toggle" className="peer hidden" />
+
           <nav className="flex items-center justify-between h-16">
-            
+
             {/* LOGO */}
             <Link href="/" className="flex items-center gap-3">
               <Image
@@ -46,20 +50,18 @@ export default function Header() {
             </Link>
 
             {/* BOTÃO MOBILE */}
-            <input type="checkbox" id="menu-toggle" className="peer hidden" />
-
             <label
               htmlFor="menu-toggle"
-              className="md:hidden text-white cursor-pointer"
+              className="md:hidden text-white cursor-pointer text-2xl"
             >
               ☰
             </label>
 
-            {/* MENU */}
-            <div className="hidden md:flex items-center gap-8 text-sm font-semibold tracking-wide">
+            {/* MENU DESKTOP */}
+            <div className="hidden md:flex items-center gap-10 text-base font-extrabold tracking-widest uppercase [font-family:var(--font-oswald)]">
               <NavItem href="/" label="INÍCIO" />
               <NavItem href="/analises" label="ANÁLISES" />
-              <NavItem href="/mundo" label="MUNDO" />
+              <NavItem href="/noticias" label="NOTÍCIAS" />
               <NavItem href="/tecnologia" label="TECNOLOGIA" />
               <NavItem href="/videos" label="VÍDEOS" />
               <NavItem href="/contato" label="CONTATO" />
@@ -67,16 +69,17 @@ export default function Header() {
           </nav>
 
           {/* MENU MOBILE */}
-          <div className="peer-checked:block hidden md:hidden pb-4">
-            <div className="flex flex-col gap-4 text-sm font-semibold tracking-wide">
+          <div className="hidden peer-checked:block md:hidden pb-6 pt-4 border-t border-zinc-800">
+            <div className="flex flex-col gap-6 text-base font-extrabold tracking-widest uppercase [font-family:var(--font-oswald)]">
               <NavItem href="/" label="INÍCIO" />
               <NavItem href="/analises" label="ANÁLISES" />
-              <NavItem href="/mundo" label="MUNDO" />
+              <NavItem href="/noticias" label="NOTÍCIAS" />
               <NavItem href="/tecnologia" label="TECNOLOGIA" />
               <NavItem href="/videos" label="VÍDEOS" />
               <NavItem href="/contato" label="CONTATO" />
             </div>
           </div>
+
         </div>
       </header>
     </>
@@ -87,7 +90,22 @@ function NavItem({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className="text-zinc-300 hover:text-red-500 transition-colors duration-200"
+      className="
+        text-white
+        relative
+        transition-colors
+        duration-200
+        hover:text-blue-500
+        after:content-['']
+        after:absolute
+        after:left-0
+        after:-bottom-1
+        after:w-0
+        after:h-[4px]
+        after:bg-red-600
+        after:transition-all
+        hover:after:w-full
+      "
     >
       {label}
     </Link>

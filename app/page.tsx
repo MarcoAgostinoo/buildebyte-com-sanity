@@ -137,7 +137,7 @@ export default async function Home() {
             <h2 className="text-3xl font-black text-primary border-l-4 border-secondary pl-4">
               Destaques
             </h2>
-            <Link
+            <Link 
               href="/destaques"
               aria-label="Ver todos os destaques"
               className="text-primary hover:underline text-sm font-bold"
