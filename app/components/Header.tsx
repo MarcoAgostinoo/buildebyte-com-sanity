@@ -39,7 +39,7 @@ export default function Header() {
         <NavbarToggle className="text-primary hover:!bg-gray-100 focus:!ring-gray-200" />
       </div>
 
-      <NavbarCollapse className="bg-white">
+      <NavbarCollapse>
         <NavbarLink href="/" className="text-gray-800 hover:text-primary">INÍCIO</NavbarLink>
         <NavbarLink href="/destaques" className="text-gray-800 hover:text-primary">DESTAQUES</NavbarLink>
         <NavbarLink href="/videos" className="text-gray-800 hover:text-primary">VIDEOS</NavbarLink>

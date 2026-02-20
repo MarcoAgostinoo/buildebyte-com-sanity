@@ -146,15 +146,15 @@ export default async function ClusterPage({
         </nav>
 
         {/* Hero do cluster */}
-        <div className="relative overflow-hidden rounded-2xl border border-(--border) bg-(--card-bg) p-8 sm:p-12">
+        <div className="relative overflow-hidden border border-(--border) bg-(--card-bg) p-8 sm:p-12">
           {/* Decoração de fundo */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-transparent pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-80 h-80 bg-primary/4 rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-primary/4 translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
           <div className="relative">
             <div className="flex items-start gap-4 mb-4">
               {/* Ícone de série */}
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+              <div className="w-12 h-12 bg-primary/10 flex items-center justify-center shrink-0">
                 <svg
                   className="w-6 h-6 text-primary"
                   fill="none"
@@ -232,7 +232,7 @@ function ClusterPostCard({
   const pillarLabel = post.pillar ? PILLAR_LABELS[post.pillar] : null;
 
   return (
-    <article className="group flex gap-0 bg-(--card-bg) rounded-2xl border border-(--border) overflow-hidden shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-300">
+    <article className="group flex gap-0 bg-(--card-bg) -2xl border border-(--border) overflow-hidden shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-300">
 
       {/* Número de ordem na série */}
       <div className="flex flex-col items-center justify-between bg-primary/5 border-r border-(--border) px-4 py-5 min-w-[56px]">
@@ -244,7 +244,7 @@ function ClusterPostCard({
           <div className="w-px flex-1 my-3 bg-primary/10" />
         )}
         {index === total && (
-          <div className="w-2 h-2 rounded-full bg-primary/20 mt-3" />
+          <div className="w-2 h-2 -full bg-primary/20 mt-3" />
         )}
       </div>
 
@@ -275,13 +275,13 @@ function ClusterPostCard({
         <div className="flex flex-wrap items-center gap-2 mb-3">
           {post.editorialType && (
             <span
-              className={`${editorialColor} text-white text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-widest`}
+              className={`${editorialColor} text-white text-[9px] font-black px-2 py-0.5  uppercase tracking-widest`}
             >
               {editorialLabel}
             </span>
           )}
           {pillarLabel && post.pillar && (
-            <Link href={`/pilares/${post.pillar}`} className="text-[9px] font-bold text-foreground/40 uppercase tracking-widest border border-foreground/15 px-1.5 py-0.5 rounded hover:bg-foreground/5 transition-colors">
+            <Link href={`/pilares/${post.pillar}`} className="text-[9px] font-bold text-foreground/40 uppercase tracking-widest border border-foreground/15 px-1.5 py-0.5  hover:bg-foreground/5 transition-colors">
               {pillarLabel}
             </Link>
           )}

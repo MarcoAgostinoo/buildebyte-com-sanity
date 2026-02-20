@@ -32,7 +32,7 @@ export default function LeadCapture() {
   };
 
   return (
-    <div className="my-12 border border-zinc-200 rounded-lg overflow-hidden shadow-lg bg-white">
+    <div className="my-12 border border-zinc-200 overflow-hidden shadow-lg bg-amber-50">
       {/* Cabeçalho Chamativo (Headline Quente) */}
       {/* Nota: O header já usava cores fixas (bg-primary, text-white), então ele já era imune ao tema */}
       <div className="bg-primary p-6 text-center">
@@ -61,13 +61,13 @@ export default function LeadCapture() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               // Removido dark:border-zinc-700 e dark:bg-zinc-950
-              className="w-full px-4 py-3 rounded-sm border border-zinc-300 bg-zinc-50 focus:ring-2 focus:ring-primary outline-none transition-all text-zinc-900"
+              className="w-full px-4 py-3  border border-zinc-300 bg-zinc-50 focus:ring-2 focus:ring-primary outline-none transition-all text-zinc-900"
             />
             <button
               type="submit"
               disabled={status === "loading" || status === "success"}
               // Removido dark:bg-white e dark:text-zinc-900. Mantido o estilo original dark (preto com texto branco)
-              className="w-full bg-zinc-900 text-white font-bold py-3 rounded-sm hover:opacity-90 transition-opacity disabled:opacity-50 uppercase tracking-wide text-sm"
+              className="w-full bg-zinc-900 text-white font-bold py-3  hover:opacity-90 transition-opacity disabled:opacity-50 uppercase tracking-wide text-sm"
             >
               {status === "loading"
                 ? "Processando..."
@@ -93,14 +93,14 @@ export default function LeadCapture() {
             {/* Removido dark:bg-blue-900/20 dark:text-blue-400 etc */}
             <a
               href="#"
-              className="flex items-center gap-3 p-3 rounded-sm bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors font-bold text-sm"
+              className="flex items-center gap-3 p-3  bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors font-bold text-sm"
             >
               <FaTelegramPlane size={20} /> Canal no Telegram
             </a>
             {/* Removido dark:bg-green-900/20 dark:text-green-400 etc */}
             <a
               href="#"
-              className="flex items-center gap-3 p-3 rounded-sm bg-green-50 text-green-600 hover:bg-green-100 transition-colors font-bold text-sm"
+              className="flex items-center gap-3 p-3  bg-green-50 text-green-600 hover:bg-green-100 transition-colors font-bold text-sm"
             >
               <FaWhatsapp size={20} /> Grupo VIP WhatsApp
             </a>

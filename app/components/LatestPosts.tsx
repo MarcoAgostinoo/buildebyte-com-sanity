@@ -43,7 +43,7 @@ export default async function LatestPosts() {
 
   return (
     <section className="py-16 bg-transparent">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto bg-amber-50 p-4">
         
         {/* CABEÇALHO EDITORIAL (Match com o resto da Home) */}
         <div className="flex items-end justify-between mb-10 border-b-2 border-(--border) pb-4">
@@ -64,7 +64,7 @@ export default async function LatestPosts() {
               <Link href={`/post/${post.slug}`} className="flex flex-col h-full">
                 
                 {/* CONTAINER DA IMAGEM (Estilo Clean) */}
-                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-(--border) mb-4">
+                <div className="relative aspect-[16/10] w-full overflow-hidden bg-(--border) mb-4">
                   {post.imagem ? (
                     <Image
                       src={post.imagem}
@@ -81,7 +81,7 @@ export default async function LatestPosts() {
                   
                   {/* BADGE DE CATEGORIA SOBREPOSTO */}
                   <div className="absolute top-3 left-3 flex gap-1">
-                    <span className="bg-black/80 backdrop-blur-md text-white text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-wider border border-white/10">
+                    <span className="bg-black/80 backdrop-blur-md text-white text-[9px] font-black px-2 py-0.5 uppercase tracking-wider border border-white/10">
                       {post.category || "Geral"}
                     </span>
                   </div>
@@ -118,7 +118,7 @@ export default async function LatestPosts() {
 
         {/* BOTÃO MOBILE VER MAIS */}
         <div className="mt-12 sm:hidden text-center">
-            <Link href="/arquivo" className="inline-block bg-primary text-white font-black text-xs px-8 py-4 rounded-xl uppercase tracking-widest w-full">
+            <Link href="/arquivo" className="inline-block bg-primary text-white font-black text-xs px-8 py-4 uppercase tracking-widest w-full">
                 Ver todo o arquivo
             </Link>
         </div>

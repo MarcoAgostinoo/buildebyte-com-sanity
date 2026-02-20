@@ -149,13 +149,13 @@ export default async function PillarPage({
         </nav>
 
         {/* Hero do Pilar */}
-        <div className="relative overflow-hidden rounded-2xl border border-(--border) bg-(--card-bg) p-8 sm:p-12">
+        <div className="relative overflow-hidden border border-(--border) bg-(--card-bg) p-8 sm:p-12">
           {/* Gradiente decorativo */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
           
           <div className="relative">
             <div className="flex items-start gap-4 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-2xl shrink-0">
+              <div className="w-12 h-12 bg-primary/10 flex items-center justify-center text-2xl shrink-0">
                 🎯
               </div>
               <div>
@@ -211,7 +211,7 @@ function PostCard({ post }: { post: PostCard }) {
     EDITORIAL_LABELS[post.editorialType ?? ""] ?? post.editorialType;
 
   return (
-    <article className="group flex flex-col bg-(--card-bg) rounded-2xl border border-(--border) overflow-hidden shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-300">
+    <article className="group flex flex-col bg-(--card-bg) border border-(--border) overflow-hidden shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-300">
       {/* Imagem */}
       <Link href={`/post/${post.slug}`} className="block relative aspect-video overflow-hidden bg-foreground/5">
         {post.imagem ? (
@@ -231,7 +231,7 @@ function PostCard({ post }: { post: PostCard }) {
         {/* Badge editorial sobre a imagem */}
         {post.editorialType && (
           <span
-            className={`absolute top-3 left-3 ${editorialColor} text-white text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-widest`}
+            className={`absolute top-3 left-3 ${editorialColor} text-white text-[9px] font-black px-2 py-0.5 uppercase tracking-widest`}
           >
             {editorialLabel}
           </span>

@@ -113,8 +113,8 @@ export default function AboutPage() {
 
           {/* VISÃO DO ANALISTA */}
           <div className="md:col-span-5 relative group">
-            <div className="absolute -inset-1 bg-linear-to-r from-blue-700 to-red-600 rounded-lg blur opacity-25"></div>
-            <div className="relative bg-zinc-900 p-6 rounded-lg border border-zinc-800 shadow-2xl">
+            <div className="absolute -inset-1 bg-linear-to-r from-blue-700 to-red-600  blur opacity-25"></div>
+            <div className="relative bg-zinc-900 p-6 border border-zinc-800 shadow-2xl">
               <h3 className="text-white font-bold text-lg mb-4">
                 Visão do Analista™
               </h3>
@@ -143,7 +143,7 @@ export default function AboutPage() {
             {pillars.map((pillar, index) => (
               <div
                 key={index}
-                className="p-6 bg-(--card-bg) border border-(--border) rounded-md hover:border-blue-600 transition-all duration-300"
+                className="p-6 bg-(--card-bg) border border-(--border) hover:border-blue-600 transition-all duration-300"
               >
                 <span className="text-xs font-mono text-red-500">
                   {pillar.group}

@@ -26,14 +26,14 @@ export default async function SecondAdComponent({ className = '' }: { className?
 
   if (!randomOffer || !randomOffer.affiliateLink) {
     return (
-      <div className={`bg-primary/10 p-4 rounded-lg text-center text-primary dark:text-primary-300 ${className}`}>
+      <div className={`bg-primary/10 p-4  text-center text-primary dark:text-primary-300 ${className}`}>
         <p>Espaço Publicitário</p>
       </div>
     );
   }
 
   return (
-    <div className={`bg-primary/10 rounded-lg text-primary dark:text-primary-300 ${className}`}>
+    <div className={`bg-primary/10  text-primary dark:text-primary-300 ${className}`}>
       <Link href={randomOffer.affiliateLink} target="_blank" rel="noopener noreferrer">
         <div className="relative w-full h-42 mb-4">
           {randomOffer.imagem && (
@@ -41,7 +41,7 @@ export default async function SecondAdComponent({ className = '' }: { className?
               src={randomOffer.imagem}
               alt={randomOffer.title}
               fill
-              className="object-cover rounded-lg"
+              className="object-cover "
             />
           )}
         </div>

@@ -11,7 +11,7 @@ import {
 
 export default function SimpleFooter() {
   return (
-    <Footer container className="rounded-none bg-white dark:bg-zinc-950 shadow-none border-t border-[var(--border)] pt-12 pb-8">
+    <Footer container className="rounded-none bg-amber-50 dark:bg-zinc-950 shadow-none border-t border-[var(--border)] pt-12 pb-8">
       <div className="w-full max-w-7xl mx-auto">
         
         <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1 gap-8">  
@@ -63,10 +63,10 @@ export default function SimpleFooter() {
           />
 
           {/* Indicador de Status do Sistema */}
-          <div className="flex items-center gap-3 px-4 py-1.5 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-full">
+          <div className="flex items-center gap-3 px-4 py-1.5 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
             <div className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex h-2 w-2 bg-green-500"></span>
             </div>
             <span className="text-[10px] font-bold text-zinc-600 dark:text-zinc-400 uppercase tracking-widest">
               Systems Operational

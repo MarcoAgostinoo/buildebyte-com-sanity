@@ -4,7 +4,7 @@ import Giscus from "@giscus/react";
 
 export default function Comments() {
   return (
-    <div className="w-full mt-10 p-6 bg-[var(--card-bg)] rounded-xl shadow-sm border border-[var(--border)]">
+    <div className="w-full mt-10 p-6 bg-[var(--card-bg)] shadow-sm border border-[var(--border)]">
       <Giscus
         id="comments"
         repo="MarcoAgostinoo/buildebyte-comentarios"

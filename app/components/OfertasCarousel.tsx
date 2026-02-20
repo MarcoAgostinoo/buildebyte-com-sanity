@@ -61,19 +61,19 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
                       key={oferta._id}
                       className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_25%] min-w-0 pl-4 py-4"
                     >
-                      <article className="flex flex-col bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-lg hover:border-zinc-400 dark:hover:border-zinc-600 transition-all duration-300 h-full">
+                      <article className="flex flex-col bg-white dark:bg-zinc-900  border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-lg hover:border-zinc-400 dark:hover:border-zinc-600 transition-all duration-300 h-full">
 
                         {/* Imagem */}
                         <div className="relative aspect-square bg-zinc-50 dark:bg-zinc-950 p-4">
                           {/* Badge loja */}
-                          <div className="absolute top-2 left-2 z-10 bg-black/70 text-white text-[10px] px-2 py-1 rounded flex items-center gap-1">
+                          <div className="absolute top-2 left-2 z-10 bg-black/70 text-white text-[10px] px-2 py-1 flex items-center gap-1">
                             <FaStore size={9} />
                             {oferta.storeName || "Mercado Livre"}
                           </div>
 
                           {/* Badge desconto */}
                           {discount > 0 && (
-                            <div className="absolute top-2 right-2 z-10 bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded-full">
+                            <div className="absolute top-2 right-2 z-10 bg-green-500 text-white text-[10px] font-bold px-2 py-1">
                               -{discount}%
                             </div>
                           )}
@@ -144,7 +144,7 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
                             href={oferta.affiliateLink}
                             target="_blank"
                             rel="noopener noreferrer sponsored"
-                            className="w-full bg-yellow-400 hover:bg-yellow-500 text-zinc-900 font-bold py-2 rounded-lg flex items-center justify-center gap-2 transition-colors text-sm"
+                            className="w-full bg-yellow-400 hover:bg-yellow-500 text-zinc-900 font-bold py-2 flex items-center justify-center gap-2 transition-colors text-sm"
                           >
                             <FaShoppingCart size={13} />
                             Pegar Promoção
@@ -160,13 +160,13 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
         {/* Setas */}
         <button
           onClick={scrollPrev}
-          className="absolute top-1/2 -left-2 md:-left-4 -translate-y-1/2 p-2 bg-white dark:bg-zinc-800 rounded-full shadow-lg text-zinc-700 dark:text-zinc-200 hover:bg-yellow-400 hover:text-zinc-900 transition-all z-20"
+          className="absolute top-1/2 -left-2 md:-left-4 -translate-y-1/2 p-2 bg-white dark:bg-zinc-800 shadow-lg text-zinc-700 dark:text-zinc-200 hover:bg-yellow-400 hover:text-zinc-900 transition-all z-20"
         >
           <FaChevronLeft />
         </button>
         <button
           onClick={scrollNext}
-          className="absolute top-1/2 -right-2 md:-right-4 -translate-y-1/2 p-2 bg-white dark:bg-zinc-800 rounded-full shadow-lg text-zinc-700 dark:text-zinc-200 hover:bg-yellow-400 hover:text-zinc-900 transition-all z-20"
+          className="absolute top-1/2 -right-2 md:-right-4 -translate-y-1/2 p-2 bg-white dark:bg-zinc-800 shadow-lg text-zinc-700 dark:text-zinc-200 hover:bg-yellow-400 hover:text-zinc-900 transition-all z-20"
         >
           <FaChevronRight />
         </button>

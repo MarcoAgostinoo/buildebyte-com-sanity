@@ -110,7 +110,7 @@ export default async function Home() {
     .slice(0, 5);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 bg-white">
+    <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 bg-white-opacity">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -124,7 +124,7 @@ export default async function Home() {
       />
       {/* --- 1. SEÇÃO DE DESTAQUES --- */}
       {featuredPosts.length > 0 && (
-        <section className="mb-16">
+        <section className="mb-16 bg-amber-50 background-gradient p-6">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-3xl font-black text-primary border-l-4 border-secondary pl-4">
               Destaques
@@ -146,7 +146,7 @@ export default async function Home() {
                 <article
                   key={post._id}
                   className={`
-                  relative group overflow-hidden rounded-2xl border border-(--border) bg-(--card-bg) shadow-sm
+                  relative group overflow-hidden border border-(--border) bg-(--card-bg) shadow-sm
                   ${isHero ? "lg:col-span-2 lg:row-span-2 h-125 lg:h-auto" : "lg:col-span-2 h-60"}
                 `}
                 >
@@ -173,7 +173,7 @@ export default async function Home() {
 
                     {/* Texto sobre a imagem (Estilo Manchete) */}
                     <div className="absolute bottom-0 left-0 p-6 z-10 w-full">
-                      <span className="inline-block px-2 py-1 mb-3 text-xs font-bold text-white bg-orange-600 rounded font-mono tracking-wider">
+                      <span className="inline-block px-2 py-1 mb-3 text-xs font-bold text-white bg-orange-600 font-mono tracking-wider">
                         {isHero ? "MANCHETE" : "EM ALTA"}
                       </span>
                       <h3
@@ -182,11 +182,11 @@ export default async function Home() {
                         {post.title}
                       </h3>
                       {isHero && (
-                        <p className="text-gray-200 line-clamp-2 max-w-xl text-sm md:text-base hidden sm:block">
+                        <p className="text-white line-clamp-2 max-w-xl text-sm md:text-base hidden sm:block">
                           {post.excerpt}
                         </p>
                       )}
-                      <div className="mt-3 text-xs text-gray-300 font-mono tracking-tight">
+                      <div className="mt-3 text-xs text-gray-100 font-mono tracking-tight">
                         {post.author} • {formatDate(post.publishedAt)}
                       </div>
                     </div>
@@ -200,17 +200,17 @@ export default async function Home() {
 
         {/* 2. SEÇÃO TECNOBLOG: POPULARES (SANITY) + CAST (API) */}
       <section className="mt-12 mb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           
           {/* LADO ESQUERDO: MAIS POPULARES */}
-          <aside className="lg:col-span-3 lg:border-r lg:border-zinc-200 lg:pr-12">
+          <aside className="lg:col-span-3 lg:border-r lg:border-zinc-200 lg:pr-12 p-4 bg-amber-50">
             <h2 className="text-[#0070f3] text-xl font-black mb-8 uppercase tracking-tighter">Mais Populares</h2>
             <div className="flex flex-col gap-8">
               {popularPosts.map((post: CategoryWithPosts['posts'][number], index: number) => (
                 <article key={post._id} className="flex gap-4 group">
-                  <span className="text-3xl font-black text-zinc-200 group-hover:text-[#0070f3] leading-none transition-colors">{index + 1}</span>
+                  <span className="text-3xl font-black text-zinc-600 group-hover:text-[#0070f3] leading-none transition-colors">{index + 1}</span>
                   <Link href={`/post/${post.slug}`}>
-                    <h4 className="font-bold text-[15px] leading-tight text-zinc-800 group-hover:text-[#0070f3] transition-colors">{post.title}</h4>
+                    <h4 className="font-bold text-[15px] leading-tight text-zinc-900 group-hover:text-[#0070f3] transition-colors">{post.title}</h4>
                   </Link>
                 </article>
               ))}
@@ -218,17 +218,17 @@ export default async function Home() {
           </aside>
 
           {/* LADO DIREITO: GRID DO BUILD & BYTE CAST */}
-          <main className="lg:col-span-9 flex flex-col gap-10">
+          <main className="lg:col-span-9 flex flex-col p-4 gap-4 bg-amber-50">
              <div className="flex items-center justify-between mb-8">
                 <h2 className="text-2xl font-black uppercase tracking-tighter">Build & Byte Cast</h2>
-                <span className="bg-green-500/10 text-green-500 text-[10px] font-bold px-2 py-1 rounded animate-pulse uppercase">Ao Vivo / Recentes</span>
+                <span className="bg-green-500/10 text-green-500 text-[10px] font-bold px-2 py-1  animate-pulse uppercase">Ao Vivo / Recentes</span>
              </div>
 
             {/* Desktop Grid 2x2 */}
             <div className="hidden md:grid grid-cols-2 gap-x-8 gap-y-12">
               {episodes.map((ep: Episode) => (
                 <article key={ep.id} className="group">
-                  <a href={ep.link} target="_blank" rel="noopener noreferrer" className="block relative aspect-video overflow-hidden rounded-sm mb-4">
+                  <a href={ep.link} target="_blank" rel="noopener noreferrer" className="block relative aspect-video overflow-hidden mb-4">
                     <Image src={ep.image || DEFAULT_IMAGE} alt={ep.title} fill className="object-cover transition-transform group-hover:scale-105" />
                     <span className="absolute bottom-3 left-3 bg-[#0070f3] text-white text-[10px] font-black px-2 py-0.5 uppercase tracking-widest">PODCAST</span>
                   </a>
@@ -254,7 +254,7 @@ export default async function Home() {
       <div className="mt-20">
         <Suspense
           fallback={
-            <div className="h-40 animate-pulse bg-gray-100 rounded" />
+            <div className="h-40 animate-pulse bg-gray-100" />
           }
         >
           <Ofertas />
@@ -265,7 +265,7 @@ export default async function Home() {
       {webStories.length > 0 && (
         <Suspense
           fallback={
-            <div className="h-60 animate-pulse bg-gray-100 rounded mt-10" />
+            <div className="h-60 animate-pulse bg-gray-100 mt-10" />
           }
         >
           <WebStoriesCarousel webStories={webStories} />
@@ -275,7 +275,7 @@ export default async function Home() {
       <div className="mt-10">
         <Suspense
           fallback={
-            <div className="h-96 animate-pulse bg-gray-100 rounded" />
+            <div className="h-96 animate-pulse bg-gray-100" />
           }
         >
           <LatestPosts />
@@ -287,8 +287,8 @@ export default async function Home() {
       </Suspense>
 
       {/* --- 5. DISCLAIMER DE AFILIADOS (P0) --- */}
-      <div className="mt-16 py-6 border-t border-zinc-200 text-center">
-        <p className="text-xs text-zinc-500 max-w-3xl mx-auto font-mono">
+      <div className="mt-16 py-6 border-t bg-amber-50/60 text-center">
+        <p className="text-xs text-zinc-800 max-w-3xl mx-auto font-mono">
           <span className="font-bold text-orange-600">
             NOTA DE TRANSPARÊNCIA:
           </span>{" "}

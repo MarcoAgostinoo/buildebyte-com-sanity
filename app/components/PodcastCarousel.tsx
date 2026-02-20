@@ -45,7 +45,7 @@ export default function PodcastCarousel({ episodes = [], defaultImage }: { episo
           {episodes.map((ep) => (
             <article key={ep.id} className="flex-[0_0_85%] min-w-0">
               <a href={ep.link} target="_blank" rel="noopener noreferrer" className="block group">
-                <div className="relative aspect-video rounded-lg overflow-hidden mb-3">
+                <div className="relative aspect-video  overflow-hidden mb-3">
                   <Image
                     src={ep.image || defaultImage}
                     alt={ep.title}
@@ -73,7 +73,7 @@ export default function PodcastCarousel({ episodes = [], defaultImage }: { episo
         {episodes.map((_, idx) => (
           <button
             key={idx}
-            className={`h-1.5 rounded-full transition-all ${
+            className={`h-1.5 transition-all ${
               selectedIndex === idx ? "bg-[#0070f3] w-4" : "bg-zinc-300 w-1.5"
             }`}
             onClick={() => scrollTo(idx)}

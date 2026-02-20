@@ -40,9 +40,9 @@ export default async function SearchPage({ searchParams }: { searchParams: { q: 
       <h1 className="text-4xl font-bold mb-8">Resultados da busca por: &quot;{searchTerm}&quot;</h1>
       {posts.length > 0 ? (
         posts.map((post: Post) => (
-          <article key={post.slug} className="mb-10 p-6 border rounded-lg shadow-sm">
+          <article key={post.slug} className="mb-10 p-6 border  shadow-sm">
             {post.imagem && (
-              <Image src={post.imagem} alt={post.title} width={800} height={450} className="w-full h-auto object-cover rounded-md mb-6" />
+              <Image src={post.imagem} alt={post.title} width={800} height={450} className="w-full h-auto object-cover  mb-6" />
             )}
             <Link href={`/post/${post.slug}`}>
               <h2 className="text-3xl font-bold text-blue-600 mb-4 hover:underline">{post.title}</h2>

@@ -42,7 +42,7 @@ export default function ReadNext({ posts }: ReadNextProps) {
 
   return (
     <div
-      className={`fixed bottom-4 right-4 w-80 z-50 bg-(--card-bg) rounded-lg shadow-2xl p-4 transition-transform duration-500 ease-in-out border border-(--border) ${
+      className={`fixed bottom-4 right-4 w-80 z-50 bg-(--card-bg)  shadow-2xl p-4 transition-transform duration-500 ease-in-out border border-(--border) ${
         isVisible ? 'translate-x-0' : 'translate-x-[150%]'
       }`}
     >
@@ -60,8 +60,8 @@ export default function ReadNext({ posts }: ReadNextProps) {
       <div className="space-y-4">
         {posts.map(post => (
           <Link href={`/post/${post.slug}`} key={post.slug}>
-            <div className="flex items-center gap-4 hover:bg-primary/10 p-2 rounded-md transition-colors group">
-              <div className="w-16 h-16 relative flex-shrink-0 overflow-hidden rounded-md">
+            <div className="flex items-center gap-4 hover:bg-primary/10 p-2  transition-colors group">
+              <div className="w-16 h-16 relative flex-shrink-0 overflow-hidden ">
                 {post.imagem ? (
                     <Image
                       src={post.imagem}

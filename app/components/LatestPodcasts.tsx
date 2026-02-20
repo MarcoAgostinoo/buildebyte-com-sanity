@@ -41,13 +41,13 @@ export default async function LatestPodcasts() {
     <section className="py-0">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {episodes.map((episode: Episode) => (
-          <div key={episode.id} className="border rounded-lg p-4 shadow-sm hover:shadow-md transition bg-white">
+          <div key={episode.id} className="border  p-4 shadow-sm hover:shadow-md transition bg-white">
             {/* Imagem de Capa */}
             {episode.image && (
               <img 
                 src={episode.image} 
                 alt={episode.title} 
-                className="w-full h-48 object-cover rounded-md mb-4"
+                className="w-full h-48 object-cover  mb-4"
               />
             )}
             

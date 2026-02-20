@@ -58,7 +58,7 @@ export default async function IAPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.length > 0 ? (
             posts.map((post) => (
-              <article key={post._id} className="group bg-(--card-bg) border border-(--border) rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+              <article key={post._id} className="group bg-(--card-bg) border border-(--border)  overflow-hidden hover:shadow-xl transition-all duration-300">
                 <Link href={`/post/${post.slug}`}>
                   <div className="relative h-48 overflow-hidden">
                     {post.imagem && (
@@ -69,7 +69,7 @@ export default async function IAPage() {
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     )}
-                    <div className="absolute top-2 right-2 bg-black/70 text-white text-xs font-bold px-2 py-1 rounded backdrop-blur-sm">
+                    <div className="absolute top-2 right-2 bg-black/70 text-white text-xs font-bold px-2 py-1  backdrop-blur-sm">
                       IA
                     </div>
                   </div>

@@ -185,7 +185,7 @@ const ptComponents: PortableTextComponents = {
       const { aspectRatio } = value.asset.metadata.dimensions;
       const w = 1200;
       return (
-        <figure className="my-8 sm:my-12 overflow-hidden rounded-xl shadow-lg">
+        <figure className="my-8 sm:my-12 overflow-hidden  shadow-lg">
           <Image
             src={urlFor(value).width(w).fit("max").auto("format").url()}
             alt={value.alt ?? "Imagem do artigo"}
@@ -221,7 +221,7 @@ const ptComponents: PortableTextComponents = {
       </h4>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="my-8 border-l-4 border-primary pl-5 bg-primary/5 py-4 pr-4 rounded-r-lg">
+      <blockquote className="my-8 border-l-4 border-primary pl-5 bg-primary/5 py-4 pr-4 ">
         <span className="block text-[10px] font-black text-primary uppercase mb-2 tracking-[0.2em]">
           {"// Dado Técnico"}
         </span>
@@ -310,7 +310,7 @@ function EditorialBadge({ type }: { type: string }) {
   };
   return (
     <span
-      className={`${colorMap[type] ?? "bg-primary"} text-white text-[10px] font-black px-2.5 py-0.5 rounded uppercase tracking-widest`}
+      className={`${colorMap[type] ?? "bg-primary"} text-white text-[10px] font-black px-2.5 py-0.5  uppercase tracking-widest`}
     >
       {label}
     </span>
@@ -323,7 +323,7 @@ function PillarBadge({ pillar }: { pillar: string }) {
   return (
     <Link
       href={`/pilares/${pillar.replace(/_/g, "-")}`}
-      className="relative z-10 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider border border-primary/30 text-primary/70 hover:bg-primary/5 transition-colors"
+      className="relative z-10 text-[10px] font-bold px-2 py-0.5  uppercase tracking-wider border border-primary/30 text-primary/70 hover:bg-primary/5 transition-colors"
     >
       {label}
     </Link>
@@ -338,7 +338,7 @@ function RatingBadge({ rating }: { rating: number }) {
       ? "text-yellow-600 dark:text-yellow-400 border-yellow-400/30 bg-yellow-400/10"
       : "text-red-600 dark:text-red-400 border-red-400/30 bg-red-400/10";
   return (
-    <div className={`flex items-center px-3 py-1.5 rounded-full border gap-1.5 ${colorClass}`}>
+    <div className={`flex items-center px-3 py-1.5  border gap-1.5 ${colorClass}`}>
       <span className="text-sm font-black leading-none">{rating}</span>
       <span className="text-xs opacity-60 font-bold">/ 10</span>
     </div>
@@ -362,7 +362,7 @@ function AuthorCard({ author }: { author: Author }) {
   return (
     <div className="flex items-start gap-4 mt-12 pt-8 border-t border-(--border)">
       {author.image && (
-        <div className="shrink-0 w-14 h-14 rounded-full overflow-hidden border-2 border-(--border) relative">
+        <div className="shrink-0 w-14 h-14  overflow-hidden border-2 border-(--border) relative">
           <Image
             src={urlFor(author.image).width(112).height(112).fit("crop").url()}
             alt={author.name}
@@ -390,13 +390,13 @@ function AuthorCard({ author }: { author: Author }) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function AnalystView({ content }: { content: any[] }) {
   return (
-    <aside className="mt-14 relative overflow-hidden rounded-2xl border border-primary/20">
+    <aside className="mt-14 relative overflow-hidden  border border-primary/20">
       {/* Gradiente de fundo sutil */}
       <div className="absolute inset-0 bg-linear-to-br from-primary/8 via-transparent to-transparent pointer-events-none" />
 
       {/* Header */}
       <div className="relative flex items-center gap-3 px-6 pt-6 pb-4 border-b border-primary/15">
-        <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+        <div className="w-9 h-9  bg-primary/10 flex items-center justify-center shrink-0">
           {/* Ícone de mira/vetor */}
           <svg
             className="w-4 h-4 text-primary"
@@ -451,7 +451,7 @@ function AffiliateBlock({
         href={href}
         target="_blank"
         rel="nofollow noopener"
-        className="mb-10 flex items-center justify-between bg-primary text-white p-4 rounded-xl hover:brightness-110 transition-all shadow-lg group"
+        className="mb-10 flex items-center justify-between bg-primary text-white p-4  hover:brightness-110 transition-all shadow-lg group"
       >
         <div>
           <p className="text-[10px] uppercase tracking-widest opacity-70 font-bold mb-0.5">
@@ -479,7 +479,7 @@ function AffiliateBlock({
   }
 
   return (
-    <div className="mt-10 bg-primary/5 border border-primary/20 p-6 rounded-2xl text-center">
+    <div className="mt-10 bg-primary/5 border border-primary/20 p-6  text-center">
       <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">
         Onde Adquirir
       </p>
@@ -490,7 +490,7 @@ function AffiliateBlock({
         href={href}
         target="_blank"
         rel="nofollow noopener"
-        className="block w-full bg-primary text-white font-bold py-3 rounded-lg hover:scale-[1.02] transition-transform"
+        className="block w-full bg-primary text-white font-bold py-3  hover:scale-[1.02] transition-transform"
       >
         {label ?? "Ver Ofertas"}
       </a>
@@ -511,7 +511,7 @@ function VereditorBlock({ veredito }: { veredito: Veredito }) {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {veredito.buyIf && (
-          <div className="p-5 bg-emerald-500/5 rounded-xl border border-emerald-500/15">
+          <div className="p-5 bg-emerald-500/5  border border-emerald-500/15">
             <h4 className="text-emerald-600 font-black uppercase text-xs mb-3 flex items-center gap-2 tracking-wider">
               ✓ Vale se...
             </h4>
@@ -521,7 +521,7 @@ function VereditorBlock({ veredito }: { veredito: Veredito }) {
           </div>
         )}
         {veredito.avoidIf && (
-          <div className="p-5 bg-red-500/5 rounded-xl border border-red-500/15">
+          <div className="p-5 bg-red-500/5  border border-red-500/15">
             <h4 className="text-red-600 font-black uppercase text-xs mb-3 flex items-center gap-2 tracking-wider">
               ✕ Evite se...
             </h4>
@@ -541,7 +541,7 @@ function FaqSection({ faq }: { faq: FaqItem[] }) {
   return (
     <div className="mt-14">
       <div className="flex items-center gap-3 mb-5">
-        <div className="w-1 h-6 bg-primary rounded-full" />
+        <div className="w-1 h-6 bg-primary " />
         <h3 className="text-xl font-black text-foreground">
           Perguntas Frequentes
         </h3>
@@ -550,7 +550,7 @@ function FaqSection({ faq }: { faq: FaqItem[] }) {
         {valid.map((item, idx) => (
           <details
             key={idx}
-            className="group border border-(--border) rounded-xl overflow-hidden bg-(--card-bg)"
+            className="group border border-(--border)  overflow-hidden bg-(--card-bg)"
           >
             <summary className="list-none p-4 font-bold cursor-pointer flex justify-between items-center gap-4 group-open:bg-primary/8 group-open:text-primary transition-all select-none text-sm">
               <span>{item.question}</span>
@@ -577,7 +577,7 @@ function FaqSection({ faq }: { faq: FaqItem[] }) {
 /** Card de cluster proeminente — série editorial */
 function ClusterCard({ cluster }: { cluster: Cluster }) {
   return (
-    <div className="mt-12 p-6 rounded-2xl border border-primary/20 bg-linear-to-br from-primary/5 to-transparent">
+    <div className="mt-12 p-6  border border-primary/20 bg-linear-to-br from-primary/5 to-transparent">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 mb-1">
@@ -592,7 +592,7 @@ function ClusterCard({ cluster }: { cluster: Cluster }) {
             </p>
           )}
         </div>
-        <div className="shrink-0 w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+        <div className="shrink-0 w-10 h-10  bg-primary/10 flex items-center justify-center">
           <svg
             className="w-5 h-5 text-primary"
             fill="none"
@@ -653,7 +653,7 @@ export default async function PostPage({
         {/* MAIN                                                              */}
         {/* ================================================================ */}
         <main className="w-full lg:w-2/3">
-          <article className="bg-(--card-bg) rounded-2xl p-6 sm:p-10 border border-(--border) shadow-sm">
+          <article className="bg-(--card-bg)  p-6 sm:p-10 border border-(--border) shadow-sm">
 
             {/* BADGES */}
             <div className="mb-5 flex flex-wrap items-center gap-2">
@@ -667,7 +667,7 @@ export default async function PostPage({
               {post.cluster && post.cluster.slug && (
                 <Link
                   href={`/clusters/${post.cluster.slug}`}
-                  className="ml-auto text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider bg-primary/8 text-primary/70 hover:bg-primary/15 border border-primary/20 transition-all"
+                  className="ml-auto text-[10px] font-bold px-2.5 py-0.5  uppercase tracking-wider bg-primary/8 text-primary/70 hover:bg-primary/15 border border-primary/20 transition-all"
                 >
                   Série: {post.cluster.title}
                 </Link>
@@ -701,7 +701,7 @@ export default async function PostPage({
               {/* Autor */}
               <div className="flex items-center gap-2.5">
                 {post.author?.image && (
-                  <div className="w-8 h-8 rounded-full overflow-hidden border border-(--border) relative shrink-0">
+                  <div className="w-8 h-8  overflow-hidden border border-(--border) relative shrink-0">
                     <Image
                       src={urlFor(post.author.image)
                         .width(64)
@@ -757,7 +757,7 @@ export default async function PostPage({
 
             {/* IMAGEM PRINCIPAL */}
             {post.imagem && (
-              <div className="mb-10 relative aspect-video rounded-xl overflow-hidden shadow-xl">
+              <div className="mb-10 relative aspect-video  overflow-hidden shadow-xl">
                 <Image
                   src={post.imagem}
                   alt={post.title}
@@ -782,7 +782,7 @@ export default async function PostPage({
             {/* SPOTIFY */}
             {post.spotifyEmbed && (
               <div
-                className="mb-10 rounded-xl overflow-hidden"
+                className="mb-10  overflow-hidden"
                 dangerouslySetInnerHTML={{ __html: post.spotifyEmbed }}
               />
             )}
@@ -850,7 +850,7 @@ export default async function PostPage({
           {pillarLabel && post.pillar && (
             <Link
               href={`/pilares/${post.pillar}`}
-              className="block bg-(--card-bg) rounded-xl border border-(--border) p-4 shadow-sm hover:border-primary/30 transition-colors group"
+              className="block bg-(--card-bg)  border border-(--border) p-4 shadow-sm hover:border-primary/30 transition-colors group"
             >
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/35 mb-1 group-hover:text-primary/60 transition-colors">
                 Pilar Editorial
@@ -862,11 +862,11 @@ export default async function PostPage({
             </Link>
           )}
 
-          <div className="bg-(--card-bg) rounded-xl border border-(--border) overflow-hidden shadow-sm">
+          <div className="bg-(--card-bg)  border border-(--border) overflow-hidden shadow-sm">
             <AdComponent />
           </div>
 
-          <div className="bg-(--card-bg) rounded-xl border border-(--border) p-4 shadow-sm hidden lg:block">
+          <div className="bg-(--card-bg)  border border-(--border) p-4 shadow-sm hidden lg:block">
             <SecondAdComponent />
           </div>
         </aside>

@@ -39,14 +39,14 @@ export default function ContactForm() {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto bg-(--card-bg) dark:bg-zinc-900/80 rounded-sm border border-(--border) shadow-2xl overflow-hidden backdrop-blur-sm">
+    <div className="w-full max-w-2xl mx-auto bg-(--card-bg) dark:bg-zinc-100/80  border border-(--border) shadow-2xl overflow-hidden backdrop-blur-sm">
       
       {/* Barra de Título estilo "Janela de Sistema" */}
-      <div className="bg-zinc-100 dark:bg-zinc-800/50 px-4 py-3 border-b border-(--border) flex items-center justify-between">
+      <div className="bg-amber-50 dark:bg-zinc-800/50 px-4 py-3 border-b border-(--border) flex items-center justify-between">
         <div className="flex gap-2">
-          <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
-          <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-          <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+          <div className="w-3 h-3  bg-red-500/80"></div>
+          <div className="w-3 h-3  bg-yellow-500/80"></div>
+          <div className="w-3 h-3  bg-green-500/80"></div>
         </div>
         <div className="text-xs font-mono text-zinc-500 uppercase tracking-widest">
           contact_daemon.exe
@@ -68,7 +68,7 @@ export default function ContactForm() {
                 name="nome"
                 id="nome"
                 required
-                className="w-full px-4 py-3 rounded-sm bg-zinc-50 dark:bg-black border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:ring-1 focus:ring-primary focus:border-primary transition-all outline-none font-mono text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-600"
+                className="w-full px-4 py-3  bg-zinc-50 dark:bg-black border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:ring-1 focus:ring-primary focus:border-primary transition-all outline-none font-mono text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-600"
                 placeholder="Marco Antonio"
               />
             </div>
@@ -83,7 +83,7 @@ export default function ContactForm() {
                 name="email"
                 id="email"
                 required
-                className="w-full px-4 py-3 rounded-sm bg-zinc-50 dark:bg-black border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:ring-1 focus:ring-primary focus:border-primary transition-all outline-none font-mono text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-600"
+                className="w-full px-4 py-3  bg-zinc-50 dark:bg-black border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:ring-1 focus:ring-primary focus:border-primary transition-all outline-none font-mono text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-600"
                 placeholder="admin@Vetor Estratégico.com"
               />
             </div>
@@ -99,21 +99,21 @@ export default function ContactForm() {
               id="mensagem"
               required
               rows={6}
-              className="w-full px-4 py-3 rounded-sm bg-zinc-50 dark:bg-black border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:ring-1 focus:ring-primary focus:border-primary transition-all outline-none resize-none font-mono text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-600 leading-relaxed"
+              className="w-full px-4 py-3  bg-zinc-50 dark:bg-black border border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100 focus:ring-1 focus:ring-primary focus:border-primary transition-all outline-none resize-none font-mono text-sm placeholder:text-zinc-400 dark:placeholder:text-zinc-600 leading-relaxed"
               placeholder="// Digite sua mensagem aqui..."
             ></textarea>
           </div>
 
           {/* Status Messages (Estilo Terminal) */}
           {status === "success" && (
-            <div className="p-4 rounded-sm bg-green-900/20 border border-green-900/30 text-green-700 dark:text-green-400 font-mono text-sm flex items-center gap-3">
+            <div className="p-4  bg-green-900/20 border border-green-900/30 text-green-700 dark:text-green-400 font-mono text-sm flex items-center gap-3">
               <span className="animate-pulse">●</span>
               <span>{`> SUCCESS: PACKET SENT TO SERVER.`}</span>
             </div>
           )}
           
           {status === "error" && (
-            <div className="p-4 rounded-sm bg-red-900/20 border border-red-900/30 text-red-700 dark:text-red-400 font-mono text-sm flex items-center gap-3">
+            <div className="p-4  bg-red-900/20 border border-red-900/30 text-red-700 dark:text-red-400 font-mono text-sm flex items-center gap-3">
               <span>●</span>
               <span>{`> ERROR: CONNECTION REFUSED. RETRY LATER.`}</span>
             </div>
@@ -123,7 +123,7 @@ export default function ContactForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-4 px-6 rounded-sm bg-zinc-900 dark:bg-white text-white dark:text-black font-bold uppercase tracking-widest text-sm hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-transparent hover:border-primary shadow-lg"
+            className="w-full py-4 px-6  bg-zinc-900 dark:bg-white text-white dark:text-black font-bold uppercase tracking-widest text-sm hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-transparent hover:border-primary shadow-lg"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2 font-mono">
@@ -142,7 +142,7 @@ export default function ContactForm() {
       </div>
       
       {/* Barra de Status Inferior */}
-      <div className="bg-zinc-100 dark:bg-zinc-800/50 px-4 py-2 border-t border-(--border) text-[10px] font-mono text-zinc-400 flex justify-between uppercase">
+      <div className="bg-amber-50 dark:bg-zinc-800/50 px-4 py-2 border-t border-(--border) text-[10px] font-mono text-zinc-400 flex justify-between uppercase">
         <span>TLS 1.3 ENCRYPTED</span>
         <span>PORT: 443</span>
       </div>

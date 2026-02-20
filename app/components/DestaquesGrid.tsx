@@ -64,7 +64,7 @@ export default function DestaquesGrid({ initialPosts }: { initialPosts: Post[] }
         {posts.map((post) => (
           <article
             key={post._id}
-            className="bg-(--card-bg) rounded-xl shadow-sm border border-(--border) overflow-hidden transform hover:shadow-lg transition-all duration-300 group"
+            className="bg-(--card-bg)  shadow-sm border border-(--border) overflow-hidden transform hover:shadow-lg transition-all duration-300 group"
           >
             <Link href={`/post/${post.slug}`}>
               <div className="cursor-pointer h-full flex flex-col">
@@ -100,7 +100,7 @@ export default function DestaquesGrid({ initialPosts }: { initialPosts: Post[] }
           <button
             onClick={loadMore}
             disabled={isLoading}
-            className="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded disabled:bg-gray-400"
+            className="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4  disabled:bg-gray-400"
           >
             {isLoading ? "Carregando..." : "Carregar Mais"}
           </button>

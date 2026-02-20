@@ -16,7 +16,7 @@ export default async function PreviewBanner() {
         </span>
         <Link
           href="/api/disable-draft"
-          className="bg-white text-primary font-bold py-1 px-3 rounded-full text-xs hover:bg-gray-200"
+          className="bg-white text-primary font-bold py-1 px-3 text-xs hover:bg-gray-200"
         >
           Exit Preview
         </Link>

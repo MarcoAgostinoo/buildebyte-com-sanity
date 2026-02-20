@@ -29,7 +29,7 @@ export default function PrivacyPolicyPage() {
         {/* HEADER */}
         <header className="mb-12 border-b border-(--border) pb-8">
           <div className="flex items-center gap-3 mb-4">
-            <span className="bg-green-600/10 text-green-600 border border-green-600/20 text-xs font-bold px-2 py-1 rounded-sm uppercase tracking-widest">
+            <span className="bg-green-600/10 text-green-600 border border-green-600/20 text-xs font-bold px-2 py-1  uppercase tracking-widest">
               Política Ativa
             </span>
             <span className="text-zinc-400 text-xs font-mono">
@@ -60,7 +60,7 @@ export default function PrivacyPolicyPage() {
             <div className="grid md:grid-cols-2 gap-6">
 
               {/* Coletamos */}
-              <div className="bg-(--card-bg) p-6 rounded-sm border-l-4 border-green-600">
+              <div className="bg-(--card-bg) p-6  border-l-4 border-green-600">
                 <h3 className="font-bold text-lg mb-4">
                   Dados Coletados
                 </h3>
@@ -76,7 +76,7 @@ export default function PrivacyPolicyPage() {
               </div>
 
               {/* Não coletamos */}
-              <div className="bg-(--card-bg) p-6 rounded-sm border-l-4 border-red-600">
+              <div className="bg-(--card-bg) p-6  border-l-4 border-red-600">
                 <h3 className="font-bold text-lg mb-4">
                   Dados Não Coletados
                 </h3>
@@ -103,7 +103,7 @@ export default function PrivacyPolicyPage() {
               necessários para funcionamento técnico do portal.
             </p>
 
-            <div className="bg-blue-50 p-4 border border-blue-200 rounded-sm text-sm">
+            <div className="bg-blue-50 p-4 border border-blue-200  text-sm">
               Não utilizamos redes de recomendação invasivas,
               nem scripts de rastreamento comportamental de terceiros
               para monetização baseada em perfil.
@@ -123,13 +123,13 @@ export default function PrivacyPolicyPage() {
             </p>
 
             <ul className="grid sm:grid-cols-3 gap-4 text-sm font-mono text-center">
-              <li className="p-4 border border-(--border) rounded bg-zinc-100">
+              <li className="p-4 border border-(--border)  bg-zinc-100">
                 TLS 1.3<br/>Obrigatório
               </li>
-              <li className="p-4 border border-(--border) rounded bg-zinc-100">
+              <li className="p-4 border border-(--border)  bg-zinc-100">
                 Banco de Dados<br/>Criptografado
               </li>
-              <li className="p-4 border border-(--border) rounded bg-zinc-100">
+              <li className="p-4 border border-(--border)  bg-zinc-100">
                 Controle de Acesso<br/>Restritivo
               </li>
             </ul>
@@ -172,7 +172,7 @@ export default function PrivacyPolicyPage() {
           </section>
 
           {/* FOOTER CTA */}
-          <div className="mt-12 bg-zinc-900 text-zinc-100 p-8 rounded-sm text-center">
+          <div className="mt-12 bg-zinc-900 text-zinc-100 p-8  text-center">
             <h3 className="text-2xl font-bold mb-3">
               Solicitação de Privacidade
             </h3>

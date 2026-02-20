@@ -26,8 +26,8 @@ export default function LicensingPage() {
       <div className="max-w-4xl mx-auto">
 
         {/* HEADER */}
-        <header className="mb-12 border-b border-[var(--border)] pb-8">
-          <span className="bg-zinc-900 text-white text-xs font-bold px-2 py-1 rounded-sm uppercase tracking-widest font-mono">
+        <header className="mb-12 border-b border-(--border) pb-8">
+          <span className="bg-zinc-900 text-white text-xs font-bold px-2 py-1  uppercase tracking-widest font-mono">
             Documento Jurídico Oficial
           </span>
 
@@ -55,7 +55,7 @@ export default function LicensingPage() {
               Todo conteúdo original publicado pelo <strong>Vetor Estratégico</strong> —
               incluindo análises técnicas, relatórios, gráficos, estrutura editorial,
               metodologia analítica e a marca registrada
-              <em className="text-primary font-semibold"> "Visão do Analista™" </em>
+            <em className="text-primary font-semibold"> &quot;Visão do Analista™&quot; </em>
               — é protegido pela legislação brasileira de direitos autorais
               (Lei nº 9.610/98) e tratados internacionais aplicáveis.
             </p>
@@ -75,7 +75,7 @@ export default function LicensingPage() {
               02. Uso Não Autorizado
             </h2>
 
-            <div className="bg-red-50 p-6 border border-red-200 rounded-sm">
+            <div className="bg-red-50 p-6 border border-red-200 ">
               <p className="font-semibold mb-4 text-red-600 uppercase text-sm">
                 É expressamente proibido:
               </p>
@@ -117,9 +117,9 @@ export default function LicensingPage() {
               Modelo de atribuição recomendado:
             </p>
 
-            <blockquote className="bg-zinc-100 border-l-4 border-primary p-6 rounded-r-md mt-4">
+            <blockquote className="bg-zinc-100 border-l-4 border-primary p-6 mt-4">
               <p className="italic">
-                "Tecnologia não é neutra. Ela desloca poder."
+                &quot;Tecnologia não é neutra. Ela desloca poder.&quot;
               </p>
               <cite className="block mt-4 text-sm font-bold not-italic">
                 — Vetor Estratégico, 2026
@@ -169,7 +169,7 @@ export default function LicensingPage() {
           </section>
 
           {/* FOOTER */}
-          <footer className="pt-10 border-t border-[var(--border)]">
+          <footer className="pt-10 border-t border-(--border)">
             <h2 className="text-sm font-black uppercase text-zinc-500 mb-4">
               Licenciamento Comercial
             </h2>
