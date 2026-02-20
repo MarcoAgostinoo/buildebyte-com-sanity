@@ -10,6 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import imageUrlBuilder from "@sanity/image-url";
 import { draftMode } from "next/headers";
+import PressaoBrasil from "@/app/components/PressaoBrasilTicker";
 
 // ---------------------------------------------------------------------------
 // INTERFACES
@@ -116,7 +117,6 @@ const REVIEW_TYPES = new Set(["review", "comparativo"]);
 // ---------------------------------------------------------------------------
 // SANITY
 // ---------------------------------------------------------------------------
-
 const builder = imageUrlBuilder(client);
 function urlFor(source: SanityImage) {
   return builder.image(source);
@@ -173,11 +173,9 @@ async function getRelatedPosts(
   }`;
   return await client.fetch(query, { currentPostSlug, categorySlugs });
 }
-
 // ---------------------------------------------------------------------------
 // PORTABLE TEXT
 // ---------------------------------------------------------------------------
-
 const ptComponents: PortableTextComponents = {
   types: {
     image: ({ value }: { value: SanityImage }) => {
@@ -185,6 +183,7 @@ const ptComponents: PortableTextComponents = {
       const { aspectRatio } = value.asset.metadata.dimensions;
       const w = 1200;
       return (
+        
         <figure className="my-8 sm:my-12 overflow-hidden  shadow-lg">
           <Image
             src={urlFor(value).width(w).fit("max").auto("format").url()}
@@ -309,6 +308,7 @@ function EditorialBadge({ type }: { type: string }) {
     opiniao:    "bg-orange-600",
   };
   return (
+    
     <span
       className={`${colorMap[type] ?? "bg-primary"} text-white text-[10px] font-black px-2.5 py-0.5  uppercase tracking-widest`}
     >
@@ -646,6 +646,7 @@ export default async function PostPage({
   const pillarLabel = post.pillar ? PILLAR_LABELS[post.pillar] : null;
 
   return (
+    
     <div className="max-w-9xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
       <div className="flex flex-col lg:flex-row gap-10">
 
@@ -653,6 +654,9 @@ export default async function PostPage({
         {/* MAIN                                                              */}
         {/* ================================================================ */}
         <main className="w-full lg:w-2/3">
+          <div className="mb-6">
+            <PressaoBrasil />
+          </div>
           <article className="bg-(--card-bg)  p-6 sm:p-10 border border-(--border) shadow-sm">
 
             {/* BADGES */}

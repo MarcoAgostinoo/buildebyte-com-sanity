@@ -11,6 +11,7 @@ import { formatDate } from "@/app/lib/utils";
 import { FeaturedPost, CategoryWithPosts, WebStory } from "@/app/lib";
 import PodcastCarousel from "./components/PodcastCarousel";
 import { getPodcastEpisodes, Episode } from "@/app/lib/podcast-service";
+import MilitaryPowerTicker from "./components/MilitaryPowerTicker";
 
 export const metadata: Metadata = {
   title: "Vetor Estratégico - Tecnologia, Hardware e Reviews",
@@ -104,9 +105,13 @@ export default async function Home() {
   });
 
   // Pegamos os 5 últimos artigos gerais para a lateral esquerda (estilo Tecnoblog)
-  const popularPosts = categories.flatMap(c => c.posts)
-    .filter(p => !renderedPostIds.has(p._id))
-    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+  const popularPosts = categories
+    .flatMap((c) => c.posts)
+    .filter((p) => !renderedPostIds.has(p._id))
+    .sort(
+      (a, b) =>
+        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+    )
     .slice(0, 5);
 
   return (
@@ -122,9 +127,12 @@ export default async function Home() {
           }),
         }}
       />
+
+      <MilitaryPowerTicker />
+
       {/* --- 1. SEÇÃO DE DESTAQUES --- */}
       {featuredPosts.length > 0 && (
-        <section className="mb-16 bg-amber-50 background-gradient p-6">
+        <section className="mb-8 bg-amber-50 background-gradient p-6">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-3xl font-black text-primary border-l-4 border-secondary pl-4">
               Destaques
@@ -196,47 +204,73 @@ export default async function Home() {
             })}
           </div>
         </section>
-      )}     
+      )}
 
-        {/* 2. SEÇÃO TECNOBLOG: POPULARES (SANITY) + CAST (API) */}
+      {/* 2. SEÇÃO TECNOBLOG: POPULARES (SANITY) + CAST (API) */}
       <section className="mt-12 mb-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          
           {/* LADO ESQUERDO: MAIS POPULARES */}
           <aside className="lg:col-span-3 lg:border-r lg:border-zinc-200 lg:pr-12 p-4 bg-amber-50">
-            <h2 className="text-[#0070f3] text-xl font-black mb-8 uppercase tracking-tighter">Mais Populares</h2>
+            <h2 className="text-[#0070f3] text-xl font-black mb-8 uppercase tracking-tighter">
+              Mais Populares
+            </h2>
             <div className="flex flex-col gap-8">
-              {popularPosts.map((post: CategoryWithPosts['posts'][number], index: number) => (
-                <article key={post._id} className="flex gap-4 group">
-                  <span className="text-3xl font-black text-zinc-600 group-hover:text-[#0070f3] leading-none transition-colors">{index + 1}</span>
-                  <Link href={`/post/${post.slug}`}>
-                    <h4 className="font-bold text-[15px] leading-tight text-zinc-900 group-hover:text-[#0070f3] transition-colors">{post.title}</h4>
-                  </Link>
-                </article>
-              ))}
+              {popularPosts.map(
+                (post: CategoryWithPosts["posts"][number], index: number) => (
+                  <article key={post._id} className="flex gap-4 group">
+                    <span className="text-3xl font-black text-zinc-600 group-hover:text-[#0070f3] leading-none transition-colors">
+                      {index + 1}
+                    </span>
+                    <Link href={`/post/${post.slug}`}>
+                      <h4 className="font-bold text-[15px] leading-tight text-zinc-900 group-hover:text-[#0070f3] transition-colors">
+                        {post.title}
+                      </h4>
+                    </Link>
+                  </article>
+                ),
+              )}
             </div>
           </aside>
 
           {/* LADO DIREITO: GRID DO BUILD & BYTE CAST */}
           <main className="lg:col-span-9 flex flex-col p-4 gap-4 bg-amber-50">
-             <div className="flex items-center justify-between mb-8">
-                <h2 className="text-2xl font-black uppercase tracking-tighter">Build & Byte Cast</h2>
-                <span className="bg-green-500/10 text-green-500 text-[10px] font-bold px-2 py-1  animate-pulse uppercase">Ao Vivo / Recentes</span>
-             </div>
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-2xl font-black uppercase tracking-tighter">
+                Build & Byte Cast
+              </h2>
+              <span className="bg-green-500/10 text-green-500 text-[10px] font-bold px-2 py-1  animate-pulse uppercase">
+                Ao Vivo / Recentes
+              </span>
+            </div>
 
             {/* Desktop Grid 2x2 */}
             <div className="hidden md:grid grid-cols-2 gap-x-8 gap-y-12">
               {episodes.map((ep: Episode) => (
                 <article key={ep.id} className="group">
-                  <a href={ep.link} target="_blank" rel="noopener noreferrer" className="block relative aspect-video overflow-hidden mb-4">
-                    <Image src={ep.image || DEFAULT_IMAGE} alt={ep.title} fill className="object-cover transition-transform group-hover:scale-105" />
-                    <span className="absolute bottom-3 left-3 bg-[#0070f3] text-white text-[10px] font-black px-2 py-0.5 uppercase tracking-widest">PODCAST</span>
+                  <a
+                    href={ep.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block relative aspect-video overflow-hidden mb-4"
+                  >
+                    <Image
+                      src={ep.image || DEFAULT_IMAGE}
+                      alt={ep.title}
+                      fill
+                      className="object-cover transition-transform group-hover:scale-105"
+                    />
+                    <span className="absolute bottom-3 left-3 bg-[#0070f3] text-white text-[10px] font-black px-2 py-0.5 uppercase tracking-widest">
+                      PODCAST
+                    </span>
                   </a>
                   <a href={ep.link} target="_blank" rel="noopener noreferrer">
-                    <h3 className="text-2xl font-black leading-tight text-zinc-900 group-hover:text-[#0070f3] transition-colors mb-2">{ep.title}</h3>
+                    <h3 className="text-2xl font-black leading-tight text-zinc-900 group-hover:text-[#0070f3] transition-colors mb-2">
+                      {ep.title}
+                    </h3>
                   </a>
                   <p className="text-sm text-zinc-500 font-medium">
-                    Postado em {formatDate(ep.pubDate)} • <span className="text-zinc-800">Build & Byte Cast</span>
+                    Postado em {formatDate(ep.pubDate)} •{" "}
+                    <span className="text-zinc-800">Build & Byte Cast</span>
                   </p>
                 </article>
               ))}
@@ -244,7 +278,10 @@ export default async function Home() {
 
             {/* Mobile Carousel */}
             <div className="md:hidden">
-              <PodcastCarousel episodes={episodes} defaultImage={DEFAULT_IMAGE} />
+              <PodcastCarousel
+                episodes={episodes}
+                defaultImage={DEFAULT_IMAGE}
+              />
             </div>
           </main>
         </div>
@@ -252,32 +289,22 @@ export default async function Home() {
 
       {/* --- 3 SEÇÕES EXTRAS --- */}
       <div className="mt-20">
-        <Suspense
-          fallback={
-            <div className="h-40 animate-pulse bg-gray-100" />
-          }
-        >
+        <Suspense fallback={<div className="h-40 animate-pulse bg-gray-100" />}>
           <Ofertas />
         </Suspense>
       </div>
-      
+
       {/* --- 4. SEÇÃO DE WEB STORIES (ESTILO INSTAGRAM) --- */}
       {webStories.length > 0 && (
         <Suspense
-          fallback={
-            <div className="h-60 animate-pulse bg-gray-100 mt-10" />
-          }
+          fallback={<div className="h-60 animate-pulse bg-gray-100 mt-10" />}
         >
           <WebStoriesCarousel webStories={webStories} />
         </Suspense>
       )}
 
       <div className="mt-10">
-        <Suspense
-          fallback={
-            <div className="h-96 animate-pulse bg-gray-100" />
-          }
-        >
+        <Suspense fallback={<div className="h-96 animate-pulse bg-gray-100" />}>
           <LatestPosts />
         </Suspense>
       </div>
@@ -292,10 +319,10 @@ export default async function Home() {
           <span className="font-bold text-orange-600">
             NOTA DE TRANSPARÊNCIA:
           </span>{" "}
-          O Vetor Estratégico participa de programas de afiliados. Ao comprar através
-          de links em nossas ofertas (&quot;Pegar Promoção&quot;), podemos
-          receber uma comissão, sem custo adicional para você. Isso financia
-          nossa infraestrutura de testes e servidores.
+          O Vetor Estratégico participa de programas de afiliados. Ao comprar
+          através de links em nossas ofertas (&quot;Pegar Promoção&quot;),
+          podemos receber uma comissão, sem custo adicional para você. Isso
+          financia nossa infraestrutura de testes e servidores.
         </p>
       </div>
     </div>

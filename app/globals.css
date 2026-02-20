@@ -56,7 +56,7 @@
 
 body {
   background-color: var(--background-base);
-  background-image: linear-gradient(rgba(0, 0, 0, 0.716), rgba(0, 0, 0, 0.708)), url('/background.jpg');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.574), rgba(0, 0, 0, 0.564)), url('/background.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -175,4 +175,18 @@ p {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+@keyframes ticker {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-ticker {
+  display: inline-block;
+  animation: ticker 80s linear infinite;
 }

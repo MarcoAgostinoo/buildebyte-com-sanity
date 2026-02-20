@@ -1,78 +1,98 @@
 "use client";
 
-import { 
-  Footer, 
-  FooterBrand, 
-  FooterCopyright, 
-  FooterDivider, 
-  FooterLink, 
-  FooterLinkGroup 
+import {
+  Footer,
+  FooterBrand,
+  FooterCopyright,
+  FooterDivider,
+  FooterLink,
+  FooterLinkGroup,
 } from "flowbite-react";
 
-export default function SimpleFooter() {
+export default function StrategicFooter() {
   return (
-    <Footer container className="rounded-none bg-amber-50 dark:bg-zinc-950 shadow-none border-t border-[var(--border)] pt-12 pb-8">
-      <div className="w-full max-w-9xl mx-auto">
-        
-        <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1 gap-8">  
-          {/* Marca / Identidade */}
-          <div className="flex flex-col items-start">
+    <Footer
+      container
+      className="rounded-none bg-white dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800 pt-16 pb-10"
+    >
+      <div className="w-full max-w-7xl mx-auto">
+
+        {/* BLOCO PRINCIPAL */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+
+          {/* IDENTIDADE */}
+          <div className="flex flex-col space-y-4">
             <FooterBrand
               href="/"
-              src="/logo.png" 
+              src="/logo.png"
               alt="Vetor Estratégico Logo"
               name="Vetor Estratégico"
-              className="mb-4 flex items-center"
             />
-            <p className="text-zinc-500 dark:text-zinc-400 text-sm max-w-xs leading-relaxed">
-              Decodificando a arquitetura do mundo moderno. <br/>
-              <span className="text-xs font-mono opacity-60 mt-2 block">
-                VERSION: 2.0.4-STABLE
-              </span>
+
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-sm">
+              Análise aplicada sobre tecnologia, defesa, infraestrutura e poder global —
+              com foco no impacto sistêmico para o Brasil.
+            </p>
+
+            <p className="text-xs font-mono text-zinc-400 tracking-wider">
+              Tecnologia. Poder. Direção.
             </p>
           </div>
 
-          {/* Links Técnicos */}
-          <div className="flex items-center">
-            <FooterLinkGroup className="flex flex-wrap gap-x-8 gap-y-4 justify-start sm:justify-end">
-              <FooterLink href="/about" className="text-zinc-600 dark:text-zinc-400 hover:text-primary uppercase text-xs font-bold tracking-widest transition-colors">
+          {/* PILARES EDITORIAIS */}
+          <div>
+            <h3 className="text-xs uppercase tracking-widest font-semibold text-zinc-500 mb-4">
+              Áreas de Análise
+            </h3>
+
+            <ul className="space-y-2 text-sm text-zinc-600 dark:text-zinc-400">
+              <li>Defesa & Tecnologia Militar</li>
+              <li>Infraestrutura & Soberania</li>
+              <li>Economia de Poder</li>
+              <li>Brasil Estratégico</li>
+            </ul>
+          </div>
+
+          {/* INSTITUCIONAL */}
+          <div>
+            <h3 className="text-xs uppercase tracking-widest font-semibold text-zinc-500 mb-4">
+              Institucional
+            </h3>
+
+            <FooterLinkGroup col className="space-y-2">
+              <FooterLink href="/about" className="hover:text-primary">
                 Sobre / Missão
               </FooterLink>
-              <FooterLink href="/privacy-policy" className="text-zinc-600 dark:text-zinc-400 hover:text-primary uppercase text-xs font-bold tracking-widest transition-colors">
-                Privacidade (LGPD)
+              <FooterLink href="/manifesto" className="hover:text-primary">
+                Manifesto Institucional
               </FooterLink>
-              <FooterLink href="/licensing" className="text-zinc-600 dark:text-zinc-400 hover:text-primary uppercase text-xs font-bold tracking-widest transition-colors">
-                Licenciamento
+              <FooterLink href="/privacy-policy" className="hover:text-primary">
+                Política de Privacidade (LGPD)
               </FooterLink>
-              <FooterLink href="/contato" className="text-zinc-600 dark:text-zinc-400 hover:text-primary uppercase text-xs font-bold tracking-widest transition-colors">
-                Abrir Chamado
+              <FooterLink href="/contato" className="hover:text-primary">
+                Contato Editorial
               </FooterLink>
             </FooterLinkGroup>
           </div>
         </div>
-        
-        <FooterDivider className="my-8 border-[var(--border)]" />
-        
-        <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4">
-          
-          <FooterCopyright 
-            href="/" 
-            by="Vetor Estratégico™ Media." 
-            year={new Date().getFullYear()} 
-            className="text-zinc-400 dark:text-zinc-500 text-xs font-mono"
+
+        <FooterDivider className="my-10 border-zinc-200 dark:border-zinc-800" />
+
+        {/* BLOCO INFERIOR */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+
+          <FooterCopyright
+            href="/"
+            by="Vetor Estratégico™"
+            year={new Date().getFullYear()}
+            className="text-xs text-zinc-500 font-mono"
           />
 
-          {/* Indicador de Status do Sistema */}
-          <div className="flex items-center gap-3 px-4 py-1.5 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
-            <div className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex h-2 w-2 bg-green-500"></span>
-            </div>
-            <span className="text-[10px] font-bold text-zinc-600 dark:text-zinc-400 uppercase tracking-widest">
-              Systems Operational
-            </span>
+          <div className="text-[11px] text-zinc-400 tracking-wide text-center md:text-right max-w-md">
+            Portal brasileiro independente de análise estratégica.
+            Não reproduzimos propaganda. Não operamos com viés partidário.
+            Análise não é torcida.
           </div>
-
         </div>
       </div>
     </Footer>
