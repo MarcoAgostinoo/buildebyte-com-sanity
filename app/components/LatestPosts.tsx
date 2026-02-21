@@ -22,8 +22,19 @@ const formatDate = (dateString: string) => {
 };
 
 async function getData() {
-  // Buscamos posts não destacados + o editorialType para o badge
-  const query = `*[_type == "post" && (!defined(featured) || featured == false) && !(_id in path('drafts.**'))] | order(publishedAt desc) [0...8] {
+  /**
+   * STREAM EDITORIAL PURO:
+   * - Exclui destaques (featured)
+   * - Exclui âncoras (anchor)
+   * - Exclui drafts
+   */
+  const query = `*[
+    _type == "post" &&
+    (!defined(featured) || featured == false) &&
+    (!defined(anchor) || anchor == false) &&
+    !(_id in path("drafts.**"))
+  ]
+  | order(publishedAt desc)[0...8] {
     title,
     "slug": slug.current,
     "imagem": mainImage.asset->url,
@@ -44,8 +55,8 @@ export default async function LatestPosts() {
   return (
     <section className="py-16 bg-transparent">
       <div className="max-w-7xl mx-auto bg-amber-50 p-4">
-        
-        {/* CABEÇALHO EDITORIAL (Match com o resto da Home) */}
+
+        {/* CABEÇALHO EDITORIAL */}
         <div className="flex items-end justify-between mb-10 border-b-2 border-(--border) pb-4">
           <div className="space-y-1">
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
@@ -62,8 +73,8 @@ export default async function LatestPosts() {
           {data.map((post, idx) => (
             <article key={idx} className="group flex flex-col">
               <Link href={`/post/${post.slug}`} className="flex flex-col h-full">
-                
-                {/* CONTAINER DA IMAGEM (Estilo Clean) */}
+
+                {/* IMAGEM */}
                 <div className="relative aspect-[16/10] w-full overflow-hidden bg-(--border) mb-4">
                   {post.imagem ? (
                     <Image
@@ -78,8 +89,8 @@ export default async function LatestPosts() {
                       No Image
                     </div>
                   )}
-                  
-                  {/* BADGE DE CATEGORIA SOBREPOSTO */}
+
+                  {/* BADGE DE CATEGORIA */}
                   <div className="absolute top-3 left-3 flex gap-1">
                     <span className="bg-black/80 backdrop-blur-md text-white text-[9px] font-black px-2 py-0.5 uppercase tracking-wider border border-white/10">
                       {post.category || "Geral"}
@@ -89,38 +100,52 @@ export default async function LatestPosts() {
 
                 {/* META INFO */}
                 <div className="flex items-center gap-2 mb-2">
-                   {post.editorialType && (
-                     <span className="text-[10px] font-bold text-primary uppercase tracking-tighter">
-                       {post.editorialType}
-                     </span>
-                   )}
-                   <span className="text-[10px] text-foreground/40 font-medium">
-                     {formatDate(post.publishedAt)}
-                   </span>
+                  {post.editorialType && (
+                    <span className="text-[10px] font-bold text-primary uppercase tracking-tighter">
+                      {post.editorialType}
+                    </span>
+                  )}
+                  <span className="text-[10px] text-foreground/40 font-medium">
+                    {formatDate(post.publishedAt)}
+                  </span>
                 </div>
 
-                {/* TÍTULO (Forte e Direto) */}
+                {/* TÍTULO */}
                 <h3 className="text-lg font-bold text-foreground leading-snug mb-3 line-clamp-2 group-hover:text-primary transition-colors decoration-primary/30 decoration-2 underline-offset-4 group-hover:underline">
                   {post.title}
                 </h3>
 
-                {/* LINK DISCRETO */}
+                {/* CTA */}
                 <div className="mt-auto flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-foreground/30 group-hover:text-primary transition-colors">
-                  Leia o Relátorio
-                  <svg className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  Leia o Relatório
+                  <svg
+                    className="w-3 h-3 ml-1 transition-transform group-hover:translate-x-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={3}
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    />
                   </svg>
                 </div>
+
               </Link>
             </article>
           ))}
         </div>
 
-        {/* BOTÃO MOBILE VER MAIS */}
+        {/* BOTÃO MOBILE */}
         <div className="mt-12 sm:hidden text-center">
-            <Link href="/arquivo" className="inline-block bg-primary text-white font-black text-xs px-8 py-4 uppercase tracking-widest w-full">
-                Ver todo o arquivo
-            </Link>
+          <Link
+            href="/arquivo"
+            className="inline-block bg-primary text-white font-black text-xs px-8 py-4 uppercase tracking-widest w-full"
+          >
+            Ver todo o arquivo
+          </Link>
         </div>
       </div>
     </section>
