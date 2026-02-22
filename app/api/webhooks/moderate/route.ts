@@ -1,78 +1,97 @@
 import { NextResponse } from "next/server";
+import crypto from "crypto";
 
+// LÓGICA MELHORADA: Palavras base sem acento. 
+// O código vai remover os acentos do comentário antes de analisar.
 const BAD_WORDS = [
-    // --- 1. SPAM E GOLPES (Financeiro) ---
-    'spam', 'golpe', 'golpista', 'fraude', 'pirâmide', 
-    'ganhe dinheiro', 'dinheiro fácil', 'fature', 'renda extra', 'lucro',
-    'crypto', 'bitcoin', 'ethereum', 'investimento', 'forex', 'trader',
-    'clique aqui', 'link na bio', 'acesse', 'site oficial',
-    'hacker', 'recuperação de conta', 
-
-    // --- 2. OFENSAS PESSOAIS E XINGAMENTOS (Aumentado) ---
-    'vacilão', 'vacilao', 'vacilaum',
-    'safado', 'safada', 'safados',
-    'pilantra', 'picareta', 'ladrão', 'ladrao', 'ladra',
-    'bandido', 'bandida', 'criminoso',
-    'impostor', 'mentiroso', 'mentirosa',
-    'burro', 'burra', 'anta', 'animal', 'jumento',
-    'idiota', 'imbecil', 'trouxa', 'otário', 'otária', 'babaca',
-    'lixo', 'inútil', 'retardado', 'retardada', 'doente',
-    'escroto', 'escrota', 'nojento', 'nojenta',
-    'arrombado', 'arrombada', 
-    'corno', 'cornos', 'chifrudo',
-    'vagabundo', 'vagabunda', 'incompetente',
-
-    // --- 3. BAIXO CALÃO (Gerais) ---
-    'merda', 'bosta', 'caguei',
-    'caralho', 'caralhos', 'krl',
-    'porra', 'porras', 'pqp',
-    'foda', 'foder', 'fuder', 'fodido', 'fudido', 'fodase', 'foda-se', 'vsf',
-    'cacete', 'k7',
-    'cu', 'cú', 'anus', 'anal', 'rabo',
-    'puta', 'putas', 'prostituta', 'quenga', 'piranha', 'vadia',
+    // Spam e Golpes
+    'spam', 'golpe', 'golpista', 'fraude', 'piramide', 
+    'crypto', 'bitcoin', 'ethereum', 'forex', 'trader',
+    'hacker',
+    // Ofensas
+    'vacilao', 'vacilaum', 'safado', 'safada', 'pilantra', 'picareta', 'ladrao', 
+    'bandido', 'impostor', 'mentiroso', 'burro', 'anta', 'animal', 'jumento',
+    'idiota', 'imbecil', 'trouxa', 'otario', 'babaca', 'lixo', 'inutil', 
+    'retardado', 'doente', 'escroto', 'nojento', 'arrombado', 'corno', 'chifrudo',
+    'vagabundo', 'incompetente',
+    // Baixo calao
+    'merda', 'bosta', 'caguei', 'caralho', 'krl', 'porra', 'pqp',
+    'foda', 'foder', 'fuder', 'fodido', 'fudido', 'fodase', 'vsf', 'cacete', 'k7',
+    'cu', 'anus', 'anal', 'rabo', 'puta', 'prostituta', 'quenga', 'piranha', 'vadia',
     'pau', 'pinto', 'rola', 'piroca', 'caceta', 'vara', 'jeba',
     'buceta', 'boceta', 'xoxota', 'perereca', 'aranha',
     'chupa', 'chupar', 'mamada', 'boquete', 'siririca',
-    'gozar', 'gozo', 'leite', 'esperma',
-    'tetas', 'peitos', 'bico',
+    'gozar', 'gozo', 'leite', 'esperma', 'tetas', 'peitos', 'bico',
     'fdp', 'vtmnc', 'vtnc', 'tmnc'
 ];
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET;
 
 export async function POST(request: Request) {
   console.log("📥 Webhook recebido! Iniciando processamento...");
 
-  if (!GITHUB_TOKEN) {
-    console.error("❌ ERRO FATAL: GITHUB_TOKEN não encontrado.");
-    return NextResponse.json({ error: "Token ausente" }, { status: 500 });
+  // 1. VERIFICAÇÃO DE AMBIENTE
+  if (!GITHUB_TOKEN || !WEBHOOK_SECRET) {
+    console.error("❌ ERRO FATAL: Variáveis de ambiente ausentes.");
+    return NextResponse.json({ error: "Configuração incompleta" }, { status: 500 });
   }
 
   try {
-    const payload = await request.json();
+    // 2. VALIDAÇÃO DE SEGURANÇA (Assinatura do Webhook)
+    // Precisamos do texto "cru" (raw) da requisição para calcular o hash corretamente
+    const rawBody = await request.text();
+    const signature = request.headers.get("x-hub-signature-256");
+
+    if (!signature) {
+      console.error("🚨 Requisição sem assinatura do GitHub.");
+      return NextResponse.json({ error: "Acesso negado" }, { status: 401 });
+    }
+
+    // Calcula o hash usando a sua chave secreta e o corpo da requisição
+    const hmac = crypto.createHmac("sha256", WEBHOOK_SECRET);
+    const digest = "sha256=" + hmac.update(rawBody).digest("hex");
+
+    // Compara se o hash que o GitHub mandou é igual ao que nós calculamos
+    if (signature !== digest) {
+      console.error("🚨 Assinatura inválida! Possível ataque forjado.");
+      return NextResponse.json({ error: "Assinatura inválida" }, { status: 401 });
+    }
+
+    // 3. PROCESSAMENTO DO PAYLOAD
+    // Agora que sabemos que é seguro, fazemos o parse para JSON
+    const payload = JSON.parse(rawBody);
     const { action, comment } = payload;
 
-    // 1. Filtrar Ação: Só queremos moderar quando Cria ou Edita
     if (action !== 'created' && action !== 'edited') {
         console.log(`ℹ️ Ação ignorada: ${action}`);
         return NextResponse.json({ message: "Ação ignorada" });
     }
 
     if (!comment || !comment.body || !comment.node_id) {
-      console.error("❌ Payload inválido ou incompleto:", payload);
       return NextResponse.json({ message: "Payload inválido" }, { status: 400 });
     }
 
-    const commentBody = comment.body.toLowerCase();
-    
-    // Log para debug (não mostra o texto todo por privacidade, só o início)
     console.log(`🔎 Analisando comentário ID: ${comment.id}`);
 
-    const foundBadWord = BAD_WORDS.find((word) => commentBody.includes(word));
+    // 4. LÓGICA DE MODERAÇÃO MELHORADA (Evitando falsos positivos)
+    // Removemos os acentos e deixamos minúsculo (ex: "CÚ" vira "cu", "Ladrão" vira "ladrao")
+    const normalizedComment = comment.body
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
 
+    // Busca usando regex com "word boundaries" (\b). Isso garante que ele ache "cu", mas ignore "escutar".
+    const foundBadWord = BAD_WORDS.find((word) => {
+      // \b significa "fronteira de palavra" (espaço, pontuação, início/fim da frase)
+      const regex = new RegExp(`\\b${word}\\b`, 'i');
+      return regex.test(normalizedComment);
+    });
+
+    // 5. DELEÇÃO NO GITHUB
     if (foundBadWord) {
       console.log(`🚨 PALAVRA PROIBIDA ENCONTRADA: "${foundBadWord}"`);
-      console.log(`🗑️ Tentando apagar comentário (NodeID: ${comment.node_id})...`);
+      console.log(`🗑️ Apagando comentário (NodeID: ${comment.node_id})...`);
 
       const mutation = JSON.stringify({
         query: `mutation($id: ID!) { deleteDiscussionComment(input: {id: $id}) { clientMutationId } }`,
@@ -91,15 +110,15 @@ export async function POST(request: Request) {
       const responseData = await response.json();
 
       if (responseData.errors) {
-        console.error("❌ Erro na API do GitHub:", JSON.stringify(responseData.errors));
-        return NextResponse.json({ error: "Falha ao apagar no GitHub" }, { status: 500 });
+        console.error("❌ Erro no GraphQL:", JSON.stringify(responseData.errors));
+        return NextResponse.json({ error: "Falha ao apagar" }, { status: 500 });
       }
 
       console.log("✅ SUCESSO! Comentário ofensivo removido.");
       return NextResponse.json({ message: "Moderado com sucesso" });
     }
 
-    console.log("👍 Comentário limpo. Nenhuma ação necessária.");
+    console.log("👍 Comentário limpo.");
     return NextResponse.json({ message: "Comentário permitido" });
 
   } catch (error) {
