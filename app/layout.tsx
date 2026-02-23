@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeInit } from "../.flowbite-react/init";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import PreviewBanner from "./components/PreviewBanner";
 
 const inter = Inter({
@@ -121,8 +122,7 @@ export default function RootLayout({
         },
         potentialAction: {
           "@type": "SearchAction",
-          target:
-            "https://vetorestrategico.com/search?q={search_term_string}",
+          target: "https://vetorestrategico.com/search?q={search_term_string}",
           "query-input": "required name=search_term_string",
         },
       },
@@ -150,6 +150,9 @@ export default function RootLayout({
         <Footer />
         <PreviewBanner />
       </body>
+      {process.env.NEXT_PUBLIC_GA_ID && (
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+      )}
     </html>
   );
 }
