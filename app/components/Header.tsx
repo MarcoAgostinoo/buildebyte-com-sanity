@@ -60,7 +60,7 @@ export default function Header() {
             {/* MENU DESKTOP */}
             <div className="hidden md:flex items-center gap-10 text-base font-extrabold tracking-widest uppercase [font-family:var(--font-oswald)]">
               <NavItem href="/" label="INÍCIO" />
-              <NavItem href="/analises" label="ANÁLISES" />
+              <NavItem href="/destaques" label="DESTAQUES" />
               <NavItem href="/noticias" label="NOTÍCIAS" />
               <NavItem href="/tecnologia" label="TECNOLOGIA" />
               <NavItem href="/videos" label="VÍDEOS" />
@@ -72,7 +72,7 @@ export default function Header() {
           <div className="hidden peer-checked:block md:hidden pb-6 pt-4 border-t border-zinc-800">
             <div className="flex flex-col gap-6 text-base font-extrabold tracking-widest uppercase [font-family:var(--font-oswald)]">
               <NavItem href="/" label="INÍCIO" />
-              <NavItem href="/analises" label="ANÁLISES" />
+              <NavItem href="/destaques" label="DESTAQUES" />
               <NavItem href="/noticias" label="NOTÍCIAS" />
               <NavItem href="/tecnologia" label="TECNOLOGIA" />
               <NavItem href="/videos" label="VÍDEOS" />
