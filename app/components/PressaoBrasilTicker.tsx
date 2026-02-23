@@ -47,9 +47,7 @@ export default function PowerGridTicker() {
         dolar: cotacaoDolar.toFixed(2),
         ouro: ouroBRL.toFixed(2),
         riscoSoberano: riscoVal > 0 ? riscoVal.toFixed(0) : "--",
-        // Aplicando separador de milhar nas reservas
         reservas: reservasVal > 0 ? Math.floor(reservasVal / 1000).toLocaleString('pt-BR') : "--",
-        // APLICAÇÃO DO PONTO NO FLUXO TECH:
         fluxoTech: techVal > 0 ? Math.floor(techVal).toLocaleString('pt-BR') : "--",
       });
     };
@@ -59,25 +57,23 @@ export default function PowerGridTicker() {
 
   if (!dados) return null;
 
-  const texto = `
-    HEGEMONIA USD: R$ ${dados.dolar} •
-    LASTRO ESTRATÉGICO (OURO): R$ ${dados.ouro}/g •
-    RISCO GEOPOLÍTICO (EMBI+): ${dados.riscoSoberano} pts •
-    ESCUDO EXTERNO: $${dados.reservas} BI •
-    ABSORÇÃO TECH MIL/IND: $${dados.fluxoTech} MI •
-  `;
+  const texto = `HEGEMONIA USD: R$ ${dados.dolar} • LASTRO ESTRATÉGICO (OURO): R$ ${dados.ouro}/g • RISCO GEOPOLÍTICO (EMBI+): ${dados.riscoSoberano} pts • ESCUDO EXTERNO: $${dados.reservas} BI • ABSORÇÃO TECH MIL/IND: $${dados.fluxoTech} MI • `;
 
   return (
     <div className="w-full bg-black border-y border-zinc-800 overflow-hidden font-mono">
-      <div className="flex items-center h-10 relative">
-        <div className="bg-amber-600 text-black text-xs font-bold px-4 h-full flex items-center tracking-widest uppercase border-r-2 border-amber-400 z-10">
-          MONITOR BRASIL
+      <div className="flex items-center h-8 sm:h-10 relative">
+        
+        {/* Container mais estreito: px-1.5 sm:px-2.5 e tracking-wide */}
+        <div className="bg-amber-600 text-black text-[10px] sm:text-xs font-bold px-1.5 sm:px-2.5 h-full flex items-center tracking-wide uppercase border-r-2 border-amber-400 z-10 flex-shrink-0 whitespace-nowrap">
+          Monitor Brasil<span className="hidden sm:inline">&nbsp;BRASIL</span>
         </div>
-        <div className="flex-1 overflow-hidden relative shadow-[inset_0_0_10px_rgba(0,0,0,0.8)]">
-          <div className="whitespace-nowrap animate-ticker text-amber-500/90 text-sm font-semibold pl-6 tracking-wide">
+        
+        <div className="flex-1 overflow-hidden relative shadow-[inset_0_0_10px_rgba(0,0,0,0.8)] h-full flex items-center">
+          <div className="whitespace-nowrap animate-ticker text-amber-500/90 text-xs sm:text-sm font-semibold pl-4 sm:pl-6 tracking-wide">
             {texto.repeat(4)}
           </div>
         </div>
+        
       </div>
     </div>
   );

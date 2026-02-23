@@ -70,15 +70,17 @@ export default function MilitaryPowerTicker() {
 
   return (
     <div className="w-full bg-black border-y border-zinc-800 overflow-hidden font-mono">
-      <div className="flex items-center h-10 relative">
+      {/* Altura responsiva: h-8 no mobile, h-10 no desktop */}
+      <div className="flex items-center h-8 sm:h-10 relative">
         
-        {/* Etiqueta estratégica */}
-        <div className="bg-red-700 text-white text-xs font-bold px-4 h-full flex items-center tracking-widest uppercase border-r border-red-500 z-10">
-         BALANÇO DE PODER GLOBAL
+        {/* Etiqueta estratégica com proteção contra quebra e redução no mobile */}
+        <div className="bg-red-700 text-white text-[10px] sm:text-xs font-bold px-2 sm:px-4 h-full flex items-center tracking-widest uppercase border-r border-red-500 z-10 flex-shrink-0 whitespace-nowrap">
+          <span className="hidden sm:inline">BALANÇO DE&nbsp;</span>PODER GLOBAL
         </div>
 
-        <div className="flex-1 overflow-hidden relative shadow-[inset_0_0_12px_rgba(0,0,0,0.9)]">
-          <div className="whitespace-nowrap animate-ticker text-red-500/90 text-sm font-semibold pl-6 tracking-wide">
+        <div className="flex-1 overflow-hidden relative shadow-[inset_0_0_12px_rgba(0,0,0,0.9)] h-full flex items-center">
+          {/* Texto do ticker ligeiramente menor no mobile para melhor leitura */}
+          <div className="whitespace-nowrap animate-ticker text-red-500/90 text-xs sm:text-sm font-semibold pl-4 sm:pl-6 tracking-wide">
             {texto.repeat(4)}
           </div>
         </div>
