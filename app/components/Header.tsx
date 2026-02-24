@@ -34,8 +34,8 @@ export default function Header() {
             <Link href="/" className="flex items-center gap-3">
               <Image
                 src="/logo.png"
-                width={50}
-                height={50}
+                width={80}
+                height={80}
                 alt="Vetor Estratégico"
                 priority
               />
