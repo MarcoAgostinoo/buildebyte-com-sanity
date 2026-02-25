@@ -105,7 +105,7 @@ export async function GET(
           return `
         <amp-story-page id="page-${index}" auto-advance-after="${page.duration || 7}s">
           <amp-story-grid-layer template="fill">
-            <amp-img src="${imgUrl}" width="720" height="1280" layout="responsive"></amp-img>
+          <amp-img src="${imgUrl}" alt="${page.text ? page.text : story.title}" width="720" height="1280" layout="responsive"></amp-img>
           </amp-story-grid-layer>
           
           ${
@@ -123,9 +123,10 @@ export async function GET(
           ${
             index === story.pages.length - 1
               ? `
-              <amp-story-page-outlink>
+            <amp-story-page-outlink layout="nodisplay" theme="dark">
               <a href="${ctaLink}">Ler Artigo Completo</a>
-              </amp-story-page-outlink>          `
+            </amp-story-page-outlink>
+          `
               : ""
           }
         </amp-story-page>
