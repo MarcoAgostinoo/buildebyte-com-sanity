@@ -46,14 +46,15 @@ O projeto opera em uma arquitetura moderna e desacoplada (Headless):
 2. **Frontend (Next.js 15+)**
    - **Funcionamento:** Utiliza o App Router para roteamento e renderização (SSR/ISR). Consome as variáveis públicas (iniciadas com `NEXT_PUBLIC_`) no cliente e as demais no servidor.
    - **Integrações:** Estilização com Tailwind CSS, componentes Flowbite React e feeds RSS para podcasts.
+   - **SEO & Sitemap:** O arquivo `sitemap.ts` gera dinamicamente o mapa do site, listando páginas estáticas (como `/privacy-policy`) e buscando todos os posts publicados no Sanity para indexação automática.
 
 3. **Sistema de Newsletter (Resend)**
-   - **Funcionamento:** O Resend é o provedor de e-mail transacional. Quando uma newsletter é disparada (rota `/api/admin/send-blast`), o sistema usa a chave de API para autenticar o envio.
+   - **Funcionamento:** A rota de API `/api/admin/send-blast` gerencia o envio em massa. Ela busca o conteúdo da newsletter no Sanity, filtra os leads com status "active" e utiliza o SDK do Resend para disparar e-mails em lotes (batch), respeitando limites de envio.
    - **Variáveis de Ambiente:**
      - `RESEND_API_KEY`: Chave privada (API Key) gerada no painel do Resend para autorizar o envio de e-mails.
 
 4. **Segurança e Automação (Cron Jobs)**
-   - **Funcionamento:** Rotas administrativas sensíveis (como disparo de e-mails em massa) são protegidas para evitar execução pública não autorizada.
+   - **Funcionamento:** Rotas administrativas sensíveis são protegidas via Bearer Token. O sistema verifica se o header `Authorization` corresponde ao segredo definido no servidor.
    - **Variáveis de Ambiente:**
      - `MY_CRON_SECRET`: Uma senha forte definida por você. Deve ser enviada no cabeçalho de autorização ou como parâmetro ao chamar rotas administrativas (Cron Jobs).
 
@@ -130,8 +131,9 @@ O foco não é volume de notícias, mas profundidade analítica.
 
 - **Core:** Next.js, React, TypeScript
 - **Estilo:** Tailwind CSS, Flowbite React
-- **Dados & CMS:** Sanity.io, Next-Sanity
+- **Dados & CMS:** Sanity.io, Next-Sanity, @portabletext/react
 - **E-mail & Marketing:** Resend
+- **Acessibilidade:** axe-core
 - **Utilitários:** RSS Parser, Embla Carousel
 
 ## 🚀 Deploy na Vercel
@@ -150,4 +152,3 @@ O Vetor Estratégico busca se consolidar como:
 - Núcleo de debate técnico sério sobre poder, infraestrutura e soberania
 
 **Tecnologia. Poder. Direção.**
-

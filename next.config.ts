@@ -5,16 +5,34 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true, // Simplesmente desabilita otimização
     remotePatterns: [
+      // Configuração correta para o Sanity.io conforme README
       {
         protocol: "https",
-        hostname: "romantic-frog-d139ad790e.media.strapiapp.com",
-      },
-      {
-        protocol: 'https',
-        hostname: 'http2.mlstatic.com',
-        pathname: '/**',
+        hostname: "cdn.sanity.io",
       },
     ],
+  },
+  // Adicionando Headers de Segurança (CSP, HSTS, X-Frame-Options)
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY', // Previne Clickjacking
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff', // Previne MIME-sniffing
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload', // Força HTTPS
+          },
+        ],
+      },
+    ];
   },
 };
 

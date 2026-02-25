@@ -2,17 +2,43 @@ import { NextResponse } from 'next/server';
 import { client } from '@/app/lib/sanity'; // Cliente de Leitura
 import { Resend } from 'resend';
 import { PortableText } from '@portabletext/react'; // Para converter o texto do Sanity para HTML se precisar customizar
+import crypto from 'crypto';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Segredo para ninguém disparar e-mail no seu lugar (Coloque isso no .env.local)
-const CRON_SECRET = process.env.MY_CRON_SECRET || 'senha_super_secreta_123';
+const CRON_SECRET = process.env.MY_CRON_SECRET;
+
+// Função auxiliar para sanitizar strings e evitar injeção de HTML
+function escapeHtml(text: string) {
+  if (!text) return '';
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 
 export async function POST(request: Request) {
   try {
+    // Garante que o segredo esteja configurado no servidor
+    if (!CRON_SECRET) {
+      return NextResponse.json({ error: 'Server configuration error: Missing CRON_SECRET' }, { status: 500 });
+    }
+
     // 1. Verificação de Segurança (Bearer Token)
-    const authHeader = request.headers.get('authorization');
-    if (authHeader !== `Bearer ${CRON_SECRET}`) {
+    const authHeader = request.headers.get('authorization') || '';
+    const expectedAuth = `Bearer ${CRON_SECRET}`;
+
+    // Proteção contra Timing Attacks: Comparação de tempo constante
+    const encoder = new TextEncoder();
+    const a = encoder.encode(authHeader);
+    const b = encoder.encode(expectedAuth);
+
+    // timingSafeEqual requer buffers de mesmo tamanho, então verificamos o tamanho antes
+    // mas ainda usamos timingSafeEqual para evitar vazamento de informação sobre o tamanho se possível, ou falhamos logo.
+    if (a.byteLength !== b.byteLength || !crypto.timingSafeEqual(a, b)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -41,8 +67,8 @@ export async function POST(request: Request) {
       subject: newsletter.subject,
       html: `
         <div style="font-family: sans-serif; color: #333;">
-          <h1>${newsletter.subject}</h1>
-          <p>${newsletter.previewText || ''}</p>
+          <h1>${escapeHtml(newsletter.subject)}</h1>
+          <p>${escapeHtml(newsletter.previewText || '')}</p>
           <hr />
           
           <p>Olá! Temos novidades no blog.</p>
