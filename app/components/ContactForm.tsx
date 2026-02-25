@@ -1,19 +1,23 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 
 // --- Subcomponente de Efeitos Especiais Cinematográficos ---
 function CinematicExplosionFX() {
   // Fagulhas mais densas e com useMemo para não recalcular durante o resfriamento
-  const sparks = useMemo(() => {
-    return Array.from({ length: 45 }).map((_, i) => {
+  const [sparks, setSparks] = useState<{ id: number; tx: number; ty: number; size: number; delay: number; colorClass: string }[]>([]);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSparks(Array.from({ length: 45 }).map((_, i) => {
       const angle = Math.random() * 360;
       const distance = 100 + Math.random() * 250; 
       const tx = Math.cos((angle * Math.PI) / 180) * distance;
       const ty = Math.sin((angle * Math.PI) / 180) * distance;
       const size = 2 + Math.random() * 5;
-      return { id: i, tx, ty, size, delay: Math.random() * 0.15 };
-    });
+      const colorClass = Math.random() > 0.5 ? 'bg-yellow-100 shadow-[0_0_12px_4px_#fbbf24]' : 'bg-orange-100 shadow-[0_0_12px_4px_#ea580c]';
+      return { id: i, tx, ty, size, delay: Math.random() * 0.15, colorClass };
+    }));
   }, []);
 
   return (
@@ -33,10 +37,10 @@ function CinematicExplosionFX() {
       <div className="absolute z-40 w-[250%] h-[300%] bg-white rounded-full mix-blend-overlay animate-cinematic-flash blur-lg"></div>
 
       {/* Camada 2: Onda de Choque Sônica (Esférica) */}
-      <div className="absolute z-30 w-16 h-16 border-[15px] rounded-full animate-cinematic-shockwave box-content shadow-[0_0_40px_rgba(255,200,100,0.8)]"></div>
+      <div className="absolute z-30 w-16 h-16 border-15 rounded-full animate-cinematic-shockwave box-content shadow-[0_0_40px_rgba(255,200,100,0.8)]"></div>
 
       {/* Camada 3: Anel de Energia (Plano horizontal 3D) */}
-      <div className="absolute z-30 w-16 h-16 rounded-full border-[4px] border-orange-300/80 animate-cinematic-ring mix-blend-screen" style={{ animationDelay: '0.05s' }}></div>
+      <div className="absolute z-30 w-16 h-16 rounded-full border-4 border-orange-300/80 animate-cinematic-ring mix-blend-screen" style={{ animationDelay: '0.05s' }}></div>
 
       {/* Camada 4: O Núcleo de Plasma (Fireball) com Textura de Turbulência */}
       <div className="absolute z-20 w-32 h-32 rounded-full animate-cinematic-fireball turbulence-fire mix-blend-hard-light"></div>
@@ -48,7 +52,7 @@ function CinematicExplosionFX() {
       {sparks.map((spark) => (
         <div
           key={spark.id}
-          className={`absolute rounded-full mix-blend-screen ${Math.random() > 0.5 ? 'bg-yellow-100 shadow-[0_0_12px_4px_#fbbf24]' : 'bg-orange-100 shadow-[0_0_12px_4px_#ea580c]'}`}
+          className={`absolute rounded-full mix-blend-screen ${spark.colorClass}`}
           style={{
             width: `${spark.size}px`,
             height: `${spark.size}px`,
@@ -108,7 +112,7 @@ export default function ContactForm() {
       } else {
         setStatus("error");
       }
-    } catch (error) {
+    } catch {
       setStatus("error");
     }
   }
@@ -128,7 +132,7 @@ export default function ContactForm() {
               <span className="relative inline-flex h-2.5 w-2.5 bg-red-500"></span>
             </span>
             <span className="text-xs font-mono text-foreground uppercase tracking-[0.2em] font-bold">
-              // CANAL DE UPLINK TÁTICO //
+              {'// CANAL DE UPLINK TÁTICO //'}
             </span>
           </div>
           <div className="text-[9px] font-mono text-primary/70 uppercase tracking-widest hidden sm:block">

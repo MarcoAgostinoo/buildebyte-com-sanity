@@ -46,6 +46,7 @@ export default function InteractiveTank() {
   const[impacts, setImpacts] = useState<Impact[]>([]); 
 
   // Evita erros de hidratação do Portal no Next.js
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setMounted(true),[]);
 
   // 1. Rastreador e sincronizador de coordenadas
@@ -226,11 +227,11 @@ export default function InteractiveTank() {
           {/* Canhão Principal */}
           <div className={`absolute left-1/2 top-1/2 -translate-y-1/2 flex items-center origin-left z-10 transition-transform ${isShootingCannon ? "duration-75 -translate-x-2" : "duration-500 translate-x-0 ease-out"}`}>
             <div className="w-6 h-6 -ml-3 bg-[#2f3329] border border-[#1a1c16] rounded-sm shadow-md z-10"></div>
-            <div className="w-[4.5rem] h-2.5 bg-gradient-to-b from-[#404040] via-[#262626] to-[#171717] border-y border-black"></div>
-            <div className="w-4 h-3.5 bg-gradient-to-b from-[#525252] to-[#171717] rounded-sm border border-black relative flex justify-center items-center">
+            <div className="w-18 h-2.5 bg-linear-to-b from-[#404040] via-[#262626] to-[#171717] border-y border-black"></div>
+            <div className="w-4 h-3.5 bg-linear-to-b from-[#525252] to-[#171717] rounded-sm border border-black relative flex justify-center items-center">
                {isShootingCannon && (
                   <div className="absolute left-full top-1/2 -translate-y-1/2 flex items-center pointer-events-none origin-left">
-                    <div className="absolute w-12 h-12 bg-white blur-[2px] rounded-full mix-blend-overlay animate-tank-flash z-30"></div><div className="absolute w-16 h-16 -left-4 bg-gradient-to-r from-yellow-300 to-orange-600 rounded-full blur-md mix-blend-screen animate-tank-fireball z-20"></div><div className="absolute w-8 h-16 border-r-4 border-white rounded-[50%] opacity-50 animate-tank-shockwave z-40"></div>
+                    <div className="absolute w-12 h-12 bg-white blur-[2px] rounded-full mix-blend-overlay animate-tank-flash z-30"></div><div className="absolute w-16 h-16 -left-4 bg-linear-to-r from-yellow-300 to-orange-600 rounded-full blur-md mix-blend-screen animate-tank-fireball z-20"></div><div className="absolute w-8 h-16 border-r-4 border-white rounded-[50%] opacity-50 animate-tank-shockwave z-40"></div>
                   </div>
                )}
                {particles.filter(p => p.type === "smoke").map(p => (<div key={p.id} className="absolute left-full w-6 h-6 bg-stone-500/30 rounded-full blur-xl animate-tank-smoke pointer-events-none"></div>))}
@@ -238,10 +239,10 @@ export default function InteractiveTank() {
           </div>
 
           {/* Metralhadora .50 cal */}
-          <div className="absolute top-[16px] left-[35px] flex items-center origin-left z-30">
+          <div className="absolute top-4 left-[35px] flex items-center origin-left z-30">
              <div className={`flex items-center transition-transform ${isShootingMG ? "-translate-x-1" : ""}`}>
                <div className="w-5 h-2 bg-[#1f221c] border border-black rounded-sm shadow-md"></div>
-               <div className="w-7 h-[2px] bg-zinc-800 border-y border-black relative">
+               <div className="w-7 h-0.5 bg-zinc-800 border-y border-black relative">
                    {isShootingMG && (<div className="absolute left-full top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"><div className="w-full h-full bg-yellow-200 rounded-full blur-[1px] animate-mg-flash mix-blend-screen"></div></div>)}
                </div>
              </div>
@@ -250,7 +251,7 @@ export default function InteractiveTank() {
           <div className={`absolute w-16 h-16 bg-[#4a523e] border border-black rounded-xl shadow-[inset_0_0_20px_rgba(0,0,0,0.6),0_10px_15px_-3px_rgba(0,0,0,0.5)] flex items-center justify-center transition-transform z-20 ${isShootingCannon ? "duration-75 -translate-x-1" : "duration-300 ease-out"}`}>
             <div className="relative w-7 h-7 bg-[#2f3329] border-2 border-black rounded-full flex items-center justify-center shadow-inner"><div className="absolute top-1 right-1 w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"></div></div>
             {particles.filter(p => p.type === "casing").map(p => (<div key={p.id} className="absolute top-2 left-1/2 w-4 h-1.5 bg-yellow-600 rounded-sm border border-yellow-800 animate-shell-eject pointer-events-none"></div>))}
-            {particles.filter(p => p.type === "mg-casing").map(p => (<div key={p.id} className="absolute top-[10px] left-[45px] w-1.5 h-0.5 bg-yellow-400 rounded-sm animate-mg-shell-eject pointer-events-none"></div>))}
+            {particles.filter(p => p.type === "mg-casing").map(p => (<div key={p.id} className="absolute top-2.5 left-[45px] w-1.5 h-0.5 bg-yellow-400 rounded-sm animate-mg-shell-eject pointer-events-none"></div>))}
           </div>
         </div>
 
@@ -259,13 +260,13 @@ export default function InteractiveTank() {
           <div key={proj.id} className="absolute z-50 pointer-events-none top-1/2 left-1/2 origin-left" style={{ transform: `rotate(${proj.angle}deg)` }}>
             {proj.type === "cannon" ? (
                <div 
-                 className="flex items-center absolute -mt-[2px] -ml-[2px]" 
+                 className="flex items-center absolute -mt-0.5 -ml-0.5" 
                  style={{ 
                    animation: `precise-strike-cannon ${proj.duration}s linear forwards`,
                    "--target-dist": `${proj.dist}px` 
                  } as React.CSSProperties}
                >
-                 <div className="w-16 h-1 bg-gradient-to-r from-transparent via-orange-400 to-yellow-100 shadow-[0_0_15px_#fcd34d] rounded-full"></div>
+                 <div className="w-16 h-1 bg-linear-to-r from-transparent via-orange-400 to-yellow-100 shadow-[0_0_15px_#fcd34d] rounded-full"></div>
                  <div className="w-2 h-2 bg-white rounded-full shadow-[0_0_10px_white]"></div>
                </div>
             ) : (
@@ -277,7 +278,7 @@ export default function InteractiveTank() {
                    "--target-dist": `${proj.dist}px`
                  } as React.CSSProperties}
                >
-                 <div className="w-10 h-[2px] bg-gradient-to-r from-transparent via-yellow-400 to-white shadow-[0_0_6px_#facc15] rounded-full"></div>
+                 <div className="w-10 h-0.5 bg-linear-to-r from-transparent via-yellow-400 to-white shadow-[0_0_6px_#facc15] rounded-full"></div>
                </div>
             )}
           </div>

@@ -50,10 +50,6 @@ O projeto opera em uma arquitetura moderna e desacoplada (Headless):
 
 3. **Sistema de Newsletter (Resend)**
    - **Funcionamento:** A rota de API `/api/admin/send-blast` gerencia o envio em massa. Ela busca o conteúdo da newsletter no Sanity, filtra os leads com status "active" e utiliza o SDK do Resend para disparar e-mails em lotes (batch), respeitando limites de envio.
-     1. **Segurança:** Verifica o cabeçalho `Authorization` contra o `MY_CRON_SECRET` usando comparação de tempo constante (`crypto.timingSafeEqual`) para prevenir ataques de timing.
-     2. **Dados:** Recebe um `newsletterId`, busca o conteúdo correspondente no Sanity e recupera todos os leads com status "active".
-     3. **Processamento:** Gera o HTML do e-mail para cada lead, sanitizando inputs para evitar injeção de código.
-     4. **Envio:** Utiliza o endpoint de *batch* do Resend para disparar os e-mails em lote, otimizando a performance e respeitando limites da API.
    - **Variáveis de Ambiente:**
      - `RESEND_API_KEY`: Chave privada (API Key) gerada no painel do Resend para autorizar o envio de e-mails.
 

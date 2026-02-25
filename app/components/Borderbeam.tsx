@@ -1,3 +1,3 @@
-export function Component() {
+export default function BorderBeam() {
   return null;
 }
