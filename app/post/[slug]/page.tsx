@@ -310,7 +310,7 @@ function EditorialBadge({ type }: { type: string }) {
   return (
     
     <span
-      className={`${colorMap[type] ?? "bg-primary"} text-white text-[10px] font-black px-2.5 py-0.5  uppercase tracking-widest`}
+      className={`${colorMap[type] ?? "bg-primary"} text-white text-[10px] font-black px-2.5  py-0.5  uppercase tracking-widest`}
     >
       {label}
     </span>
@@ -479,7 +479,7 @@ function AffiliateBlock({
   }
 
   return (
-    <div className="mt-10 bg-primary/5 border border-primary/20 p-6  text-center">
+    <div className="mt-11 bg-primary/5 border border-primary/20 p-6  text-center">
       <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">
         Onde Adquirir
       </p>
@@ -647,17 +647,19 @@ export default async function PostPage({
 
   return (
     
-    <div className="max-w-9xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    <div className="max-w-10xl mx-auto px-1 py-1 sm:px-6 lg:px-2">
       <div className="flex flex-col lg:flex-row gap-10">
 
         {/* ================================================================ */}
-        {/* MAIN                                                              */}
+        {/* MAIN                                                             */}
         {/* ================================================================ */}
         <main className="w-full lg:w-2/3">
           <div className="mb-6">
             <PressaoBrasil />
           </div>
-          <article className="bg-(--card-bg)  p-6 sm:p-10 border border-(--border) shadow-sm">
+          
+          {/* PRIMEIRO CARD: Cabeçalho e Corpo do Texto */}
+          <article className="bg-(--card-bg)  p-2 sm:p-4 border border-(--border) shadow-sm">
 
             {/* BADGES */}
             <div className="mb-5 flex flex-wrap items-center gap-2">
@@ -802,6 +804,28 @@ export default async function PostPage({
                 />
               )}
             </div>
+          </article> {/* FECHA O PRIMEIRO CARD */}
+
+          {/* ================================================================ */}
+          {/* SESSÃO PARALAX (REVELA O FUNDO DO SITE) */}
+          {/* ================================================================ */}
+          <div className="w-full py-24 my-6 flex flex-col items-center justify-center text-center px-4 relative">
+            <h3 className="text-2xl sm:text-3xl font-black text-white drop-shadow-xl mb-6 max-w-2xl leading-tight">
+             Mantenha-se atualizado com os desdobramentos que definem o futuro e a soberania do Brasil.
+            </h3>
+            
+            <Link
+              href="/noticias"
+              className="bg-primary hover:bg-blue-500 text-white font-black py-4 px-10 border border-primary/50 shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] transition-all uppercase tracking-[0.2em] text-xs"
+            >
+              LER ÚLTIMAS NOTÍCIAS
+            </Link>
+          </div>
+
+          {/* ================================================================ */}
+          {/* SEGUNDO CARD: Conteúdo Extra (Analyst View, Autor, etc) */}
+          {/* ================================================================ */}
+          <article className="bg-(--card-bg) p-2 sm:p-2 border border-(--border) shadow-sm">
 
             {/* VISÃO DO ANALISTA — elemento central do branding */}
             {post.analystView && post.analystView.length > 0 && (
@@ -837,7 +861,7 @@ export default async function PostPage({
             <div className="mt-10">
               <LeadCapture />
             </div>
-          </article>
+          </article> {/* FECHA O SEGUNDO CARD */}
 
           {/* COMENTÁRIOS */}
           <div className="mt-10">
