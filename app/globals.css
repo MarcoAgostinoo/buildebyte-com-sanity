@@ -195,3 +195,243 @@ p {
   display: inline-block;
   animation: ticker 80s linear infinite;
 }
+
+/* 1. CLARÃO INICIAL (Flash) */
+@keyframes cinematic-flash {
+  0% { opacity: 0; transform: scale(0); background-color: #ffffff; }
+  10% { opacity: 1; transform: scale(3); background-color: #fffbdf; }
+  100% { opacity: 0; transform: scale(4); background-color: #ffaa00; }
+}
+
+/* 2. O NÚCLEO DE PLASMA (Fireball) */
+@keyframes cinematic-fireball {
+  0% { 
+    transform: scale(0.1); 
+    opacity: 1; 
+    background-image: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,240,100,1) 30%, rgba(255,100,0,1) 70%, transparent 100%);
+  }
+  20% {
+    transform: scale(3);
+    background-image: radial-gradient(circle, rgba(255,255,200,1) 10%, rgba(255,160,0,1) 40%, rgba(200,50,0,0.9) 80%, transparent 100%);
+  }
+  50% {
+    transform: scale(4) translateY(-10px); 
+    opacity: 0.9;
+    background-image: radial-gradient(circle, rgba(255,100,0,0.8) 0%, rgba(140,20,0,0.7) 50%, rgba(50,50,50,0.5) 90%, transparent 100%);
+    filter: blur(8px);
+  }
+  100% { 
+    transform: scale(5) translateY(-30px);
+    opacity: 0; 
+    background-image: radial-gradient(circle, rgba(100,20,0,0.2) 0%, rgba(30,30,30,0.1) 60%, transparent 100%);
+    filter: blur(25px);
+  }
+}
+
+/* 3. ONDA DE CHOQUE SÔNICA (Shockwave) */
+@keyframes cinematic-shockwave {
+  0% { transform: scale(0.5); opacity: 1; border-width: 20px; border-color: rgba(255, 255, 255, 1); }
+  100% { transform: scale(8); opacity: 0; border-width: 0px; border-color: rgba(255, 200, 100, 0); }
+}
+
+/* 4. FAGULHAS INCANDESCENTES (Sparks) */
+@keyframes cinematic-spark {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; filter: brightness(2); }
+  60% { opacity: 1; transform: translate(calc(var(--tx) * 0.8), calc(var(--ty) * 0.8)) scale(0.8); }
+  100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+
+/* 5. EFEITO DE TREMOR DE CÂMERA (Screen Shake) */
+@keyframes camera-shake {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  10% { transform: translate(-5px, -5px) rotate(-1deg); }
+  20% { transform: translate(5px, 3px) rotate(1deg); }
+  30% { transform: translate(-4px, 2px) rotate(-0.5deg); }
+  40% { transform: translate(4px, -3px) rotate(0.5deg); }
+  50% { transform: translate(-2px, 2px) rotate(-0.2deg); }
+  60% { transform: translate(2px, -1px) rotate(0.2deg); }
+  70% { transform: translate(-1px, 1px) rotate(0deg); }
+  80% { transform: translate(1px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+
+/* 6. ANEIS DE ENERGIA 3D (Halo Rings) - NOVO */
+@keyframes cinematic-ring {
+  0% { transform: scale(0.1) rotateX(70deg); opacity: 0; border-width: 10px; }
+  10% { opacity: 1; }
+  100% { transform: scale(10) rotateX(70deg); opacity: 0; border-width: 1px; }
+}
+
+/* 7. COLAPSO DO BOTÃO (Implosão antes de explodir) - NOVO */
+@keyframes button-implode {
+  0% { transform: scale(1); filter: brightness(1); }
+  10% { transform: scale(0.95) translate(-2px, 1px); filter: brightness(1.2); }
+  20% { transform: scale(1.02) translate(2px, -1px); filter: brightness(1.5) hue-rotate(-10deg); box-shadow: 0 0 20px rgba(255,100,0,0.8); }
+  30% { transform: scale(0.9) translate(-2px, -2px); filter: brightness(1.8) hue-rotate(-15deg); }
+  40% { transform: scale(1.05) translate(2px, 2px); filter: brightness(2) hue-rotate(-20deg); box-shadow: 0 0 40px rgba(255,50,0,0.9); }
+  50% { transform: scale(0.85) translate(-3px, 1px); filter: brightness(2.5) hue-rotate(-25deg); }
+  60% { transform: scale(1.1) translate(3px, -2px); filter: brightness(3) hue-rotate(-30deg); box-shadow: 0 0 60px rgba(255,0,0,1); }
+  70% { transform: scale(0.8) translate(-1px, -1px); filter: brightness(3.5); }
+  80% { transform: scale(1.2) translate(2px, 2px); filter: brightness(4); opacity: 1; }
+  100% { transform: scale(0) translate(0, 0); filter: brightness(10); opacity: 0; }
+}
+
+/* Classes utilitárias Tailwind v4 */
+.animate-cinematic-flash { animation: cinematic-flash 0.3s cubic-bezier(0.1, 0.8, 0.2, 1) forwards; }
+.animate-cinematic-fireball { animation: cinematic-fireball 1.2s cubic-bezier(0.1, 0.8, 0.2, 1) forwards; }
+.animate-cinematic-shockwave { animation: cinematic-shockwave 0.6s cubic-bezier(0.1, 0.8, 0.2, 1) forwards; }
+.animate-cinematic-ring { animation: cinematic-ring 1s cubic-bezier(0.1, 0.8, 0.2, 1) forwards; }
+.animate-camera-shake { animation: camera-shake 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards; }
+.animate-button-implode { animation: button-implode 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+
+.turbulence-fire {
+  filter: url(#fire-filter) contrast(1.8) brightness(1.5);
+}
+/* =========================================
+   ANIMAÇÕES REALISTAS DO TANQUE
+========================================= */
+
+/* 1. Clarão da boca do canhão (Flash instantâneo) */
+@keyframes tank-flash {
+  0% { transform: scale(0.5); opacity: 1; }
+  50% { transform: scale(2); opacity: 1; }
+  100% { transform: scale(0.1); opacity: 0; }
+}
+.animate-tank-flash {
+  animation: tank-flash 0.1s ease-out forwards;
+}
+
+/* 2. Bola de Fogo Secundária */
+@keyframes tank-fireball {
+  0% { transform: scale(0.5) translateX(0); opacity: 0.9; }
+  100% { transform: scale(2.5) translateX(10px); opacity: 0; filter: blur(15px); }
+}
+.animate-tank-fireball {
+  animation: tank-fireball 0.2s ease-out forwards;
+}
+
+/* 3. Onda de Choque do ar sendo rompido */
+@keyframes tank-shockwave {
+  0% { transform: scale(0.5) translateX(0); opacity: 1; border-width: 4px; }
+  100% { transform: scale(3) translateX(20px); opacity: 0; border-width: 0px; }
+}
+.animate-tank-shockwave {
+  animation: tank-shockwave 0.3s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+}
+
+/* 4. Fumaça saindo do cano e subindo devagar */
+@keyframes tank-smoke {
+  0% { transform: scale(0.5) translate(20px, 0); opacity: 0.8; }
+  100% { transform: scale(4) translate(40px, -20px); opacity: 0; filter: blur(20px); }
+}
+.animate-tank-smoke {
+  animation: tank-smoke 1.5s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+}
+
+/* 5. Ejeção da Cápsula da Bala (Pula para o lado e gira) */
+@keyframes shell-eject {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  30% { transform: translate(0px, -30px) rotate(180deg); }
+  80% { transform: translate(-10px, -50px) rotate(360deg); opacity: 1; }
+  100% { transform: translate(-20px, -60px) rotate(540deg); opacity: 0; }
+}
+.animate-shell-eject {
+  animation: shell-eject 0.6s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+}
+
+
+/* =========================================
+   ANIMAÇÕES DA METRALHADORA (.50 CAL)
+========================================= */
+
+/* 1. Flash intermitente na ponta do cano */
+@keyframes mg-flash {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.3); opacity: 0; }
+}
+.animate-mg-flash {
+  animation: mg-flash 0.05s infinite alternate; 
+}
+
+/* 2. Cápsulas menores sendo ejetadas violentamente de lado */
+@keyframes mg-shell-eject {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(-10px, -25px) rotate(360deg); opacity: 0; }
+}
+.animate-mg-shell-eject {
+  animation: mg-shell-eject 0.25s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+}
+
+
+/* =========================================
+   ANIMAÇÕES DE DESTRUIÇÃO DA TELA (IMPACTOS)
+========================================= */
+
+/* 1. Flash monstruoso quando o tiro de canhão bate na tela */
+@keyframes impact-flash {
+  0% { transform: scale(0); opacity: 1; }
+  10% { transform: scale(10); opacity: 1; }
+  100% { transform: scale(15); opacity: 0; }
+}
+.animate-impact-flash {
+  animation: impact-flash 0.5s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+}
+
+/* 2. Metal derretido ao redor da cratera do canhão esfriando lentamente */
+@keyframes crater-glow {
+  0% { box-shadow: 0 0 30px 10px #ea580c; border-color: #fcd34d; filter: brightness(2); opacity: 1; }
+  50% { box-shadow: 0 0 10px 2px #c2410c; border-color: #ea580c; filter: brightness(1); opacity: 0.8; }
+  100% { box-shadow: 0 0 0px 0px #ea580c; border-color: #451a03; filter: brightness(0.5); opacity: 0; }
+}
+.animate-crater-glow {
+  animation: crater-glow 3s ease-out forwards;
+}
+
+/* 3. Fumaça saindo do buraco do canhão */
+@keyframes crater-smoke {
+  0% { transform: translateY(0) scale(0.5); opacity: 1; }
+  100% { transform: translateY(-50px) scale(2); opacity: 0; filter: blur(20px); }
+}
+.animate-crater-smoke {
+  animation: crater-smoke 2s ease-out forwards;
+}
+
+/* 4. Fagulha pequena e rápida do tiro da Metralhadora .50 cal */
+@keyframes mg-impact-flash {
+  0% { transform: scale(0.5); opacity: 1; }
+  50% { transform: scale(3); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
+}
+.animate-mg-impact-flash {
+  animation: mg-impact-flash 0.2s ease-out forwards;
+}
+
+
+/* 5. Desaparecimento suave dos buracos após 3 segundos (Dura 4s no total) */
+@keyframes impact-fade-away {
+  0% { opacity: 1; }
+  75% { opacity: 1; } /* Fica 100% visível por 3 segundos (75% de 4s) */
+  100% { opacity: 0; } /* Desaparece lentamente no último segundo */
+}
+.animate-impact-fade-away {
+  animation: impact-fade-away 4s linear forwards;
+}
+
+/* =========================================
+   TRAJETÓRIA FÍSICA DINÂMICA (SUBSTITUIU AS ANTIGAS)
+========================================= */
+
+/* Tiro principal parando e amassando contra o mouse na distância exata */
+@keyframes precise-strike-cannon {
+  0% { transform: translateX(50px) scaleX(1); opacity: 1; }
+  90% { transform: translateX(calc(var(--target-dist) - 20px)) scaleX(1); opacity: 1; }
+  100% { transform: translateX(var(--target-dist)) scaleX(0.1); opacity: 0; }
+}
+
+/* Bala da MG parando perfeitamente no ponto exato do alvo */
+@keyframes precise-strike-mg {
+  0% { transform: translateX(40px) scaleX(1); opacity: 1; }
+  90% { transform: translateX(calc(var(--target-dist) - 10px)) scaleX(1); opacity: 1; }
+  100% { transform: translateX(var(--target-dist)) scaleX(0.1); opacity: 0; }
+}

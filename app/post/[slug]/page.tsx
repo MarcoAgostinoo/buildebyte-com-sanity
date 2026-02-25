@@ -178,12 +178,42 @@ async function getRelatedPosts(
 // ---------------------------------------------------------------------------
 const ptComponents: PortableTextComponents = {
   types: {
+   // =========================================================
+    // NOVO BLOCO: PARALAXE RENDERIZADO NO MEIO DO TEXTO
+    // =========================================================
+    breakoutParallax: ({ value }: { value: { title?: string; linkText?: string; linkUrl?: string } }) => {
+      return (
+        <div 
+          className="w-[calc(100%+1rem)] sm:w-[calc(100%+2rem)] -ml-2 sm:-ml-4 my-16 py-24 flex flex-col items-center justify-center text-center px-4 relative border-y border-primary/20 shadow-inner"
+          style={{
+            /* O TRUQUE MÁGICO: Copiamos o fundo exato do global.css para cá */
+            backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.574), rgba(0, 0, 0, 0.564)), url('/background.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundAttachment: "fixed",
+            backgroundRepeat: "no-repeat"
+          }}
+        >
+          <h3 className="text-2xl sm:text-3xl font-black text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] mb-6 max-w-2xl leading-tight">
+            {value.title ?? "Mantenha-se atualizado com os desdobramentos que definem o futuro e a soberania do Brasil."}
+          </h3>
+          
+          <Link
+            href={value.linkUrl ?? "/noticias"}
+            className="bg-primary hover:bg-blue-500 text-white font-black py-4 px-10 border border-primary/50 shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] transition-all uppercase tracking-[0.2em] text-xs"
+          >
+            {value.linkText ?? "LER ÚLTIMAS NOTÍCIAS"}
+          </Link>
+        </div>
+      );
+    },
+    // =========================================================
+
     image: ({ value }: { value: SanityImage }) => {
       if (!value?.asset?.metadata?.dimensions) return null;
       const { aspectRatio } = value.asset.metadata.dimensions;
       const w = 1200;
       return (
-        
         <figure className="my-8 sm:my-12 overflow-hidden  shadow-lg">
           <Image
             src={urlFor(value).width(w).fit("max").auto("format").url()}
@@ -659,7 +689,7 @@ export default async function PostPage({
           </div>
           
           {/* PRIMEIRO CARD: Cabeçalho e Corpo do Texto */}
-          <article className="bg-(--card-bg)  p-2 sm:p-4 border border-(--border) shadow-sm">
+          <article className="bg-(--card-bg)  p-2 sm:p-4 shadow-sm">
 
             {/* BADGES */}
             <div className="mb-5 flex flex-wrap items-center gap-2">
@@ -807,10 +837,10 @@ export default async function PostPage({
           </article> {/* FECHA O PRIMEIRO CARD */}
 
           {/* ================================================================ */}
-          {/* SESSÃO PARALAX (REVELA O FUNDO DO SITE) */}
+          {/* SESSÃO PARALAX FIXA NO RODAPÉ DO ARTIGO                          */}
           {/* ================================================================ */}
-          <div className="w-full py-24 my-6 flex flex-col items-center justify-center text-center px-4 relative">
-            <h3 className="text-2xl sm:text-3xl font-black text-white drop-shadow-xl mb-6 max-w-2xl leading-tight">
+          <div className="w-full py-24 my-6 flex flex-col items-center justify-center text-center px-4 relative bg-transparent">
+            <h3 className="text-2xl sm:text-3xl font-black text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] mb-6 max-w-2xl leading-tight">
              Mantenha-se atualizado com os desdobramentos que definem o futuro e a soberania do Brasil.
             </h3>
             
