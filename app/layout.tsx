@@ -7,6 +7,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import PreviewBanner from "./components/PreviewBanner";
+import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({
   subsets: ["latin"],
@@ -149,10 +150,11 @@ export default function RootLayout({
 
         <Footer />
         <PreviewBanner />
-      </body>
-      {process.env.NEXT_PUBLIC_GA_ID && (
+        <Analytics />
+        {process.env.NEXT_PUBLIC_GA_ID && (
         <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
       )}
+      </body>
     </html>
   );
 }
