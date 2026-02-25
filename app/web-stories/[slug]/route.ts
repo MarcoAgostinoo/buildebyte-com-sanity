@@ -1,4 +1,4 @@
-import { client } from '@/app/lib/sanity';
+import { client } from "@/app/lib/sanity";
 
 interface WebStoryPage {
   image: string;
@@ -8,7 +8,7 @@ interface WebStoryPage {
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
   const baseUrl = new URL(request.url).origin;
@@ -25,40 +25,40 @@ export async function GET(
       duration
     }
   }`;
-  
+
   const story = await client.fetch(query, { slug });
 
   if (!story) {
-    return new Response('Story not found', { status: 404 });
+    return new Response("Story not found", { status: 404 });
   }
 
-  const ctaLink = story.targetSlug 
-    ? `${baseUrl}/post/${story.targetSlug}` 
+  const ctaLink = story.targetSlug
+    ? `${baseUrl}/post/${story.targetSlug}`
     : baseUrl;
 
   // Schema SEO
   const schema = {
     "@context": "http://schema.org",
     "@type": "NewsArticle",
-    "mainEntityOfPage": {
+    mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `${baseUrl}/web-stories/${slug}`
+      "@id": `${baseUrl}/web-stories/${slug}`,
     },
-    "headline": story.title,
-    "image": [story.coverImage],
-    "datePublished": story.publishedAt || new Date().toISOString(),
-    "author": {
+    headline: story.title,
+    image: [story.coverImage],
+    datePublished: story.publishedAt || new Date().toISOString(),
+    author: {
       "@type": "Person",
-      "name": story.author || "Build & Byte"
+      name: story.author || "Build & Byte",
     },
-    "publisher": {
+    publisher: {
       "@type": "Organization",
-      "name": "Build & Byte",
-      "logo": {
+      name: "Build & Byte",
+      logo: {
         "@type": "ImageObject",
-        "url": `${baseUrl}/logo.png`
-      }
-    }
+        url: `${baseUrl}/logo.png`,
+      },
+    },
   };
 
   // HTML AMP corrigido (Sem cta-text)
@@ -96,10 +96,11 @@ export async function GET(
       publisher-logo-src="${baseUrl}/logo.png"
       poster-portrait-src="${story.coverImage}">
       
-      ${story.pages?.map((page: WebStoryPage, index: number) => {
-          const imgUrl = page.image.includes('sanity.io') 
-          ? `${page.image}?w=720&h=1280&fit=crop&auto=format` 
-          : page.image;
+      ${story.pages
+        ?.map((page: WebStoryPage, index: number) => {
+          const imgUrl = page.image.includes("sanity.io")
+            ? `${page.image}?w=720&h=1280&fit=crop&auto=format`
+            : page.image;
 
           return `
         <amp-story-page id="page-${index}" auto-advance-after="${page.duration || 7}s">
@@ -107,26 +108,35 @@ export async function GET(
             <amp-img src="${imgUrl}" width="720" height="1280" layout="responsive"></amp-img>
           </amp-story-grid-layer>
           
-          ${page.text ? `
+          ${
+            page.text
+              ? `
           <amp-story-grid-layer template="vertical" class="bottom">
             <div class="text-layer">
               <p>${page.text}</p>
             </div>
           </amp-story-grid-layer>
-          ` : ''}
+          `
+              : ""
+          }
 
-          ${index === (story.pages.length - 1) ? `
-            <amp-story-page-outlink layout="nodisplay" theme="dark">
+          ${
+            index === story.pages.length - 1
+              ? `
+              <amp-story-page-outlink>
               <a href="${ctaLink}">Ler Artigo Completo</a>
-            </amp-story-page-outlink>
-          ` : ''}
+              </amp-story-page-outlink>          `
+              : ""
+          }
         </amp-story-page>
-      `}).join('')}
+      `;
+        })
+        .join("")}
     </amp-story>
   </body>
 </html>`.trim();
 
   return new Response(html, {
-    headers: { 'Content-Type': 'text/html' },
+    headers: { "Content-Type": "text/html" },
   });
 }
