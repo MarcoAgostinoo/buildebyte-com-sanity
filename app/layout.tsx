@@ -132,6 +132,12 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
+        {/* Pré-conexões para otimizar LCP */}
+        <link rel="preconnect" href="https://cdn.sanity.io" />
+        <link rel="preconnect" href="https://d3t3ozftmdmh3i.cloudfront.net" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+        
         <Script
           id="vetor-estrategico-schema"
           type="application/ld+json"

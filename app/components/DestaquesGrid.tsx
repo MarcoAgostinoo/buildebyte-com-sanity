@@ -87,9 +87,9 @@ export default function DestaquesGrid({ initialPosts }: { initialPosts: Post[] }
                       src={post.imagem}
                       alt={post.title}
                       fill
-                      // 5. O SEGREDO DO DESEMPENHO: O atributo sizes e o priority
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      priority={index === 0} // <-- O primeiro post do grid carrega instantaneamente
+                      priority={index === 0}
+                      loading={index === 0 ? "eager" : "lazy"}
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>

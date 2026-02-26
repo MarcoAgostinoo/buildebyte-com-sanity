@@ -185,6 +185,8 @@ export default async function Home() {
                             : "(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 25vw"
                         }
                         priority={isHero}
+                        loading={isHero ? "eager" : "lazy"}
+                        fetchPriority={isHero ? "high" : "auto"}
                       />
                       <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent" />
                     </div>
@@ -264,6 +266,7 @@ export default async function Home() {
                       src={ep.image || DEFAULT_IMAGE}
                       alt={`Capa do episódio ${ep.title}`}
                       fill
+                      loading="lazy"
                       sizes="(max-width: 768px) 100vw, 50vw"
                       quality={60}
                       className="object-cover transition-transform group-hover:scale-105"

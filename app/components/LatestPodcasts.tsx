@@ -50,6 +50,7 @@ export default async function LatestPodcasts() {
                   src={episode.image} 
                   alt={episode.title} 
                   fill
+                  loading="lazy"
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />

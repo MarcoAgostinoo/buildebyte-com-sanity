@@ -50,7 +50,7 @@ export default function PodcastCarousel({ episodes = [], defaultImage }: { episo
                     src={ep.image || defaultImage}
                     alt={`Capa do episódio ${ep.title}`}
                     fill
-                    // 👇 A MÁGICA DA PERFORMANCE NO MOBILE
+                    loading="lazy"
                     sizes="(max-width: 768px) 100vw, 50vw"
                     quality={60}
                     className="object-cover"

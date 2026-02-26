@@ -60,6 +60,7 @@ export function WebStoriesCarousel({ webStories }: { webStories: WebStory[] }) {
                     src={story.coverImage}
                     alt={story.title}
                     fill
+                    loading="lazy"
                     sizes="100vw"
                     className="object-cover"
                   />

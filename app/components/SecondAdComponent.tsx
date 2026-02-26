@@ -41,6 +41,7 @@ export default async function SecondAdComponent({ className = '' }: { className?
               src={randomOffer.imagem}
               alt={randomOffer.title}
               fill
+              loading="lazy"
               className="object-cover "
             />
           )}

@@ -67,6 +67,7 @@ export default function ReadNext({ posts }: ReadNextProps) {
                       src={post.imagem}
                       alt={post.title}
                       fill
+                      loading="lazy"
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                 ) : (

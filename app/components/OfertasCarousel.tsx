@@ -102,6 +102,7 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
                                 src={imgUrl}
                                 alt={oferta.title}
                                 fill
+                                loading="lazy"
                                 className="object-contain hover:scale-105 transition-transform duration-300"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                               />
