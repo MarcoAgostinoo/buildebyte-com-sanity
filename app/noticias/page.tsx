@@ -1,4 +1,4 @@
-import { client } from "@/app/lib/sanity";
+import { client, urlFor, type SanityImageSource } from "@/app/lib/sanity";
 import DestaquesGrid from "@/app/components/DestaquesGrid";
 
 interface Post {
@@ -9,6 +9,10 @@ interface Post {
   imagem: string;
   publishedAt: string;
   author: string;
+}
+
+interface RawPost extends Omit<Post, "imagem"> {
+  mainImage: SanityImageSource;
 }
 
 async function getNoticias(): Promise<Post[]> {
@@ -22,12 +26,18 @@ async function getNoticias(): Promise<Post[]> {
     title,
     "slug": slug.current,
     excerpt,
-    "imagem": mainImage.asset->url,
+    mainImage,
     publishedAt,
     "author": author->name
   }`;
 
-  return await client.fetch(query, {}, { next: { revalidate: 60 } }); 
+  const data = await client.fetch(query, {}, { next: { revalidate: 60 } });
+
+  // Transforma a imagem crua em uma URL otimizada e leve
+  return data.map((post: RawPost) => ({
+    ...post,
+    imagem: post.mainImage ? urlFor(post.mainImage).width(800).height(500).quality(80).auto('format').url() : ""
+  }));
 }
 
 export default async function NoticiasPage() {

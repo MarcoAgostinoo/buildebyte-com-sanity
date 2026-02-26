@@ -1,4 +1,5 @@
 import { createClient } from "next-sanity";
+import imageUrlBuilder from "@sanity/image-url";
 
 /**
  * ============================================================================
@@ -91,4 +92,20 @@ export function getClient(preview: boolean = false) {
     return previewClient;
   }
   return client;
+}
+
+/**
+ * ============================================================================
+ * Helper para URLs de Imagem Otimizadas
+ * ============================================================================
+ */
+const builder = imageUrlBuilder(client);
+
+export type SanityImageSource = Parameters<typeof builder.image>[0];
+
+export function urlFor(source: SanityImageSource) {
+  return builder.image(source)
+    .auto('format') // Converte automaticamente para WebP se o navegador suportar
+    .fit('max')     // Garante que a imagem não seja maior que o necessário
+    .quality(80);   // Compressão inteligente
 }

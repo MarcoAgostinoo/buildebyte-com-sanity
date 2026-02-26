@@ -52,22 +52,24 @@ export default function InteractiveTank() {
 
   // 1. Rastreador e sincronizador de coordenadas
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+    // Otimização: Calcula a posição do tanque APENAS no scroll/resize, não a cada movimento do mouse
+    const updateTurretPosition = () => {
       if (!turretRef.current) return;
+      const rect = turretRef.current.getBoundingClientRect();
+      const docCenterX = rect.left + window.scrollX + rect.width / 2;
+      const docCenterY = rect.top + window.scrollY + rect.height / 2;
+      turretCenterRef.current = { x: docCenterX, y: docCenterY };
+    };
 
-      // Otimização: Usa requestAnimationFrame para não bloquear a thread principal
+    // Calcula posição inicial
+    updateTurretPosition();
+
+    const handleMouseMove = (e: MouseEvent) => {
       if (requestRef.current) return;
+      
       requestRef.current = requestAnimationFrame(() => {
-        if (!turretRef.current) return;
-        const rect = turretRef.current.getBoundingClientRect();
-        
-        // Encontra o centro do tanque no eixo X e Y globais (considerando o scroll da página)
-        const docCenterX = rect.left + window.scrollX + rect.width / 2;
-        const docCenterY = rect.top + window.scrollY + rect.height / 2;
-        turretCenterRef.current = { x: docCenterX, y: docCenterY };
-
-        const deltaX = e.pageX - docCenterX;
-        const deltaY = e.pageY - docCenterY;
+        const deltaX = e.pageX - turretCenterRef.current.x;
+        const deltaY = e.pageY - turretCenterRef.current.y;
 
         const theta = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
         setAngle(theta);
@@ -79,8 +81,12 @@ export default function InteractiveTank() {
     };
 
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("scroll", updateTurretPosition);
+    window.addEventListener("resize", updateTurretPosition);
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", updateTurretPosition);
+      window.removeEventListener("resize", updateTurretPosition);
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
   },[]);
