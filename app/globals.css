@@ -371,8 +371,8 @@ p {
 /* 1. Flash monstruoso quando o tiro de canhão bate na tela */
 @keyframes impact-flash {
   0% { transform: scale(0); opacity: 1; }
-  10% { transform: scale(10); opacity: 1; }
-  100% { transform: scale(15); opacity: 0; }
+  10% { transform: scale(2); opacity: 1; }
+  100% { transform: scale(4); opacity: 0; }
 }
 .animate-impact-flash {
   animation: impact-flash 0.5s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
