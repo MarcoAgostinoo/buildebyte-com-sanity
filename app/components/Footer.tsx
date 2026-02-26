@@ -24,7 +24,7 @@ export default function StrategicFooter() {
           <div className="flex flex-col space-y-4">
             <FooterBrand
               href="/"
-              src="/logofooter.png"
+              src="/logofooter.webp"
               alt="Vetor Estratégico Logo"
               name="Vetor Estratégico"
             />

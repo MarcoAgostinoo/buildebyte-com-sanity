@@ -187,7 +187,7 @@ const ptComponents: PortableTextComponents = {
           className="w-[calc(100%+1rem)] sm:w-[calc(100%+2rem)] -ml-2 sm:-ml-4 my-16 py-24 flex flex-col items-center justify-center text-center px-4 relative border-y border-primary/20 shadow-inner"
           style={{
             /* O TRUQUE MÁGICO: Copiamos o fundo exato do global.css para cá */
-            backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.574), rgba(0, 0, 0, 0.564)), url('/background.png')",
+            backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.574), rgba(0, 0, 0, 0.564)), url('/background.webp')",
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundAttachment: "fixed",

@@ -98,7 +98,7 @@ export default function RootLayout({
         url: "https://vetorestrategico.com",
         logo: {
           "@type": "ImageObject",
-          url: "https://vetorestrategico.com/logo.png",
+          url: "https://vetorestrategico.com/logo.webp",
         },
         description:
           "Portal brasileiro de análise técnica sobre tecnologia, defesa e infraestrutura estratégica.",
@@ -110,7 +110,7 @@ export default function RootLayout({
         url: "https://vetorestrategico.com",
         logo: {
           "@type": "ImageObject",
-          url: "https://vetorestrategico.com/logo.png",
+          url: "https://vetorestrategico.com/logo.webp",
         },
       },
       {

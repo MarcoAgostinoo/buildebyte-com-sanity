@@ -36,7 +36,7 @@ async function getNoticias(): Promise<Post[]> {
   // Transforma a imagem crua em uma URL otimizada e leve
   return data.map((post: RawPost) => ({
     ...post,
-    imagem: post.mainImage ? urlFor(post.mainImage).width(800).height(500).quality(80).auto('format').url() : ""
+    imagem: post.mainImage ? urlFor(post.mainImage).width(640).height(400).quality(75).fit('crop').auto('format').url() : ""
   }));
 }
 

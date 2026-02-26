@@ -29,7 +29,6 @@ export default function InteractiveTank() {
   const [mounted, setMounted] = useState(false);
   const turretRef = useRef<HTMLDivElement>(null);
 
-  const [angle, setAngle] = useState(0);
   const angleRef = useRef(0);
 
   // Guardamos a posição exata do centro da torreta no documento
@@ -72,7 +71,10 @@ export default function InteractiveTank() {
         const deltaY = e.pageY - turretCenterRef.current.y;
 
         const theta = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-        setAngle(theta);
+        
+        // Otimização: Manipula o DOM diretamente para evitar re-render do React a cada frame
+        if (turretRef.current) turretRef.current.style.transform = `rotate(${theta}deg)`;
+        
         angleRef.current = theta; 
         
         mousePosRef.current = { x: e.pageX, y: e.pageY };
@@ -269,7 +271,7 @@ export default function InteractiveTank() {
         <div
           ref={turretRef}
           className="absolute flex items-center justify-center z-20 w-16 h-16 origin-center"
-          style={{ transform: `rotate(${angle}deg)` }}
+          style={{ transform: `rotate(0deg)` }} // Rotação inicial, controlada via ref depois
         >
           {/* Canhão Principal */}
           <div

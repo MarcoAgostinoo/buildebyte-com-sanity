@@ -33,7 +33,7 @@ export default function Header() {
             {/* LOGO */}
             <Link href="/" className="flex items-center gap-3">
               <Image
-                src="/logo.png"
+                src="/logo.webp"
                 width={80}
                 height={80}
                 alt="Vetor Estratégico"

@@ -107,5 +107,5 @@ export function urlFor(source: SanityImageSource) {
   return builder.image(source)
     .auto('format') // Converte automaticamente para WebP se o navegador suportar
     .fit('max')     // Garante que a imagem não seja maior que o necessário
-    .quality(80);   // Compressão inteligente
+    .quality(75);   // Compressão inteligente (75 é o sweet spot do Google Lighthouse)
 }

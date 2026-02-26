@@ -56,7 +56,7 @@ export async function GET(
       name: "Build & Byte",
       logo: {
         "@type": "ImageObject",
-        url: `${baseUrl}/logo.png`,
+        url: `${baseUrl}/logo.webp`,
       },
     },
   };
@@ -93,7 +93,7 @@ export async function GET(
     <amp-story standalone
       title="${story.title}"
       publisher="Build & Byte"
-      publisher-logo-src="${baseUrl}/logo.png"
+      publisher-logo-src="${baseUrl}/logo.webp"
       poster-portrait-src="${story.coverImage}">
       
       ${story.pages
