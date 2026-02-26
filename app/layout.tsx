@@ -132,9 +132,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
-        {/* Pré-conexões para otimizar LCP */}
-        <link rel="preconnect" href="https://cdn.sanity.io" />
-        <link rel="preconnect" href="https://d3t3ozftmdmh3i.cloudfront.net" />
+        {/* Em desktop, preconnect acelera. Em mobile 4G, economizamos banda com dns-prefetch */}
+        <link rel="dns-prefetch" href="https://cdn.sanity.io" />
+        <link rel="dns-prefetch" href="https://d3t3ozftmdmh3i.cloudfront.net" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         

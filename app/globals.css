@@ -74,6 +74,14 @@ body {
     color 0.25s ease;
 }
 
+/* Mobile: remover background.webp (224 KiB) para melhorar LCP */
+@media (max-width: 768px) {
+  body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.574), rgba(0, 0, 0, 0.564));
+    background-attachment: scroll;
+  }
+}
+
 /* ===============================
    CARDS / SEÇÕES
    =============================== */

@@ -5,15 +5,18 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { FaChevronLeft, FaChevronRight, FaShoppingCart, FaStore } from "react-icons/fa";
 import Image from "next/image";
-import { client } from "@/app/lib/sanity";
+import { client, urlForMobile } from "@/app/lib/sanity";
 import { createImageUrlBuilder } from "@sanity/image-url";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const builder = createImageUrlBuilder(client as any);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function urlFor(source: any) {
-  // 👈 Adicionamos .auto("format") para garantir que o Sanity entregue WebP sempre que possível!
-  return builder.image(source).width(400).height(400).fit("fillmax").auto("format").url();
+  return builder.image(source).width(400).height(400).fit("fillmax").auto("format").quality(75).url();
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function urlForMobileOferta(source: any) {
+  return builder.image(source).width(400).height(400).fit("fillmax").auto("format").quality(60).url();
 }
 
 export interface Oferta {

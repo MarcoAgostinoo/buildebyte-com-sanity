@@ -105,7 +105,19 @@ export type SanityImageSource = Parameters<typeof builder.image>[0];
 
 export function urlFor(source: SanityImageSource) {
   return builder.image(source)
-    .auto('format') // Converte automaticamente para WebP se o navegador suportar
-    .fit('max')     // Garante que a imagem não seja maior que o necessário
-    .quality(75);   // Compressão inteligente (75 é o sweet spot do Google Lighthouse)
+    .auto('format')
+    .fit('max')
+    .quality(75);
+}
+
+/**
+ * ============================================================================
+ * Helper para URLs de Imagem Otimizadas para Mobile (mais compressão)
+ * ============================================================================
+ */
+export function urlForMobile(source: SanityImageSource) {
+  return builder.image(source)
+    .auto('format')
+    .fit('max')
+    .quality(60); // Reduzido para economizar banda em 4G
 }

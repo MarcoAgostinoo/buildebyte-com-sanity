@@ -37,7 +37,7 @@ export default function Header() {
                 width={80}
                 height={80}
                 alt="Vetor Estratégico"
-                priority
+                loading="lazy"
               />
               <div className="flex flex-col leading-tight">
                 <span className="text-lg font-bold text-white tracking-wide">

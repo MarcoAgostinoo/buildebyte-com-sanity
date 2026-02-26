@@ -255,13 +255,7 @@ export default async function Home() {
             <div className="hidden md:grid grid-cols-2 gap-x-8 gap-y-12">
               {episodes.map((ep: Episode) => (
                 <article key={ep.id} className="group">
-                  <a
-                    href={ep.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`Ouvir podcast: ${ep.title}`} // 👈 Correção de Acessibilidade
-                    className="block relative aspect-video overflow-hidden mb-4"
-                  >
+                  <a href={ep.link} target="_blank" rel="noopener noreferrer" className="block relative aspect-video overflow-hidden mb-4">
                     <Image
                       src={ep.image || DEFAULT_IMAGE}
                       alt={`Capa do episódio ${ep.title}`}
