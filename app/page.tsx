@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
-import { client } from "@/app/lib/sanity";
+import { client, urlFor } from "@/app/lib/sanity"; // 👈 Importamos o urlFor
 import Link from "next/link";
 import Image from "next/image";
-import Ofertas from "./components/Ofertas"; // Verifique se o caminho está certo
-import LatestPosts from "./components/LatestPosts"; // Verifique se o caminho está certo
+import Ofertas from "./components/Ofertas"; 
+import LatestPosts from "./components/LatestPosts"; 
 import { WebStoriesCarousel } from "./components/WebStoriesCarousel";
 import LeadCapture from "./components/LeadCapture";
 import { formatDate } from "@/app/lib/utils";
@@ -25,22 +25,28 @@ export const metadata: Metadata = {
 const DEFAULT_IMAGE = "/images/placeholder.jpg";
 
 // --- QUERIES ---
-// 1. Busca Destaques
+// 1. Busca Destaques (Agora com otimização de imagem)
 async function getFeaturedPosts(): Promise<FeaturedPost[]> {
   const query = `*[_type == "post" && featured == true && !(_id in path('drafts.**'))] | order(publishedAt desc) [0...3] {
     _id, 
     title,
     "slug": slug.current,
     excerpt,
-    "imagem": mainImage.asset->url,
+    mainImage,
     "imagemAlt": mainImage.alt,
     publishedAt,
     "author": author->name
   }`;
-  return await client.fetch(query, {}, { next: { revalidate: 300 } });
+  const data = await client.fetch(query, {}, { next: { revalidate: 300 } });
+  
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return data.map((post: any) => ({
+    ...post,
+    imagem: post.mainImage ? urlFor(post.mainImage).width(1200).height(800).quality(80).auto('format').url() : DEFAULT_IMAGE
+  }));
 }
 
-// 2. Busca Categorias
+// 2. Busca Categorias (Agora com otimização de imagem nos posts internos)
 async function getCategories(): Promise<CategoryWithPosts[]> {
   const query = `*[_type == "category" && !(_id in path('drafts.**')) && count(*[_type == "post" && references(^._id)]) > 0]{
     _id,
@@ -50,7 +56,7 @@ async function getCategories(): Promise<CategoryWithPosts[]> {
       _id,
       title,
       "slug": slug.current,
-      "imagem": mainImage.asset->url,
+      mainImage,
       "imagemAlt": mainImage.alt,
       excerpt,
       "author": author->name,
@@ -58,33 +64,42 @@ async function getCategories(): Promise<CategoryWithPosts[]> {
       editorialType
     }
   }`;
-  const categories = await client.fetch(
-    query,
-    {},
-    { next: { revalidate: 300 } },
-  );
+  const categories = await client.fetch(query, {}, { next: { revalidate: 300 } });
 
-  // Remove categorias com títulos duplicados
   const seenTitles = new Set<string>();
-  const uniqueCategories = categories.filter((cat: CategoryWithPosts) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const uniqueCategories = categories.filter((cat: any) => {
     if (seenTitles.has(cat.title)) return false;
     seenTitles.add(cat.title);
+    
+    // Otimizando imagens aninhadas
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    cat.posts = cat.posts.map((post: any) => ({
+      ...post,
+      imagem: post.mainImage ? urlFor(post.mainImage).width(600).height(400).quality(80).auto('format').url() : DEFAULT_IMAGE
+    }));
     return true;
   });
 
   return uniqueCategories;
 }
 
-// 3. Busca Web Stories
+// 3. Busca Web Stories (Agora com otimização de imagem vertical)
 async function getWebStories(): Promise<WebStory[]> {
   const query = `*[_type == "webStory"] | order(_createdAt desc) [0...6] {
     _id,
     title,
     "slug": slug.current,
-    "coverImage": coverImage.asset->url,
+    coverImage,
     "targetPostSlug": targetPost->slug.current
   }`;
-  return await client.fetch(query, {}, { next: { revalidate: 300 } });
+  const data = await client.fetch(query, {}, { next: { revalidate: 300 } });
+  
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return data.map((story: any) => ({
+    ...story,
+    coverImage: story.coverImage ? urlFor(story.coverImage).width(400).height(700).quality(80).auto('format').url() : DEFAULT_IMAGE
+  }));
 }
 
 // --- COMPONENTE PRINCIPAL ---
@@ -96,15 +111,12 @@ export default async function Home() {
     getPodcastEpisodes(),
   ]);
 
-  // SET PARA CONTROLE DE DUPLICATAS
   const renderedPostIds = new Set<string>();
 
-  // Marca os destaques como já renderizados
   featuredPosts.forEach((post) => {
     renderedPostIds.add(post._id);
   });
 
-  // Pegamos os 5 últimos artigos gerais para a lateral esquerda (estilo Tecnoblog)
   const popularPosts = categories
     .flatMap((c) => c.posts)
     .filter((p) => !renderedPostIds.has(p._id))
@@ -147,7 +159,6 @@ export default async function Home() {
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {featuredPosts.map((post, index) => {
-              // O primeiro post é o HERO (ocupa mais espaço)
               const isHero = index === 0;
 
               return (
@@ -155,14 +166,13 @@ export default async function Home() {
                   key={post._id}
                   className={`
                   relative group overflow-hidden border border-(--border) bg-(--card-bg) shadow-sm
-                  ${isHero ? "lg:col-span-2 lg:row-span-2 h-125 lg:h-auto" : "lg:col-span-2 h-60"}
-                `}
+                  ${isHero ? "lg:col-span-2 lg:row-span-2 min-h-[400px] lg:min-h-[500px]" : "lg:col-span-2 min-h-[240px]"}
+                `} // 👈 O SEGREDO DO CLS: Altura mínima fixa! Nada de 'h-auto'
                 >
                   <Link
                     href={`/post/${post.slug}`}
                     className="block h-full w-full relative"
                   >
-                    {/* Imagem com Overlay Gradiente para leitura */}
                     <div className="absolute inset-0 z-0">
                       <Image
                         src={post.imagem || DEFAULT_IMAGE}
@@ -179,7 +189,6 @@ export default async function Home() {
                       <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent" />
                     </div>
 
-                    {/* Texto sobre a imagem (Estilo Manchete) */}
                     <div className="absolute bottom-0 left-0 p-6 z-10 w-full">
                       <span className="inline-block px-2 py-1 mb-3 text-xs font-bold text-white bg-orange-600 font-mono tracking-wider">
                         {isHero ? "MANCHETE" : "EM ALTA"}
@@ -209,7 +218,6 @@ export default async function Home() {
       {/* 2. SEÇÃO TECNOBLOG: POPULARES (SANITY) + CAST (API) */}
       <section className="mt-12 mb-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-          {/* LADO ESQUERDO: MAIS POPULARES */}
           <aside className="lg:col-span-3 lg:border-r lg:border-zinc-200 lg:pr-12 p-4 bg-amber-50">
             <h2 className="text-[#0070f3] text-xl font-black mb-8 uppercase tracking-tighter">
               Mais Populares
@@ -232,7 +240,6 @@ export default async function Home() {
             </div>
           </aside>
 
-          {/* LADO DIREITO: GRID DO BUILD & BYTE CAST */}
           <main className="lg:col-span-9 flex flex-col p-4 gap-4 bg-amber-50">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-2xl font-black uppercase tracking-tighter">
@@ -243,7 +250,6 @@ export default async function Home() {
               </span>
             </div>
 
-            {/* Desktop Grid 2x2 */}
             <div className="hidden md:grid grid-cols-2 gap-x-8 gap-y-12">
               {episodes.map((ep: Episode) => (
                 <article key={ep.id} className="group">
@@ -251,6 +257,7 @@ export default async function Home() {
                     href={ep.link}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label={`Ouvir podcast: ${ep.title}`} // 👈 Correção de Acessibilidade
                     className="block relative aspect-video overflow-hidden mb-4"
                   >
                     <Image
@@ -276,7 +283,6 @@ export default async function Home() {
               ))}
             </div>
 
-            {/* Mobile Carousel */}
             <div className="md:hidden">
               <PodcastCarousel
                 episodes={episodes}
