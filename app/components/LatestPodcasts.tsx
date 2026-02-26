@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 interface Episode {
   id: string;
@@ -44,11 +45,15 @@ export default async function LatestPodcasts() {
           <div key={episode.id} className="border  p-4 shadow-sm hover:shadow-md transition bg-white">
             {/* Imagem de Capa */}
             {episode.image && (
-              <img 
-                src={episode.image} 
-                alt={episode.title} 
-                className="w-full h-48 object-cover  mb-4"
-              />
+              <div className="relative w-full h-48 mb-4">
+                <Image 
+                  src={episode.image} 
+                  alt={episode.title} 
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+              </div>
             )}
             
             <h3 className="font-semibold text-lg mb-2 line-clamp-2">

@@ -10,6 +10,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "cdn.sanity.io",
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn.sanity.io',
+      },
+      {
+        protocol: 'https',
+        hostname: 'd3t3ozftmdmh3i.cloudfront.net', // 👈 Adicione isso!
+      },
     ],
   },
   // Adicionando Headers de Segurança (CSP, HSTS, X-Frame-Options)
@@ -30,6 +38,7 @@ const nextConfig: NextConfig = {
             key: 'Strict-Transport-Security',
             value: 'max-age=63072000; includeSubDomains; preload', // Força HTTPS
           },
+          
         ],
       },
     ];

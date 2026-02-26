@@ -44,12 +44,14 @@ export default function PodcastCarousel({ episodes = [], defaultImage }: { episo
         <div className="flex gap-4">
           {episodes.map((ep) => (
             <article key={ep.id} className="flex-[0_0_85%] min-w-0">
-              <a href={ep.link} target="_blank" rel="noopener noreferrer" className="block group">
-                <div className="relative aspect-video  overflow-hidden mb-3">
+              <a href={ep.link} target="_blank" rel="noopener noreferrer" className="block group" aria-label={`Ouvir podcast: ${ep.title}`}>
+                <div className="relative aspect-video overflow-hidden mb-3">
                   <Image
                     src={ep.image || defaultImage}
                     alt={ep.title}
                     fill
+                    // 👇 A MÁGICA DA PERFORMANCE NO MOBILE
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover"
                   />
                   <span className="absolute bottom-2 left-2 bg-[#0070f3] text-white text-[9px] font-black px-1.5 py-0.5 uppercase">
@@ -73,6 +75,8 @@ export default function PodcastCarousel({ episodes = [], defaultImage }: { episo
         {episodes.map((_, idx) => (
           <button
             key={idx}
+            // 👇 A MÁGICA DA ACESSIBILIDADE
+            aria-label={`Ir para o episódio ${idx + 1} do carrossel`}
             className={`h-1.5 transition-all ${
               selectedIndex === idx ? "bg-[#0070f3] w-4" : "bg-zinc-300 w-1.5"
             }`}

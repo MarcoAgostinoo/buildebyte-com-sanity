@@ -1,4 +1,4 @@
-import { client } from "@/app/lib/sanity";
+import { client, urlFor, type SanityImageSource } from "@/app/lib/sanity";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -12,6 +12,10 @@ interface Post {
   editorialType?: string;
 }
 
+interface RawPost extends Omit<Post, "imagem"> {
+  mainImage: SanityImageSource;
+}
+
 const formatDate = (dateString: string) => {
   if (!dateString) return "";
   return new Date(dateString).toLocaleDateString("pt-BR", {
@@ -21,13 +25,8 @@ const formatDate = (dateString: string) => {
   });
 };
 
-async function getData() {
-  /**
-   * STREAM EDITORIAL PURO:
-   * - Exclui destaques (featured)
-   * - Exclui âncoras (anchor)
-   * - Exclui drafts
-   */
+// 👇 1. Adicionamos o Promise<Post[]> aqui para o TypeScript saber o que a função retorna
+async function getData(): Promise<Post[]> {
   const query = `*[
     _type == "post" &&
     (!defined(featured) || featured == false) &&
@@ -37,18 +36,28 @@ async function getData() {
   | order(publishedAt desc)[0...8] {
     title,
     "slug": slug.current,
-    "imagem": mainImage.asset->url,
+    mainImage,
     "alt": mainImage.alt,
     publishedAt,
     "category": categories[0]->title,
     editorialType
   }`;
 
-  return await client.fetch(query, {}, { next: { revalidate: 3600 } });
+  const data = await client.fetch(query, {}, { next: { revalidate: 3600 } });
+
+  return data.map((post: RawPost) => ({
+    title: post.title,
+    slug: post.slug,
+    alt: post.alt || "",
+    publishedAt: post.publishedAt,
+    category: post.category,
+    editorialType: post.editorialType,
+    imagem: post.mainImage ? urlFor(post.mainImage).width(800).height(500).quality(75).auto('format').url() : ""
+  }));
 }
 
 export default async function LatestPosts() {
-  const data: Post[] = await getData();
+  const data = await getData();
 
   if (!data || data.length === 0) return null;
 
@@ -70,12 +79,14 @@ export default async function LatestPosts() {
 
         {/* GRID SISTÊMICO */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10">
-          {data.map((post, idx) => (
+          {/* 👇 2. Tipamos explicitamente post e idx aqui para eliminar o erro 7006 */}
+          {data.map((post: Post, idx: number) => (
             <article key={idx} className="group flex flex-col">
               <Link href={`/post/${post.slug}`} className="flex flex-col h-full">
 
                 {/* IMAGEM */}
-                <div className="relative aspect-[16/10] w-full overflow-hidden bg-(--border) mb-4">
+                {/* 👇 3. Removemos os colchetes do aspect-16/10 para agradar o Tailwind */}
+                <div className="relative aspect-16/10 w-full overflow-hidden bg-(--border) mb-4">
                   {post.imagem ? (
                     <Image
                       src={post.imagem}

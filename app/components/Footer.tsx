@@ -2,12 +2,13 @@
 
 import {
   Footer,
-  FooterBrand,
   FooterCopyright,
   FooterDivider,
   FooterLink,
   FooterLinkGroup,
 } from "flowbite-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function StrategicFooter() {
   return (
@@ -22,12 +23,18 @@ export default function StrategicFooter() {
 
           {/* IDENTIDADE */}
           <div className="flex flex-col space-y-4">
-            <FooterBrand
-              href="/"
-              src="/logofooter.webp"
-              alt="Vetor Estratégico Logo"
-              name="Vetor Estratégico"
-            />
+            <Link href="/" className="flex items-center gap-3">
+              <Image
+                src="/logofooter.webp"
+                alt="Vetor Estratégico Logo"
+                width={39}
+                height={32}
+                className="mr-3 h-8 w-auto"
+              />
+              <span className="self-center whitespace-nowrap text-xl font-semibold text-zinc-800 dark:text-white">
+                Vetor Estratégico
+              </span>
+            </Link>
 
             <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-sm">
               Análise aplicada sobre tecnologia, defesa, infraestrutura e poder global —

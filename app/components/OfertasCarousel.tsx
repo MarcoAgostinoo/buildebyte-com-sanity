@@ -12,7 +12,8 @@ import { createImageUrlBuilder } from "@sanity/image-url";
 const builder = createImageUrlBuilder(client as any);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function urlFor(source: any) {
-  return builder.image(source).width(400).height(400).fit("fillmax").url();
+  // 👈 Adicionamos .auto("format") para garantir que o Sanity entregue WebP sempre que possível!
+  return builder.image(source).width(400).height(400).fit("fillmax").auto("format").url();
 }
 
 export interface Oferta {
@@ -61,7 +62,7 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
                       key={oferta._id}
                       className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_25%] min-w-0 pl-4 py-4"
                     >
-                      <article className="flex flex-col bg-white dark:bg-zinc-900  border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-lg hover:border-zinc-400 dark:hover:border-zinc-600 transition-all duration-300 h-full">
+                      <article className="flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-lg hover:border-zinc-400 dark:hover:border-zinc-600 transition-all duration-300 h-full">
 
                         {/* Imagem */}
                         <div className="relative aspect-square bg-zinc-50 dark:bg-zinc-950 p-4">
@@ -82,6 +83,7 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
                             href={oferta.affiliateLink}
                             target="_blank"
                             rel="noopener noreferrer"
+                            aria-label={`Ver imagem da oferta: ${oferta.title}`} // 👈 Acessibilidade da imagem
                             className="block w-full h-full relative"
                           >
                             {imgUrl ? (
@@ -144,6 +146,7 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
                             href={oferta.affiliateLink}
                             target="_blank"
                             rel="noopener noreferrer sponsored"
+                            aria-label={`Pegar promoção do produto: ${oferta.title}`} // 👈 Resolve o erro "Links idênticos"
                             className="w-full bg-yellow-400 hover:bg-yellow-500 text-zinc-900 font-bold py-2 flex items-center justify-center gap-2 transition-colors text-sm"
                           >
                             <FaShoppingCart size={13} />
@@ -160,12 +163,14 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
         {/* Setas */}
         <button
           onClick={scrollPrev}
+          aria-label="Ver ofertas anteriores" // 👈 Resolve o erro "Botões não têm um nome"
           className="absolute top-1/2 -left-2 md:-left-4 -translate-y-1/2 p-2 bg-white dark:bg-zinc-800 shadow-lg text-zinc-700 dark:text-zinc-200 hover:bg-yellow-400 hover:text-zinc-900 transition-all z-20"
         >
           <FaChevronLeft />
         </button>
         <button
           onClick={scrollNext}
+          aria-label="Ver próximas ofertas" // 👈 Resolve o erro "Botões não têm um nome"
           className="absolute top-1/2 -right-2 md:-right-4 -translate-y-1/2 p-2 bg-white dark:bg-zinc-800 shadow-lg text-zinc-700 dark:text-zinc-200 hover:bg-yellow-400 hover:text-zinc-900 transition-all z-20"
         >
           <FaChevronRight />
