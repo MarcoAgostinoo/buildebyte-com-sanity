@@ -262,9 +262,10 @@ export default async function Home() {
                   >
                     <Image
                       src={ep.image || DEFAULT_IMAGE}
-                      alt={ep.title}
+                      alt={`Capa do episódio ${ep.title}`}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
+                      quality={60}
                       className="object-cover transition-transform group-hover:scale-105"
                     />
                     <span className="absolute bottom-3 left-3 bg-[#0070f3] text-white text-[10px] font-black px-2 py-0.5 uppercase tracking-widest">

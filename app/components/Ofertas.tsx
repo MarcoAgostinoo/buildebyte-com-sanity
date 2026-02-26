@@ -1,6 +1,13 @@
-// app/components/Ofertas.tsx
 import { client } from "@/app/lib/sanity";
-import { OfertasCarousel } from './OfertasCarousel';
+import dynamic from 'next/dynamic';
+
+// 👇 Removemos apenas a linha "ssr: false"
+const OfertasCarousel = dynamic(
+  () => import('./OfertasCarousel').then((mod) => mod.OfertasCarousel),
+  { 
+    loading: () => <div className="h-64 flex items-center justify-center animate-pulse bg-gray-100 dark:bg-zinc-800">Carregando ofertas...</div>
+  }
+);
 
 const QUERY = `*[_type == "oferta"] | order(publishedAt desc) {
   _id, title, price, originalPrice, installments,

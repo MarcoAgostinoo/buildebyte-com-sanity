@@ -48,19 +48,20 @@ export default function PodcastCarousel({ episodes = [], defaultImage }: { episo
                 <div className="relative aspect-video overflow-hidden mb-3">
                   <Image
                     src={ep.image || defaultImage}
-                    alt={ep.title}
+                    alt={`Capa do episódio ${ep.title}`}
                     fill
                     // 👇 A MÁGICA DA PERFORMANCE NO MOBILE
                     sizes="(max-width: 768px) 100vw, 50vw"
+                    quality={60}
                     className="object-cover"
                   />
                   <span className="absolute bottom-2 left-2 bg-[#0070f3] text-white text-[9px] font-black px-1.5 py-0.5 uppercase">
                     PODCAST
                   </span>
                 </div>
-                <h4 className="font-bold text-zinc-900 dark:text-white text-base line-clamp-2 leading-tight">
+                <h3 className="font-bold text-zinc-900 dark:text-white text-base line-clamp-2 leading-tight">
                   {ep.title}
-                </h4>
+                </h3>
                 <p className="text-[11px] text-zinc-500 mt-1">
                   {formatDate(ep.pubDate)} • Build & Byte Cast
                 </p>

@@ -52,7 +52,7 @@ export default function StrategicFooter() {
               Áreas de Análise
             </h3>
 
-            <ul className="space-y-2 text-sm text-zinc-600 dark:text-zinc-400">
+            <ul className="space-y-3 text-sm text-zinc-600 dark:text-zinc-400">
               <li>Defesa & Tecnologia Militar</li>
               <li>Infraestrutura & Soberania</li>
               <li>Economia de Poder</li>
@@ -66,7 +66,7 @@ export default function StrategicFooter() {
               Institucional
             </h3>
 
-            <FooterLinkGroup col className="space-y-2">
+            <FooterLinkGroup col className="space-y-3">
               <FooterLink href="/about" className="hover:text-primary">
                 Sobre / Missão
               </FooterLink>

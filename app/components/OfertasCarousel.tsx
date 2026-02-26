@@ -115,7 +115,7 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
 
                         {/* Conteúdo */}
                         <div className="p-4 flex flex-col flex-1">
-                          <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100 line-clamp-2 min-h-[2.5rem] mb-2">
+                          <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100 line-clamp-2 min-h-10 mb-2">
                             <a
                               href={oferta.affiliateLink}
                               target="_blank"
@@ -175,14 +175,14 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
         <button
           onClick={scrollPrev}
           aria-label="Ver ofertas anteriores" // 👈 Resolve o erro "Botões não têm um nome"
-          className="absolute top-1/2 -left-2 md:-left-4 -translate-y-1/2 p-2 bg-white dark:bg-zinc-800 shadow-lg text-zinc-700 dark:text-zinc-200 hover:bg-yellow-400 hover:text-zinc-900 transition-all z-20"
+          className="absolute top-1/2 -left-2 md:-left-4 -translate-y-1/2 p-3 bg-white dark:bg-zinc-800 shadow-lg text-zinc-700 dark:text-zinc-200 hover:bg-yellow-400 hover:text-zinc-900 transition-all z-20"
         >
           <FaChevronLeft />
         </button>
         <button
           onClick={scrollNext}
           aria-label="Ver próximas ofertas" // 👈 Resolve o erro "Botões não têm um nome"
-          className="absolute top-1/2 -right-2 md:-right-4 -translate-y-1/2 p-2 bg-white dark:bg-zinc-800 shadow-lg text-zinc-700 dark:text-zinc-200 hover:bg-yellow-400 hover:text-zinc-900 transition-all z-20"
+          className="absolute top-1/2 -right-2 md:-right-4 -translate-y-1/2 p-3 bg-white dark:bg-zinc-800 shadow-lg text-zinc-700 dark:text-zinc-200 hover:bg-yellow-400 hover:text-zinc-900 transition-all z-20"
         >
           <FaChevronRight />
         </button>
