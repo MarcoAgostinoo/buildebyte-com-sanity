@@ -247,7 +247,7 @@ export default async function Home() {
               <h2 className="text-2xl font-black uppercase tracking-tighter">
                 Build & Byte Cast
               </h2>
-              <span className="bg-green-500/10 text-green-700 text-[10px] font-bold px-2 py-1  animate-pulse uppercase">
+              <span className="bg-green-500/10 text-green-900 text-[10px] font-bold px-2 py-1  animate-pulse uppercase">
                 Ao Vivo / Recentes
               </span>
             </div>
@@ -293,25 +293,25 @@ export default async function Home() {
       </section>
 
       {/* --- 3 SEÇÕES EXTRAS --- */}
-      <div className="mt-20 min-h-[400px]">
-        <Suspense fallback={<div className="h-96 animate-pulse bg-gray-100" />}>
+      {/* No celular é mais alto, no PC (lg) é mais baixo */}
+      <div className="mt-20 min-h-[500px] lg:min-h-[450px]">
+        <Suspense fallback={<div className="h-full animate-pulse bg-gray-100 dark:bg-zinc-900 rounded-lg" />}>
           <Ofertas />
         </Suspense>
       </div>
 
       {/* --- 4. SEÇÃO DE WEB STORIES (ESTILO INSTAGRAM) --- */}
       {webStories.length > 0 && (
-        <div className="min-h-[350px]">
-          <Suspense
-            fallback={<div className="h-64 animate-pulse bg-gray-100 mt-10" />}
-          >
+        <div className="min-h-[350px] lg:min-h-[400px]">
+          <Suspense fallback={<div className="h-full animate-pulse bg-gray-100 dark:bg-zinc-900 mt-10 rounded-lg" />}>
             <WebStoriesCarousel webStories={webStories} />
           </Suspense>
         </div>
       )}
 
-      <div className="mt-10 min-h-[800px]">
-        <Suspense fallback={<div className="h-screen animate-pulse bg-gray-100" />}>
+      {/* A MÁGICA DO CLS: Posts empilhados no celular (muito altos) vs 4 colunas no PC (mais baixos) */}
+      <div className="mt-10 min-h-[1200px] sm:min-h-[800px] lg:min-h-[600px]">
+        <Suspense fallback={<div className="h-full animate-pulse bg-gray-100 dark:bg-zinc-900 rounded-lg" />}>
           <LatestPosts />
         </Suspense>
       </div>
