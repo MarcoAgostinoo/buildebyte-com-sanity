@@ -230,9 +230,9 @@ export default async function Home() {
                       {index + 1}
                     </span>
                     <Link href={`/post/${post.slug}`}>
-                      <h4 className="font-bold text-[15px] leading-tight text-zinc-900 group-hover:text-[#0070f3] transition-colors">
+                      <h3 className="font-bold text-[15px] leading-tight text-zinc-900 group-hover:text-[#0070f3] transition-colors">
                         {post.title}
-                      </h4>
+                      </h3>
                     </Link>
                   </article>
                 ),
@@ -245,7 +245,7 @@ export default async function Home() {
               <h2 className="text-2xl font-black uppercase tracking-tighter">
                 Build & Byte Cast
               </h2>
-              <span className="bg-green-500/10 text-green-500 text-[10px] font-bold px-2 py-1  animate-pulse uppercase">
+              <span className="bg-green-500/10 text-green-700 text-[10px] font-bold px-2 py-1  animate-pulse uppercase">
                 Ao Vivo / Recentes
               </span>
             </div>
@@ -264,6 +264,7 @@ export default async function Home() {
                       src={ep.image || DEFAULT_IMAGE}
                       alt={ep.title}
                       fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-cover transition-transform group-hover:scale-105"
                     />
                     <span className="absolute bottom-3 left-3 bg-[#0070f3] text-white text-[10px] font-black px-2 py-0.5 uppercase tracking-widest">
@@ -294,23 +295,25 @@ export default async function Home() {
       </section>
 
       {/* --- 3 SEÇÕES EXTRAS --- */}
-      <div className="mt-20">
-        <Suspense fallback={<div className="h-40 animate-pulse bg-gray-100" />}>
+      <div className="mt-20 min-h-[400px]">
+        <Suspense fallback={<div className="h-96 animate-pulse bg-gray-100" />}>
           <Ofertas />
         </Suspense>
       </div>
 
       {/* --- 4. SEÇÃO DE WEB STORIES (ESTILO INSTAGRAM) --- */}
       {webStories.length > 0 && (
-        <Suspense
-          fallback={<div className="h-60 animate-pulse bg-gray-100 mt-10" />}
-        >
-          <WebStoriesCarousel webStories={webStories} />
-        </Suspense>
+        <div className="min-h-[350px]">
+          <Suspense
+            fallback={<div className="h-64 animate-pulse bg-gray-100 mt-10" />}
+          >
+            <WebStoriesCarousel webStories={webStories} />
+          </Suspense>
+        </div>
       )}
 
-      <div className="mt-10">
-        <Suspense fallback={<div className="h-96 animate-pulse bg-gray-100" />}>
+      <div className="mt-10 min-h-[800px]">
+        <Suspense fallback={<div className="h-screen animate-pulse bg-gray-100" />}>
           <LatestPosts />
         </Suspense>
       </div>
