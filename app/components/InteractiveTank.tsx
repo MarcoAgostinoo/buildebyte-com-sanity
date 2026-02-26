@@ -36,6 +36,7 @@ export default function InteractiveTank() {
   const turretCenterRef = useRef({ x: 0, y: 0 });
   // Guardamos a posição exata do mouse
   const mousePosRef = useRef({ x: 0, y: 0 });
+  const requestRef = useRef<number>(0);
 
   const [isShootingCannon, setIsShootingCannon] = useState(false);
   const[isShootingMG, setIsShootingMG] = useState(false);
@@ -53,26 +54,36 @@ export default function InteractiveTank() {
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!turretRef.current) return;
-      
-      const rect = turretRef.current.getBoundingClientRect();
-      
-      // Encontra o centro do tanque no eixo X e Y globais (considerando o scroll da página)
-      const docCenterX = rect.left + window.scrollX + rect.width / 2;
-      const docCenterY = rect.top + window.scrollY + rect.height / 2;
-      turretCenterRef.current = { x: docCenterX, y: docCenterY };
 
-      const deltaX = e.pageX - docCenterX;
-      const deltaY = e.pageY - docCenterY;
+      // Otimização: Usa requestAnimationFrame para não bloquear a thread principal
+      if (requestRef.current) return;
 
-      const theta = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-      setAngle(theta);
-      angleRef.current = theta; 
-      
-      mousePosRef.current = { x: e.pageX, y: e.pageY };
+      requestRef.current = requestAnimationFrame(() => {
+        if (!turretRef.current) return;
+        const rect = turretRef.current.getBoundingClientRect();
+        
+        // Encontra o centro do tanque no eixo X e Y globais (considerando o scroll da página)
+        const docCenterX = rect.left + window.scrollX + rect.width / 2;
+        const docCenterY = rect.top + window.scrollY + rect.height / 2;
+        turretCenterRef.current = { x: docCenterX, y: docCenterY };
+
+        const deltaX = e.pageX - docCenterX;
+        const deltaY = e.pageY - docCenterY;
+
+        const theta = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+        setAngle(theta);
+        angleRef.current = theta; 
+        
+        mousePosRef.current = { x: e.pageX, y: e.pageY };
+        requestRef.current = 0;
+      });
     };
 
     window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+    };
   },[]);
 
   // 2. Canhão: Colisão perfeita e limpeza da memória após 4s
