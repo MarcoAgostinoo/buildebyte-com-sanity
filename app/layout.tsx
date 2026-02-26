@@ -5,7 +5,6 @@ import "./globals.css";
 import { ThemeInit } from "../.flowbite-react/init";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import { GoogleAnalytics } from "@next/third-parties/google";
 import PreviewBanner from "./components/PreviewBanner";
 import { Analytics } from '@vercel/analytics/react';
 
@@ -152,8 +151,21 @@ export default function RootLayout({
         <PreviewBanner />
         <Analytics />
         {process.env.NEXT_PUBLIC_GA_ID && (
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
-      )}
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+              strategy="lazyOnload"
+            />
+            <Script id="google-analytics" strategy="lazyOnload">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+              `}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );

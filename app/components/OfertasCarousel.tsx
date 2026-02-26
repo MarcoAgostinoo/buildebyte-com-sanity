@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { FaChevronLeft, FaChevronRight, FaShoppingCart, FaStore } from "react-icons/fa";
@@ -39,11 +39,22 @@ function calcDiscount(original: number, current: number) {
 export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true, align: "start", slidesToScroll: 1 },
-    [Autoplay({ delay: 5000, stopOnInteraction: false })]
+    [Autoplay({ delay: 5000, stopOnInteraction: false, playOnInit: false })]
   );
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+
+  useEffect(() => {
+    if (emblaApi) {
+      const autoplay = emblaApi.plugins().autoplay;
+      if (!autoplay) return;
+
+      // Inicia o autoplay após 2 segundos para aliviar o TBT inicial
+      const timer = setTimeout(() => autoplay.play(), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [emblaApi]);
 
   return (
     <div className="w-full">
