@@ -54,21 +54,9 @@ export default function InteractiveTank() {
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!turretRef.current) return;
-<<<<<<< HEAD
-=======
-
-      const rect = turretRef.current.getBoundingClientRect();
-
-      // Encontra o centro do tanque no eixo X e Y globais (considerando o scroll da página)
-      const docCenterX = rect.left + window.scrollX + rect.width / 2;
-      const docCenterY = rect.top + window.scrollY + rect.height / 2;
-      turretCenterRef.current = { x: docCenterX, y: docCenterY };
->>>>>>> f053f4967f2669dfc6bb23377d9e0d54c23c2960
 
       // Otimização: Usa requestAnimationFrame para não bloquear a thread principal
       if (requestRef.current) return;
-
-<<<<<<< HEAD
       requestRef.current = requestAnimationFrame(() => {
         if (!turretRef.current) return;
         const rect = turretRef.current.getBoundingClientRect();
@@ -96,18 +84,6 @@ export default function InteractiveTank() {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
   },[]);
-=======
-      const theta = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-      setAngle(theta);
-      angleRef.current = theta;
-
-      mousePosRef.current = { x: e.pageX, y: e.pageY };
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
->>>>>>> f053f4967f2669dfc6bb23377d9e0d54c23c2960
 
   // 2. Canhão: Colisão perfeita e limpeza da memória após 4s
   const fireCannon = useCallback(() => {
