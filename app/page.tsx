@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
-import { client, urlFor } from "@/app/lib/sanity"; // 👈 Importamos o urlFor
+import { client, urlFor } from "@/app/lib/sanity";
 import Link from "next/link";
 import Image from "next/image";
 import Ofertas from "./components/Ofertas"; 
@@ -25,7 +25,8 @@ export const metadata: Metadata = {
 const DEFAULT_IMAGE = "/images/placeholder.jpg";
 
 // --- QUERIES ---
-// 1. Busca Destaques (Agora com otimização de imagem)
+
+// 1. Busca Destaques
 async function getFeaturedPosts(): Promise<FeaturedPost[]> {
   const query = `*[_type == "post" && featured == true && !(_id in path('drafts.**'))] | order(publishedAt desc) [0...3] {
     _id, 
@@ -46,7 +47,7 @@ async function getFeaturedPosts(): Promise<FeaturedPost[]> {
   }));
 }
 
-// 2. Busca Categorias (Agora com otimização de imagem nos posts internos)
+// 2. Busca Categorias
 async function getCategories(): Promise<CategoryWithPosts[]> {
   const query = `*[_type == "category" && !(_id in path('drafts.**')) && count(*[_type == "post" && references(^._id)]) > 0]{
     _id,
@@ -72,7 +73,6 @@ async function getCategories(): Promise<CategoryWithPosts[]> {
     if (seenTitles.has(cat.title)) return false;
     seenTitles.add(cat.title);
     
-    // Otimizando imagens aninhadas
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     cat.posts = cat.posts.map((post: any) => ({
       ...post,
@@ -84,27 +84,27 @@ async function getCategories(): Promise<CategoryWithPosts[]> {
   return uniqueCategories;
 }
 
-// 3. Busca Web Stories (Agora com otimização de imagem vertical)
+// 3. Busca Web Stories (Otimização para formato vertical exato 9:16)
 async function getWebStories(): Promise<WebStory[]> {
-  const query = `*[_type == "webStory"] | order(_createdAt desc) [0...6] {
+  const query = `*[_type == "webStory"] | order(_createdAt desc)[0...6] {
     _id,
     title,
     "slug": slug.current,
-    coverImage,
-    "targetPostSlug": targetPost->slug.current
+    coverImage
   }`;
   const data = await client.fetch(query, {}, { next: { revalidate: 300 } });
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return data.map((story: any) => ({
     ...story,
-    coverImage: story.coverImage ? urlFor(story.coverImage).width(400).height(700).quality(80).auto('format').url() : DEFAULT_IMAGE
+    // 450x800 é a proporção perfeita 9:16 para manter os Stories lindos no Mobile
+    coverImage: story.coverImage ? urlFor(story.coverImage).width(450).height(800).quality(80).auto('format').url() : DEFAULT_IMAGE
   }));
 }
 
 // --- COMPONENTE PRINCIPAL ---
 export default async function Home() {
-  const [featuredPosts, categories, webStories, episodes] = await Promise.all([
+  const[featuredPosts, categories, webStories, episodes] = await Promise.all([
     getFeaturedPosts(),
     getCategories(),
     getWebStories(),
@@ -135,7 +135,7 @@ export default async function Home() {
             "@context": "https://schema.org",
             "@type": "WebSite",
             name: "Vetor Estratégico",
-            url: "https://buildbyte.com.br",
+            url: "https://buildbyte.com.br", // Ajuste se seu domínio for vetorestrategico.com
           }),
         }}
       />
@@ -167,7 +167,7 @@ export default async function Home() {
                   className={`
                   relative group overflow-hidden border border-(--border) bg-(--card-bg) shadow-sm
                   ${isHero ? "lg:col-span-2 lg:row-span-2 min-h-[400px] lg:min-h-[500px]" : "lg:col-span-2 min-h-[240px]"}
-                `} // 👈 O SEGREDO DO CLS: Altura mínima fixa! Nada de 'h-auto'
+                `}
                 >
                   <Link
                     href={`/post/${post.slug}`}
@@ -217,7 +217,7 @@ export default async function Home() {
         </section>
       )}
 
-      {/* 2. SEÇÃO TECNOBLOG: POPULARES (SANITY) + CAST (API) */}
+      {/* 2. SEÇÃO MAIS POPULARES */}
       <section className="mt-12 mb-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           <aside className="lg:col-span-3 lg:border-r lg:border-zinc-200 lg:pr-12 p-4 bg-amber-50">
@@ -262,7 +262,7 @@ export default async function Home() {
                       fill
                       loading="lazy"
                       sizes="(max-width: 768px) 100vw, 50vw"
-                      quality={60}
+                      quality={75}
                       className="object-cover transition-transform group-hover:scale-105"
                     />
                     <span className="absolute bottom-3 left-3 bg-[#0070f3] text-white text-[10px] font-black px-2 py-0.5 uppercase tracking-widest">
@@ -292,24 +292,22 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* --- 3 SEÇÕES EXTRAS --- */}
-      {/* No celular é mais alto, no PC (lg) é mais baixo */}
+      {/* --- 3. SEÇÃO DE OFERTAS --- */}
       <div className="mt-20 min-h-[500px] lg:min-h-[450px]">
         <Suspense fallback={<div className="h-full animate-pulse bg-gray-100 dark:bg-zinc-900 rounded-lg" />}>
           <Ofertas />
         </Suspense>
       </div>
 
-      {/* --- 4. SEÇÃO DE WEB STORIES (ESTILO INSTAGRAM) --- */}
+      {/* --- 4. SEÇÃO DE WEB STORIES --- */}
+      {/* Removemos o Suspense daqui porque `webStories` já vem resolvido do `await Promise.all()` lá em cima */}
       {webStories.length > 0 && (
-        <div className="min-h-[350px] lg:min-h-[400px]">
-          <Suspense fallback={<div className="h-full animate-pulse bg-gray-100 dark:bg-zinc-900 mt-10 rounded-lg" />}>
-            <WebStoriesCarousel webStories={webStories} />
-          </Suspense>
+        <div className="mt-8 mb-8 min-h-[350px] lg:min-h-[400px]">
+          <WebStoriesCarousel webStories={webStories} />
         </div>
       )}
 
-      {/* A MÁGICA DO CLS: Posts empilhados no celular (muito altos) vs 4 colunas no PC (mais baixos) */}
+      {/* --- 5. LATEST POSTS E LEAD CAPTURE --- */}
       <div className="mt-10 min-h-[1200px] sm:min-h-[800px] lg:min-h-[600px]">
         <Suspense fallback={<div className="h-full animate-pulse bg-gray-100 dark:bg-zinc-900 rounded-lg" />}>
           <LatestPosts />
@@ -320,7 +318,7 @@ export default async function Home() {
         <LeadCapture />
       </Suspense>
 
-      {/* --- 5. DISCLAIMER DE AFILIADOS (P0) --- */}
+      {/* --- 6. DISCLAIMER DE AFILIADOS --- */}
       <div className="mt-16 py-6 border-t bg-amber-50/60 text-center">
         <p className="text-xs text-zinc-800 max-w-3xl mx-auto font-mono">
           <span className="font-bold text-orange-600">

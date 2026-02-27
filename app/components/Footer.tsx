@@ -30,6 +30,7 @@ export default function StrategicFooter() {
                 width={39}
                 height={32}
                 className="mr-3 h-8 w-auto"
+                style={{ width: "auto", height: "auto" }}
               />
               <span className="self-center whitespace-nowrap text-xl font-semibold text-zinc-800 dark:text-white">
                 Vetor Estratégico

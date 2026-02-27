@@ -49,6 +49,7 @@ export default function Header() {
                 height={80}
                 alt="Vetor Estratégico"
                 priority
+                style={{ width: "auto", height: "auto" }}
               />
               <div className="flex flex-col leading-tight">
                 <span className="text-lg font-bold text-white tracking-wide">

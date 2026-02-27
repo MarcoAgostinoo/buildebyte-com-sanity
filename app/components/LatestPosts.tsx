@@ -92,7 +92,7 @@ export default async function LatestPosts() {
                       src={post.imagem}
                       alt={post.alt || post.title}
                       fill
-                      loading="lazy"
+                      loading={idx === 0 ? "eager" : "lazy"}
                       sizes="(max-width: 768px) 100vw, 25vw"
                       className="object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-90"
                     />

@@ -52,7 +52,7 @@ export default function PodcastCarousel({ episodes = [], defaultImage }: { episo
                     fill
                     loading="lazy"
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    quality={60}
+                    quality={75}
                     className="object-cover"
                   />
                   <span className="absolute bottom-2 left-2 bg-[#0070f3] text-white text-[9px] font-black px-1.5 py-0.5 uppercase">

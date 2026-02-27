@@ -17,6 +17,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'd3t3ozftmdmh3i.cloudfront.net', // 👈 Adicione isso!
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      }
     ],
   },
   // Adicionando Headers de Segurança (CSP, HSTS, X-Frame-Options)
@@ -39,7 +43,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https:; font-src 'self' https:; connect-src 'self' https:; frame-src 'self' https:; media-src 'self' https:; upgrade-insecure-requests; form-action 'self';",
+            value: "default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://cdn.ampproject.org https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline' https:; font-src 'self' https:; connect-src 'self' https:; frame-src 'self' https:; media-src 'self' https:; upgrade-insecure-requests; form-action 'self';",
           },
           {
             key: 'Cross-Origin-Opener-Policy',
