@@ -135,7 +135,7 @@ export default async function Home() {
             "@context": "https://schema.org",
             "@type": "WebSite",
             name: "Vetor Estratégico",
-            url: "https://buildbyte.com.br", // Ajuste se seu domínio for vetorestrategico.com
+            url: "https://vetorestrategico.com", // Ajuste se seu domínio for vetorestrategico.com
           }),
         }}
       />
