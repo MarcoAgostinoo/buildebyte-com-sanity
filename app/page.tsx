@@ -302,7 +302,7 @@ export default async function Home() {
       {/* --- 4. SEÇÃO DE WEB STORIES --- */}
       {/* Removemos o Suspense daqui porque `webStories` já vem resolvido do `await Promise.all()` lá em cima */}
       {webStories.length > 0 && (
-        <div className="mt-8 mb-8 min-h-[350px] lg:min-h-[400px]">
+        <div className="mt-1 mb-8 min-h-[50px] lg:min-h-[10px]">
           <WebStoriesCarousel webStories={webStories} />
         </div>
       )}
