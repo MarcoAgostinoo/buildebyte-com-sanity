@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const[currentDate, setCurrentDate] = useState("");
+  const [currentDate, setCurrentDate] = useState("");
 
   // Resolve o problema de Hydration Mismatch do Next.js
   useEffect(() => {
@@ -16,9 +16,9 @@ export default function Header() {
         day: "2-digit",
         month: "long",
         year: "numeric",
-      })
+      }),
     );
-  },[]);
+  }, []);
 
   // Função para fechar o menu mobile ao clicar em um link
   const closeMenu = () => setIsMenuOpen(false);
@@ -38,29 +38,53 @@ export default function Header() {
 
       {/* HEADER */}
       <header className="sticky top-0 z-50 bg-[#0b0f14] border-b border-zinc-800">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-8xl mx-auto px-4">
           <nav className="flex items-center justify-between h-16">
-            
             {/* LOGO */}
-            <Link href="/" className="flex items-center gap-3" onClick={closeMenu}>
+            <Link
+              href="/"
+              className="flex items-center gap-2 sm:gap-3"
+              onClick={closeMenu}
+            >
               <Image
                 src="/logo.webp"
-                width={80}
-                height={80}
+                width={200}
+                height={200}
                 alt="Vetor Estratégico"
                 priority
-                style={{ width: "auto", height: "auto" }}
+                className="
+      w-10 h-10
+      sm:w-12 sm:h-12
+      md:w-30 md:h-30
+      lg:w-40 lg:h-40
+      object-contain
+                     "
               />
+
               <div className="flex flex-col leading-tight">
-                <span className="text-lg font-bold text-white tracking-wide">
+                <span
+                  className="
+                  text-sm
+                  sm:text-base
+                  md:text-lg
+                  font-bold text-white tracking-wide
+                  "
+                >
                   VETOR ESTRATÉGICO
                 </span>
-                <span className="text-xs text-zinc-400 tracking-widest uppercase">
+
+                <span
+                  className="
+      hidden sm:block
+      text-[10px]
+      md:text-xs
+      text-zinc-400 tracking-widest uppercase
+    "
+                >
                   Análise de Impacto Sistêmico
                 </span>
               </div>
             </Link>
-
             {/* BOTÃO MOBILE (Substituído o <label> por um <button> acessível) */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -86,9 +110,21 @@ export default function Header() {
             <div className="md:hidden pb-6 pt-4 border-t border-zinc-800 animate-in fade-in slide-in-from-top-2 duration-200">
               <div className="flex flex-col gap-6 text-base font-extrabold tracking-widest uppercase[font-family:var(--font-oswald)]">
                 <NavItem href="/" label="INÍCIO" onClick={closeMenu} />
-                <NavItem href="/destaques" label="DESTAQUES" onClick={closeMenu} />
-                <NavItem href="/noticias" label="NOTÍCIAS" onClick={closeMenu} />
-                <NavItem href="/tecnologia" label="TECNOLOGIA" onClick={closeMenu} />
+                <NavItem
+                  href="/destaques"
+                  label="DESTAQUES"
+                  onClick={closeMenu}
+                />
+                <NavItem
+                  href="/noticias"
+                  label="NOTÍCIAS"
+                  onClick={closeMenu}
+                />
+                <NavItem
+                  href="/tecnologia"
+                  label="TECNOLOGIA"
+                  onClick={closeMenu}
+                />
                 <NavItem href="/videos" label="VÍDEOS" onClick={closeMenu} />
                 <NavItem href="/contato" label="CONTATO" onClick={closeMenu} />
               </div>
@@ -101,7 +137,15 @@ export default function Header() {
 }
 
 // Atualizado para receber onClick (útil para fechar o menu mobile)
-function NavItem({ href, label, onClick }: { href: string; label: string; onClick?: () => void }) {
+function NavItem({
+  href,
+  label,
+  onClick,
+}: {
+  href: string;
+  label: string;
+  onClick?: () => void;
+}) {
   return (
     <Link
       href={href}
