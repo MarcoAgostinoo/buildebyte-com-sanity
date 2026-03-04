@@ -13,6 +13,7 @@ import Link from "next/link";
 import imageUrlBuilder from "@sanity/image-url";
 import { draftMode } from "next/headers";
 import PressaoBrasil from "@/app/components/PressaoBrasilTicker";
+import { generateNewsArticleSchema } from "@/app/lib/schema-helpers";
 
 // ---------------------------------------------------------------------------
 // INTERFACES
@@ -674,25 +675,31 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!post) return {};
 
   const ogImage = post.imagem || "https://vetorestrategico.com/og-image.png";
+  const newsKeywords = post.categories?.map((c) => c.title).join(", ") || "tecnologia, defesa, infraestrutura";
 
   return {
     title: post.seoTitle || post.title,
     description: post.seoDescription || post.excerpt,
+    keywords: `${newsKeywords}, análise estratégica, ${post.pillar ? PILLAR_LABELS[post.pillar] : ""}`.split(", ").filter(Boolean),
+    
     openGraph: {
       title: post.seoTitle || post.title,
       description: post.seoDescription || post.excerpt,
       type: "article",
+      url: `https://vetorestrategico.com/post/${post.slug}`,
       publishedTime: post.publishedAt,
-      url: `https://vetorestrategico.com/artigos/${post.slug}`,
+      authors: [post.author?.name || "Vetor Estratégico"],
+      tags: post.categories?.map((c) => c.title) || [],
       images: [
         {
           url: ogImage,
           width: 1200,
           height: 675,
-          alt: post.title,
+          alt: post.imagemAlt || post.title,
         },
       ],
     },
+    
     twitter: {
       card: "summary_large_image",
       title: post.seoTitle || post.title,
@@ -716,18 +723,19 @@ export default async function PostPage({
   const readTime = estimateReadTime(post.body);
   const pillarLabel = post.pillar ? PILLAR_LABELS[post.pillar] : null;
 
-  const articleJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "NewsArticle",
-    "headline": post.title,
-    "image": [post.imagem],
-    "datePublished": post.publishedAt,
-    "author": [{
-        "@type": "Person",
-        "name": post.author?.name || "Vetor Estratégico",
-        "url": "https://vetorestrategico.com"
-      }]
-  };
+  const newsKeywords = post.categories?.map((c) => c.title).join(", ") || "tecnologia, defesa, infraestrutura";
+
+  const articleJsonLd = generateNewsArticleSchema({
+    title: post.title,
+    description: post.seoDescription || post.excerpt || post.title,
+    image: post.imagem || "https://vetorestrategico.com/og-image.png",
+    url: `https://vetorestrategico.com/post/${post.slug}`,
+    publishedAt: post.publishedAt,
+    keywords: newsKeywords,
+    authorName: post.author?.name,
+    articleSection: post.pillar ? PILLAR_LABELS[post.pillar] : undefined,
+    slug: post.slug,
+  });
 
   return (
     <>
