@@ -68,6 +68,7 @@ interface Post {
   body: any[];
   contentHtml?: string;
   imagem?: string;
+  imagemAlt?: string;
   imagemLqip?: string;
   author: Author;
   publishedAt: string;
