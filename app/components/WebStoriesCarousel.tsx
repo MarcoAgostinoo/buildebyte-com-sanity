@@ -13,6 +13,8 @@ interface WebStory {
   title: string;
   slug: string;
   coverImage: string;
+  description?: string;
+  ctaText?: string;
 }
 
 export function WebStoriesCarousel({ webStories }: { webStories: WebStory[] }) {
@@ -71,9 +73,14 @@ export function WebStoriesCarousel({ webStories }: { webStories: WebStory[] }) {
                   <div className="absolute top-4 right-4 text-white/90 bg-black/40 rounded-full p-2 backdrop-blur-sm">
                     <FaPlay size={12} />
                   </div>
-                  <h3 className="text-white text-lg font-bold leading-tight drop-shadow-lg">
+                  <h3 className="text-white text-lg font-bold leading-tight drop-shadow-lg mb-2">
                     {story.title}
                   </h3>
+                  {story.description && (
+                    <p className="text-white/80 text-xs leading-tight drop-shadow-sm line-clamp-2">
+                      {story.description}
+                    </p>
+                  )}
                 </div>
               </Link>
             </div>

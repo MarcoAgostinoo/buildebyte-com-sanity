@@ -4,6 +4,7 @@ export interface BasePost {
   slug: string;
   imagem: string;
   imagemAlt?: string;
+  imagemLqip?: string;
   excerpt: string;
   author: string;
   publishedAt: string;
@@ -27,5 +28,7 @@ export interface WebStory {
   title: string;
   slug: string;
   coverImage: string;
+  description?: string;
+  ctaText?: string;
   targetPostSlug?: string;
 }

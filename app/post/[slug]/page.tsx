@@ -1,6 +1,8 @@
 import { client, previewClient } from "@/app/lib/sanity";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import { notFound } from "next/navigation";
+import { type Metadata } from "next";
+import Script from "next/script";
 import AdComponent from "@/app/components/AdComponent";
 import SecondAdComponent from "@/app/components/SecondAdComponent";
 import ReadNext from "@/app/components/ReadNext";
@@ -133,6 +135,7 @@ async function getPost(slug: string): Promise<Post | null> {
     contentHtml,
     spotifyEmbed,
     "imagem": mainImage.asset->url,
+    "imagemAlt": mainImage.alt,
     "imagemLqip": mainImage.asset->metadata.lqip,
     "author": author->{
       name,
@@ -223,6 +226,7 @@ const ptComponents: PortableTextComponents = {
             placeholder={value.asset.metadata?.lqip ? "blur" : "empty"}
             blurDataURL={value.asset.metadata?.lqip}
             className="w-full h-auto object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 85vw"
           />
           {value.caption && (
             <figcaption className="mt-2 text-center text-xs text-foreground/50 italic px-4 pb-2">
@@ -397,6 +401,7 @@ function AuthorCard({ author }: { author: Author }) {
             src={urlFor(author.image).width(112).height(112).fit("crop").url()}
             alt={author.name}
             fill
+            sizes="56px"
             className="object-cover"
           />
         </div>
@@ -661,6 +666,41 @@ function ClusterCard({ cluster }: { cluster: Cluster }) {
 // PAGE
 // ---------------------------------------------------------------------------
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPost(slug);
+
+  if (!post) return {};
+
+  const ogImage = post.imagem || "https://vetorestrategico.com/og-image.png";
+
+  return {
+    title: post.seoTitle || post.title,
+    description: post.seoDescription || post.excerpt,
+    openGraph: {
+      title: post.seoTitle || post.title,
+      description: post.seoDescription || post.excerpt,
+      type: "article",
+      publishedTime: post.publishedAt,
+      url: `https://vetorestrategico.com/artigos/${post.slug}`,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 675,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.seoTitle || post.title,
+      description: post.seoDescription || post.excerpt,
+      images: [ogImage],
+    },
+  };
+}
+
 export default async function PostPage({
   params,
 }: {
@@ -675,9 +715,27 @@ export default async function PostPage({
   const readTime = estimateReadTime(post.body);
   const pillarLabel = post.pillar ? PILLAR_LABELS[post.pillar] : null;
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    "headline": post.title,
+    "image": [post.imagem],
+    "datePublished": post.publishedAt,
+    "author": [{
+        "@type": "Person",
+        "name": post.author?.name || "Vetor Estratégico",
+        "url": "https://vetorestrategico.com"
+      }]
+  };
+
   return (
-    
-    <div className="max-w-10xl mx-auto px-1 py-1 sm:px-6 lg:px-2">
+    <>
+      <Script
+        id="article-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <div className="max-w-10xl mx-auto px-1 py-1 sm:px-6 lg:px-2">
       <div className="flex flex-col lg:flex-row gap-10">
 
         {/* ================================================================ */}
@@ -746,6 +804,7 @@ export default async function PostPage({
                         .url()}
                       alt={post.author.name}
                       fill
+                      sizes="64px"
                       className="object-cover"
                     />
                   </div>
@@ -796,11 +855,12 @@ export default async function PostPage({
               <div className="mb-10 relative aspect-video  overflow-hidden shadow-xl">
                 <Image
                   src={post.imagem}
-                  alt={post.title}
+                  alt={post.imagemAlt || post.title}
                   fill
                   priority
                   placeholder={post.imagemLqip ? "blur" : "empty"}
                   blurDataURL={post.imagemLqip}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 50vw"
                   className="object-cover"
                 />
               </div>
@@ -818,8 +878,13 @@ export default async function PostPage({
             {/* SPOTIFY */}
             {post.spotifyEmbed && (
               <div
-                className="mb-10  overflow-hidden"
-                dangerouslySetInnerHTML={{ __html: post.spotifyEmbed }}
+                className="mb-10 overflow-hidden"
+                dangerouslySetInnerHTML={{
+                  __html: post.spotifyEmbed.replace(
+                    'allowfullscreen',
+                    'allow="fullscreen; encrypted-media"'
+                  ),
+                }}
               />
             )}
 
@@ -935,5 +1000,6 @@ export default async function PostPage({
         <ReadNext posts={relatedPosts} />
       </div>
     </div>
+    </>
   );
 }

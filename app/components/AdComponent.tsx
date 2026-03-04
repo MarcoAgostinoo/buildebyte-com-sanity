@@ -46,6 +46,7 @@ export default async function AdComponent({ className = '' }: { className?: stri
               alt={randomOffer.title}
               fill
               loading="lazy"
+              sizes="100%"
               className="object-cover "
             />
           )}

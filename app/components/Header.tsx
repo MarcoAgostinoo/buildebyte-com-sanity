@@ -55,8 +55,8 @@ export default function Header() {
                 className="
       w-10 h-10
       sm:w-12 sm:h-12
-      md:w-30 md:h-30
-      lg:w-40 lg:h-40
+      md:w-20 md:h-20
+      lg:w-30 lg:h-30
       object-contain
                      "
               />

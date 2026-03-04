@@ -14,15 +14,15 @@ import { getPodcastEpisodes, Episode } from "@/app/lib/podcast-service";
 import MilitaryPowerTicker from "./components/MilitaryPowerTicker";
 
 export const metadata: Metadata = {
-  title: "Vetor Estratégico - Tecnologia, Hardware e Reviews",
+  title: "Vetor Estratégico - Defesa e Estratégia",
   description:
-    "As últimas novidades em tecnologia, reviews de hardware e guias técnicos.",
+    "Portal brasileiro de análise técnica sobre tecnologia, defesa e infraestrutura. Estratégia, inteligência e poder.",
   openGraph: {
-    images: ["/og-image.jpg"],
+    images: ["https://vetorestrategico.com/og-image.png"],
   },
 };
 
-const DEFAULT_IMAGE = "/images/placeholder.jpg";
+const DEFAULT_IMAGE = "/images/placeholder.png";
 
 // --- QUERIES ---
 
@@ -35,6 +35,7 @@ async function getFeaturedPosts(): Promise<FeaturedPost[]> {
     excerpt,
     mainImage,
     "imagemAlt": mainImage.alt,
+    "imagemLqip": mainImage.asset->metadata.lqip,
     publishedAt,
     "author": author->name
   }`;
@@ -59,6 +60,7 @@ async function getCategories(): Promise<CategoryWithPosts[]> {
       "slug": slug.current,
       mainImage,
       "imagemAlt": mainImage.alt,
+      "imagemLqip": mainImage.asset->metadata.lqip,
       excerpt,
       "author": author->name,
       publishedAt,
@@ -90,7 +92,9 @@ async function getWebStories(): Promise<WebStory[]> {
     _id,
     title,
     "slug": slug.current,
-    coverImage
+    coverImage,
+    description,
+    ctaText
   }`;
   const data = await client.fetch(query, {}, { next: { revalidate: 300 } });
   
@@ -134,8 +138,22 @@ export default async function Home() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebSite",
-            name: "Vetor Estratégico",
-            url: "https://vetorestrategico.com", // Ajuste se seu domínio for vetorestrategico.com
+            "name": "Vetor Estratégico",
+            "url": "https://vetorestrategico.com",
+            "description": "Portal brasileiro de análise técnica sobre tecnologia, defesa e infraestrutura.",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://vetorestrategico.com/search?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "Vetor Estratégico",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://vetorestrategico.com/logo.webp"
+              }
+            }
           }),
         }}
       />
@@ -178,6 +196,8 @@ export default async function Home() {
                         src={post.imagem || DEFAULT_IMAGE}
                         alt={post.imagemAlt || post.title || "Imagem do artigo"}
                         fill
+                        placeholder={post.imagemLqip ? "blur" : "empty"}
+                        blurDataURL={post.imagemLqip}
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                         sizes={
                           isHero
@@ -245,7 +265,7 @@ export default async function Home() {
           <main className="lg:col-span-9 flex flex-col p-4 gap-4 bg-amber-50">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-2xl font-black uppercase tracking-tighter">
-                Build & Byte Cast
+                Vetor Estratégico Cast
               </h2>
               <span className="bg-green-500/10 text-green-900 text-[10px] font-bold px-2 py-1  animate-pulse uppercase">
                 Ao Vivo / Recentes
@@ -257,7 +277,7 @@ export default async function Home() {
                 <article key={ep.id} className="group">
                   <a href={ep.link} target="_blank" rel="noopener noreferrer" className="block relative aspect-video overflow-hidden mb-4">
                     <Image
-                      src={ep.image || DEFAULT_IMAGE}
+                      src={ep.image && ep.image.startsWith('http') ? ep.image : `https://vetorestrategico.com${ep.image || DEFAULT_IMAGE}`}
                       alt={`Capa do episódio ${ep.title}`}
                       fill
                       loading="lazy"
@@ -276,7 +296,7 @@ export default async function Home() {
                   </a>
                   <p className="text-sm text-zinc-500 font-medium">
                     Postado em {formatDate(ep.pubDate)} •{" "}
-                    <span className="text-zinc-800">Build & Byte Cast</span>
+                    <span className="text-zinc-800">Vetor Estratégico Cast</span>
                   </p>
                 </article>
               ))}
