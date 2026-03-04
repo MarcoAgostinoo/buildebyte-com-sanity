@@ -114,7 +114,7 @@ const EDITORIAL_LABELS: Record<string, string> = {
 };
 
 // Tipos editoriais que exibem elementos de compra/afiliado
-const REVIEW_TYPES = new Set(["review", "comparativo"]);
+const REVIEW_TYPES = new Set(["review", "comparativo", "relatorio"]);
 
 // ---------------------------------------------------------------------------
 // SANITY
