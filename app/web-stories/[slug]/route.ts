@@ -1,7 +1,9 @@
 import { client } from "@/app/lib/sanity";
+import { generateWebStorySchema, extractNewsKeywords } from "@/app/lib/schema-helpers";
 
 interface WebStoryPage {
   image: string;
+  alt?: string; // Adicionado para suportar o novo schema
   text?: string;
   duration?: number;
 }
@@ -13,14 +15,19 @@ export async function GET(
   const { slug } = await params;
   const baseUrl = new URL(request.url).origin;
 
+  // Query atualizada para buscar 'alt' das páginas e as 'keywords' do Story
   const query = `*[_type == "webStory" && slug.current == $slug][0]{
     title,
+    description,
+    keywords,
     "coverImage": coverImage.asset->url,
+    "coverImageAlt": coverImage.alt,
     "targetSlug": targetPost->slug.current,
-    "publishedAt": _createdAt,
+    "publishedAt": coalesce(publishedAt, _createdAt),
     "author": targetPost->author->name,
     pages[]{
       "image": image.asset->url,
+      "alt": image.alt,
       text,
       duration
     }
@@ -36,39 +43,29 @@ export async function GET(
     ? `${baseUrl}/post/${story.targetSlug}`
     : baseUrl;
 
-  // Schema SEO
-  const schema = {
-    "@context": "http://schema.org",
-    "@type": "NewsArticle",
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": `${baseUrl}/web-stories/${slug}`,
-    },
-    headline: story.title,
-    image: [story.coverImage],
-    datePublished: story.publishedAt || new Date().toISOString(),
-    author: {
-      "@type": "Person",
-      name: story.author || "Build & Byte",
-    },
-    publisher: {
-      "@type": "Organization",
-      name: "Build & Byte",
-      logo: {
-        "@type": "ImageObject",
-        url: `${baseUrl}/logo.webp`,
-      },
-    },
-  };
+  // USO DO HELPER DE SEO OFICIAL
+  const schema = generateWebStorySchema({
+    title: story.title,
+    description: story.description || story.title,
+    image: story.coverImage,
+    url: `${baseUrl}/web-stories/${slug}`,
+    publishedAt: story.publishedAt,
+    keywords: story.keywords || "defesa, tecnologia, estratégia",
+    authorName: story.author || "Marco Antonio Melo",
+  });
 
-  // HTML AMP corrigido (Sem cta-text)
+  // HTML AMP com metadados para Google News
   const html = `
 <!DOCTYPE html>
 <html amp lang="pt-BR">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
-    <title>${story.title}</title>
+    <title>${story.title} | Vetor Estratégico</title>
+    
+    <meta name="news_keywords" content="${story.keywords || ""}" />
+    <meta property="article:published_time" content="${story.publishedAt}" />
+    
     <link rel="canonical" href="${baseUrl}/web-stories/${slug}">
     <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
     <script async src="https://cdn.ampproject.org/v0.js"></script>
@@ -92,7 +89,7 @@ export async function GET(
   <body>
     <amp-story standalone
       title="${story.title}"
-      publisher="Build & Byte"
+      publisher="Vetor Estratégico"
       publisher-logo-src="${baseUrl}/logo.webp"
       poster-portrait-src="${story.coverImage}">
       
@@ -105,30 +102,25 @@ export async function GET(
           return `
         <amp-story-page id="page-${index}" auto-advance-after="${page.duration || 7}s">
           <amp-story-grid-layer template="fill">
-          <amp-img src="${imgUrl}" alt="${page.text ? page.text : story.title}" width="720" height="1280" layout="responsive"></amp-img>
+            <amp-img src="${imgUrl}" 
+              alt="${page.alt || story.title}" 
+              width="720" height="1280" layout="responsive">
+            </amp-img>
           </amp-story-grid-layer>
           
-          ${
-            page.text
-              ? `
+          ${page.text ? `
           <amp-story-grid-layer template="vertical" class="bottom">
             <div class="text-layer">
               <p>${page.text}</p>
             </div>
           </amp-story-grid-layer>
-          `
-              : ""
-          }
+          ` : ""}
 
-          ${
-            index === story.pages.length - 1
-              ? `
+          ${index === story.pages.length - 1 ? `
             <amp-story-page-outlink layout="nodisplay" theme="dark">
               <a href="${ctaLink}">Ler Artigo Completo</a>
             </amp-story-page-outlink>
-          `
-              : ""
-          }
+          ` : ""}
         </amp-story-page>
       `;
         })

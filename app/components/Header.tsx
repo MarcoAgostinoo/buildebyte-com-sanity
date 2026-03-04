@@ -53,12 +53,12 @@ export default function Header() {
                 alt="Vetor Estratégico"
                 priority
                 className="
-      w-10 h-10
-      sm:w-12 sm:h-12
-      md:w-20 md:h-20
-      lg:w-30 lg:h-30
-      object-contain
-                     "
+    w-10 h-10         // Mobile continua igual
+    sm:w-12 h-12      // sm continua igual
+    md:w-14 h-14      // Reduzimos de 80px para 56px
+    lg:w-16 h-16      // Reduzimos de 120px para 64px
+    object-contain
+  "
               />
 
               <div className="flex flex-col leading-tight">
