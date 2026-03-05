@@ -40,7 +40,7 @@ export default async function Ofertas() {
 
           <div className="flex flex-col md:items-end gap-1 max-w-md">
             <p className="text-sm md:text-right bg-amber-50 bg-clip-border font-medium">
-              Hardware e acessórios selecionados com os melhores preços no Mercado Livre.
+              Equipamentos e tecnologia selecionados com os melhores preços.
             </p>
             <p className="text-xs bg-amber-50 text-yellow-600 dark:text-yellow-400 md:text-right font-mono">
               ⚠️ Preços podem variar. Confirme o valor antes de comprar.

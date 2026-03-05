@@ -38,12 +38,11 @@ export default function LeadCapture() {
       <div className="bg-primary p-6 text-center">
         <h3 className="text-2xl font-black text-white uppercase tracking-tight flex items-center justify-center gap-2">
           <FaBolt className="text-yellow-300" />
-          Não perca o próximo insight
+          Receba análises estratégicas semanais
         </h3>
         <p className="mt-2 font-medium" style={{ color: "#FFFFFF" }}>
-  Receba nossa newsletter semanal uma vez por semana, direto no seu
-  e-mail. Conteúdo exclusivo, dicas práticas e as últimas novidades do
-  mundo da engenharia de software.
+  Inteligência sobre defesa, tecnologia e infraestrutura crítica — entregues 
+  na sua caixa de entrada. Análise técnica, sem sensacionalismo, com foco no Brasil.
 </p>
       </div>
 
@@ -51,7 +50,7 @@ export default function LeadCapture() {
         {/* Coluna 1: Email (Lead) */}
         <div>
           <p className="text-zinc-600 mb-4 text-sm font-medium">
-            Junte-se a nossa comunidade de engenheiros e entusiastas.
+            Analistas, estrategistas e curiosos sobre geopolítica e defesa moderna.
           </p>
           <form onSubmit={handleSubmit} className="space-y-3">
             <input
@@ -73,7 +72,8 @@ export default function LeadCapture() {
                 ? "Processando..."
                 : status === "success"
                   ? "Inscrito com Sucesso!"
-                  : "Quero Acesso Exclusivo"}
+                  : "Acessar Newsletter"}
+            
             </button>
             {status === "error" && (
               <p className="text-red-500 text-xs">

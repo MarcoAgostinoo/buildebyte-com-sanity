@@ -63,7 +63,7 @@ export default function PodcastCarousel({ episodes = [], defaultImage }: { episo
                   {ep.title}
                 </h3>
                 <p className="text-[11px] text-zinc-500 mt-1">
-                  {formatDate(ep.pubDate)} • Build & Byte Cast
+                  {formatDate(ep.pubDate)} • Vetor Estratégico Podcast
                 </p>
               </a>
             </article>

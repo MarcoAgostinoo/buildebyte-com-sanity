@@ -4,8 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Inteligência Artificial na Prática | Vetor Estratégico",
-  description: "Análises técnicas sobre LLMs locais, agentes autônomos e o impacto real da IA na engenharia de software.",
+  title: "IA na Defesa e Estratégia | Vetor Estratégico",
+  description: "Análises técnicas sobre inteligência artificial aplicada a sistemas de defesa, guerra moderna, automação militar e impacto geoestratégico.",
 };
 
 interface Post {
@@ -19,9 +19,8 @@ interface Post {
 }
 
 async function getIAPosts(): Promise<Post[]> {
-  // Filtra posts do pilar BYTE que tenham categoria relacionada a IA ou tag IA
-  // Ajuste o filtro 'category match' conforme sua taxonomia real no Sanity
-  const query = `*[_type == "post" && (title match "IA" || title match "AI" || title match "GPT" || title match "LLM" || categories[]->title match "IA" || categories[]->title match "Inteligência Artificial")] | order(publishedAt desc) {
+  // Filtra posts sobre IA aplicada a defesa, guerra moderna e estratégia
+  const query = `*[_type == "post" && (title match "IA" || title match "AI" || title match "inteligência" || title match "automação" || categories[]->title match "IA" || categories[]->title match "Inteligência Artificial")] | order(publishedAt desc) {
     _id,
     title,
     "slug": slug.current,
@@ -42,16 +41,16 @@ export default async function IAPage() {
         
         <header className="mb-16 border-b border-(--border) pb-8">
           <span className="text-primary font-bold tracking-widest text-xs uppercase mb-2 block">
-            Pilar BYTE
+            Defesa e Tecnologia
           </span>
           <h1 className="text-4xl md:text-6xl font-black text-zinc-900 dark:text-white tracking-tighter uppercase">
             Inteligência <br />
             <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 to-blue-500">
-              Artificial Real
+              Artificial na Guerra
             </span>
           </h1>
           <p className="mt-6 text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl font-medium">
-            Chega de demos bonitas. Aqui analisamos LLMs rodando localmente, RAG em produção e a arquitetura de agentes autônomos.
+            Sistemas autônomos, reconhecimento de padrões, swarms de drones e guerra eletrônica. Como a IA redefiniu a capacidade operacional moderna.
           </p>
         </header>
 
@@ -88,7 +87,7 @@ export default async function IAPage() {
               </article>
             ))
           ) : (
-            <p className="text-zinc-500 col-span-full text-center py-20">Nenhuma análise de IA publicada ainda. O futuro está carregando...</p>
+            <p className="text-zinc-500 col-span-full text-center py-20">Nenhuma análise de IA publicada ainda. Volta em breve.</p>
           )}
         </div>
       </div>

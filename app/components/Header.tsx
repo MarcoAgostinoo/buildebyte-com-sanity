@@ -31,7 +31,7 @@ export default function Header() {
           {/* Mostra a data apenas quando renderizado no cliente (evita flash vazio) */}
           <span className="capitalize">{currentDate || "Carregando..."}</span>
           <span className="uppercase tracking-widest hidden md:block">
-            Inteligência • Defesa • Tecnologia
+            Defesa • Análise • Estratégia
           </span>
         </div>
       </div>

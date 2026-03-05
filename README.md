@@ -1,11 +1,12 @@
-# Vetor Estratégico — Portal Brasileiro de Análise Estratégica
+# Vetor Estratégico — Portal Brasileiro de Defesa Moderna
 
-O Vetor Estratégico é um portal brasileiro de análise aplicada sobre tecnologia, defesa, infraestrutura crítica e economia de poder.
+O Vetor Estratégico é um portal brasileiro de análise de defesa, tecnologia militar e impacto estratégico no Brasil.
 
-Não é um blog de notícias rápidas.
-Não é agregador de conteúdo internacional.
+Não somos portal de tecnologia ampla.
+Não somos blog de TI.
+Não somos replicador de manchetes.
 
-É uma plataforma editorial focada em direção, magnitude e impacto sistêmico, com ênfase no que afeta o Brasil nos próximos 2–3 anos.
+Somos análise aplicada da guerra moderna, da infraestrutura crítica e da economia de poder — sempre sob a lente brasileira.
 
 O projeto é construído com **Next.js** para alta performance e **Sanity.io** como gerenciador de conteúdo (Headless CMS).
 
@@ -13,24 +14,30 @@ O projeto é construído com **Next.js** para alta performance e **Sanity.io** c
 
 O Vetor Estratégico parte de um princípio simples:
 
-> Tecnologia deixou de ser ferramenta. Tornou-se instrumento de poder.
+> A guerra moderna não começa com tiros. Começa com chips, drones, satélites, cabos submarinos e cadeias industriais.
 
-O portal analisa:
-- Defesa e tecnologia militar
-- Infraestrutura crítica (energia, semicondutores, cabos submarinos)
-- Cadeias globais de produção
-- Sanções e instrumentos econômicos estratégicos
-- Disputa tecnológica entre Estados
-- Base industrial de defesa brasileira
-- Soberania tecnológica
+Os pilares editoriais do portal:
 
-Cada artigo segue quatro camadas analíticas:
-1. Fato
-2. Contexto histórico
-3. Impacto sistêmico
-4. Projeção futura
+1. **Defesa & Tecnologia Militar**
+   - Drones, mísseis, caças, guerra eletrônica, sistemas antiaéreos
+   - Pergunta central: Isso altera capacidade operacional real ou é narrativa?
 
-A abordagem é técnica, baseada em dados e orientada ao impacto no Brasil.
+2. **Infraestrutura Crítica & Soberania**
+   - Semicondutores, satélites, cabos submarinos, energia, logística
+   - Conexão obrigatória à defesa: semicondutor não é apenas indústria, é autonomia militar
+
+3. **Economia de Poder**
+   - Sanções, cadeias globais, política industrial, corridas armamentistas
+   - Pergunta: Isso é comércio ou coerção estratégica?
+
+4. **Brasil Estratégico**
+   - Base industrial de defesa, dependência tecnológica, posicionamento geopolítico
+   - O Brasil depende dessa tecnologia? Nossa base industrial é suficiente? Qual o impacto cambial?
+
+Cada análise cruza **pelo menos dois pilares** e responde:
+- Isso altera capacidade real?
+- Quem ganha vantagem estrutural?
+- O que isso significa para o Brasil?
 
 ## 🛠 Como o Projeto Funciona
 
@@ -107,25 +114,37 @@ Para rodar o projeto localmente, siga estes passos:
 
 ## 🧭 Estrutura Editorial do Portal
 
-Seções principais:
-- Defesa
-- Infraestrutura
-- Economia de Poder
-- Brasil Estratégico
-- Tecnologia & Soberania
-- Cenário Global
-- Relatórios Estratégicos
+**Slogan Oficial:** Tecnologia. Defesa. Direção.
 
-O foco não é volume de notícias, mas profundidade analítica.
+Seções principais:
+- **Defesa & Tecnologia** — Capacidade militar real
+- **Infraestrutura & Soberania** — Infraestrutura invisível como instrumento de poder
+- **Economia de Poder** — Sanções, BRICS, logística, política industrial
+- **Brasil Estratégico** — Posicionamento geopolítico, base industrial, impacto cambial
+- **Análise Aplicada** — Impacto nos próximos 2–3 anos com cenários futuros
+
+O foco não é volume de notícias, mas profundidade analítica e impacto estratégico real.
 
 ## 🧠 Público-Alvo
 
-- Profissionais de tecnologia
-- Analistas de mercado
-- Estudantes de Relações Internacionais
+**Núcleo Principal:**
+- Homens 18–45 anos
 - Entusiastas de defesa
-- Empreendedores atentos à macroeconomia
-- Leitores que buscam contexto, não manchetes
+- Concurseiros militares
+- Interessados em geopolítica
+- Público que consome YouTube militar
+
+**Núcleo Técnico:**
+- Profissionais de tecnologia
+- Engenheiros
+- Analistas de Relações Internacionais
+- Estudantes de defesa
+
+**Perfil Psicológico:**
+- Alta curiosidade
+- Busca clareza sem sensacionalismo
+- Quer entender o "como funciona"
+- Desconfia de manchetes infladas
 
 ## ⚙ Tecnologias Utilizadas
 
@@ -142,13 +161,20 @@ A maneira mais simples de fazer o deploy do aplicativo Next.js é utilizando a p
 
 Consulte a documentação oficial do Next.js para detalhes sobre build, SSR, ISR e configuração de ambiente em produção.
 
-## 📌 Visão do Projeto
+## 📌 Visão e Missão do Projeto
 
 O Vetor Estratégico busca se consolidar como:
 
-- Referência brasileira em análise estratégica aplicada à tecnologia
-- Plataforma de relatórios técnicos aprofundados
-- Fonte consultiva para profissionais e estudantes
-- Núcleo de debate técnico sério sobre poder, infraestrutura e soberania
+- **Referência brasileira** em análise de defesa e impacto geoestratégico
+- **Portal técnico aprofundado** sobre tecnologia militar e infraestrutura crítica
+- **Fonte consultiva** para profissionais, estudantes e formuladores de política
+- **Núcleo sério** de debate sobre poder, soberania e direção estratégica
 
-**Tecnologia. Poder. Direção.**
+**Diferencial:**
+- Outros portais narram eventos. O Vetor explica sistemas.
+- Outros discutem política. O Vetor mede capacidade real.
+- Outros geram alarme. O Vetor mede direção.
+
+**Missão Final:** Traduzir a guerra moderna e a infraestrutura de poder para o público brasileiro, com clareza, profundidade e responsabilidade. Sem ruído. Sem exagero. Com direção.
+
+**Slogan:** Tecnologia. Defesa. Direção.
