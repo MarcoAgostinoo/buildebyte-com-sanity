@@ -15,11 +15,11 @@ interface RawPost extends Omit<Post, "imagem"> {
   mainImage: SanityImageSource;
 }
 
-async function getNoticias(): Promise<Post[]> {
+async function getRadar(): Promise<Post[]> {
   // Ajuste na query: verificar dentro do array 'categories' em vez do campo singular 'category'
   const query = `*[
     _type == "post" && 
-    "noticias" in categories[]->slug.current && 
+    "radar" in categories[]->slug.current && 
     !(_id in path('drafts.**'))
   ] | order(publishedAt desc) {
     _id,
@@ -40,8 +40,8 @@ async function getNoticias(): Promise<Post[]> {
   }));
 }
 
-export default async function NoticiasPage() {
-  const noticias = await getNoticias();
+export default async function RadarPage() {
+  const posts = await getRadar();
 
   return (
     <div className="max-w-9xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
@@ -57,10 +57,10 @@ export default async function NoticiasPage() {
         </p>
       </header>
 
-      {noticias.length > 0 ? (
-        <DestaquesGrid initialPosts={noticias} />
+      {posts.length > 0 ? (
+        <DestaquesGrid initialPosts={posts} />
       ) : (
-        <p className="text-zinc-500 italic">Nenhuma notícia encontrada nesta categoria.</p>
+        <p className="text-zinc-500 italic">Nenhum artigo encontrado nesta categoria.</p>
       )}
     </div>
   );

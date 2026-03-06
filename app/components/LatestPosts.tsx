@@ -33,7 +33,7 @@ async function getData(): Promise<Post[]> {
     (!defined(anchor) || anchor == false) &&
     !(_id in path("drafts.**"))
   ]
-  | order(publishedAt desc)[0...8] {
+  | order(publishedAt desc)[0...4] {
     title,
     "slug": slug.current,
     mainImage,

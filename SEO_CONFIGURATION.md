@@ -142,7 +142,7 @@
    const breadcrumb = generateBreadcrumbSchema({
      items: [
        { name: "Home", url: "https://vetorestrategico.com" },
-       { name: "Posts", url: "https://vetorestrategico.com/noticias" },
+       { name: "Posts", url: "https://vetorestrategico.com/radar" },
        { name: "Post Title", url: "https://vetorestrategico.com/post/slug" },
      ]
    });

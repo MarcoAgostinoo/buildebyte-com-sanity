@@ -204,7 +204,7 @@ const ptComponents: PortableTextComponents = {
           </h3>
           
           <Link
-            href={value.linkUrl ?? "/noticias"}
+            href={value.linkUrl ?? "/radar"}
             className="bg-primary hover:bg-blue-500 text-white font-black py-4 px-10 border border-primary/50 shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] transition-all uppercase tracking-[0.2em] text-xs"
           >
             {value.linkText ?? "LER ÚLTIMAS NOTÍCIAS"}
@@ -919,7 +919,7 @@ export default async function PostPage({
             </h3>
             
             <Link
-              href="/noticias"
+              href="/radar"
               className="bg-primary hover:bg-blue-500 text-white font-black py-4 px-10 border border-primary/50 shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] transition-all uppercase tracking-[0.2em] text-xs"
             >
               LER ÚLTIMAS NOTÍCIAS

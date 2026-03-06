@@ -182,10 +182,7 @@ export default async function Home() {
               return (
                 <article
                   key={post._id}
-                  className={`
-                  relative group overflow-hidden border border-(--border) bg-(--card-bg) shadow-sm
-                  ${isHero ? "lg:col-span-2 lg:row-span-2 min-h-[400px] lg:min-h-[500px]" : "lg:col-span-2 min-h-[240px]"}
-                `}
+                  className={`relative group overflow-hidden border border-(--border) bg-(--card-bg) shadow-sm ${isHero ? "lg:col-span-2 lg:row-span-2 min-h-100 lg:min-h-125" : "lg:col-span-2"}`}
                 >
                   <Link
                     href={`/post/${post.slug}`}
@@ -313,7 +310,7 @@ export default async function Home() {
       </section>
 
       {/* --- 3. SEÇÃO DE OFERTAS --- */}
-      <div className="mt-20 min-h-[500px] lg:min-h-[450px]">
+      <div className="mt-20 min-h-125 lg:min-h-112.5">
         <Suspense fallback={<div className="h-full animate-pulse bg-gray-100 dark:bg-zinc-900 rounded-lg" />}>
           <Ofertas />
         </Suspense>
@@ -322,13 +319,13 @@ export default async function Home() {
       {/* --- 4. SEÇÃO DE WEB STORIES --- */}
       {/* Removemos o Suspense daqui porque `webStories` já vem resolvido do `await Promise.all()` lá em cima */}
       {webStories.length > 0 && (
-        <div className="mt-1 mb-8 min-h-[50px] lg:min-h-[10px]">
+        <div className="mt-1 mb-8 min-h-12.5 lg:min-h-2.5">
           <WebStoriesCarousel webStories={webStories} />
         </div>
       )}
 
       {/* --- 5. LATEST POSTS E LEAD CAPTURE --- */}
-      <div className="mt-10 min-h-[1200px] sm:min-h-[800px] lg:min-h-[600px]">
+      <div className="mt-10 min-h-300 sm:min-h-200 lg:min-h-150">
         <Suspense fallback={<div className="h-full animate-pulse bg-gray-100 dark:bg-zinc-900 rounded-lg" />}>
           <LatestPosts />
         </Suspense>
