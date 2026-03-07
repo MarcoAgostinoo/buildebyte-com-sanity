@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Bebas_Neue, Barlow } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { ThemeInit } from "../.flowbite-react/init";
@@ -8,9 +8,18 @@ import Footer from "./components/Footer";
 import PreviewBanner from "./components/PreviewBanner";
 import { Analytics } from '@vercel/analytics/react';
 
-const inter = Inter({
+const bebas_neue = Bebas_Neue({
   subsets: ["latin"],
   display: "swap",
+  weight: "400",
+  variable: "--font-bebas-neue",
+});
+
+const barlow = Barlow({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-barlow",
 });
 
 export const metadata: Metadata = {
@@ -97,7 +106,7 @@ export default function RootLayout({
         url: "https://vetorestrategico.com",
         logo: {
           "@type": "ImageObject",
-          url: "https://vetorestrategico.com/logo.webp",
+          url: "https://vetorestrategico.com/logo.png",
         },
         description:
           "Portal brasileiro de análise técnica sobre tecnologia, defesa e infraestrutura estratégica.",
@@ -120,7 +129,7 @@ export default function RootLayout({
         url: "https://vetorestrategico.com",
         logo: {
           "@type": "ImageObject",
-          url: "https://vetorestrategico.com/logo.webp",
+          url: "https://vetorestrategico.com/logo.png",
         },
         image: "https://vetorestrategico.com/og-image.png",
         sameAs: [
@@ -163,7 +172,7 @@ export default function RootLayout({
       </head>
 
       <body
-        className={`${inter.className} flex flex-col min-h-screen bg-zinc-950 text-zinc-100 antialiased`}
+        className={`${bebas_neue.variable} ${barlow.variable} flex flex-col min-h-screen bg-zinc-950 text-zinc-100 antialiased`}
       >
         <ThemeInit />
         <Header />

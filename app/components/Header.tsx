@@ -13,7 +13,7 @@ export default function Header() {
       new Date().toLocaleDateString("pt-BR", {
         weekday: "long",
         day: "2-digit",
-        month: "2-digit", // Mudei para número para ficar mais "tático" e curto
+        month: "2-digit",
         year: "numeric",
       }),
     );
@@ -23,8 +23,7 @@ export default function Header() {
 
   return (
     <>
-      {/* TOP BAR - TACTICAL TICKER */}
-      {/* Fundo ultra escuro, fonte monoespaçada para dar cara de "terminal" de dados */}
+      {/* TOP BAR - TACTICAL TICKER (Mantido conforme seu original) */}
       <div className="w-full bg-[#05080b] text-zinc-500 text-[10px] md:text-xs border-b border-zinc-800/80 font-mono">
         <div className="max-w-7xl mx-auto px-4 h-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -37,8 +36,9 @@ export default function Header() {
         </div>
       </div>
 
-      {/* HEADER PRINCIPAL */}
-      <header className="sticky top-0 z-50 bg-[#0b0f14] border-b-2 border-zinc-800 shadow-xl">
+      {/* HEADER PRINCIPAL - Estilo do site de referência */}
+      {/* Alterado para fundo branco e borda suave */}
+      <header className="sticky top-0 z-50 bg-white border-b-2 border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4">
           <nav className="flex items-center justify-between h-20 md:h-24">
             
@@ -49,53 +49,61 @@ export default function Header() {
               onClick={closeMenu}
             >
               <div className="relative">
-                {/* Efeito de "mira" ou caixa ao redor do logo */}
-                <div className="absolute inset-0 border border-zinc-700/50 group-hover:border-zinc-500 transition-colors duration-300"></div>
                 <Image
-                  src="/logo.webp"
+                  src="/logo.png"
                   width={200}
                   height={200}
                   alt="Vetor Estratégico"
                   priority
-                  className="w-12 h-12 md:w-16 md:h-16 object-contain p-1 relative z-10"
+                  className="w-12 h-12 md:w-16 md:h-16 object-contain relative z-10"
                 />
               </div>
 
               <div className="flex flex-col leading-none justify-center">
-                <span className="text-lg md:text-2xl font-black text-white tracking-widest uppercase mb-1">
+                {/* Alterado para texto preto */}
+                <span className="text-lg md:text-2xl font-black text-black tracking-widest uppercase mb-1">
                   Vetor Estratégico
                 </span>
-                <span className="hidden sm:block text-[10px] md:text-xs text-zinc-500 tracking-[0.3em] uppercase font-bold">
+                <span className="hidden sm:block text-[10px] md:text-xs text-gray-500 tracking-[0.3em] uppercase font-bold">
                   Análise de Impacto Sistêmico
                 </span>
               </div>
             </Link>
 
             {/* BOTÃO MOBILE */}
+            {/* Adaptado para o tema claro */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
-              className="md:hidden text-zinc-300 hover:text-white cursor-pointer text-2xl focus:outline-none w-10 h-10 flex items-center justify-center border border-zinc-800 bg-zinc-900/50"
+              className="md:hidden text-black hover:text-gray-600 cursor-pointer text-2xl focus:outline-none w-10 h-10 flex items-center justify-center border border-gray-200 bg-gray-50 rounded"
             >
               {isMenuOpen ? "✕" : "☰"}
             </button>
 
             {/* MENU DESKTOP */}
-            <div className="hidden md:flex items-center gap-8 text-sm font-bold tracking-[0.15em] uppercase">
-              <NavItem href="/" label="Início" />
+            <div className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-bold uppercase">
+              <NavItem href="/" label="Início" isActive /> {/* isActive simula o "HOME" sublinhado da imagem */}
               <NavItem href="/destaques" label="Destaques" />
-              {/* Radar em destaque vermelho */}
               <NavItem href="/radar" label="Radar" isSpecial /> 
               <NavItem href="/categorias" label="Categorias" />
               <NavItem href="/videos" label="Vídeos" />
               <NavItem href="/contato" label="Contato" />
+              
+              {/* Ícone de busca idêntico à referência */}
+              <button aria-label="Buscar" className="ml-2 text-black hover:text-gray-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+              </button>
             </div>
           </nav>
 
           {/* MENU MOBILE */}
+          {/* Adaptado para o tema claro */}
           {isMenuOpen && (
-            <div className="md:hidden border-t border-zinc-800 bg-[#0b0f14] absolute left-0 w-full shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200">
-              <div className="flex flex-col px-4 py-4 uppercase font-bold tracking-widest text-sm">
+            <div className="md:hidden border-t border-gray-200 bg-white absolute left-0 w-full shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="flex flex-col px-4 py-4 uppercase font-bold text-sm">
                 <MobileNavItem href="/" label="Início" onClick={closeMenu} />
                 <MobileNavItem href="/destaques" label="Destaques" onClick={closeMenu} />
                 <MobileNavItem href="/radar" label="Radar" onClick={closeMenu} isSpecial />
@@ -116,21 +124,23 @@ function NavItem({
   href,
   label,
   isSpecial = false,
+  isActive = false, // Adicionado para replicar o sublinhado fixo que tem na imagem
 }: {
   href: string;
   label: string;
   isSpecial?: boolean;
+  isActive?: boolean;
 }) {
   return (
     <Link
       href={href}
       className={`
         relative py-2 transition-colors duration-300
-        ${isSpecial ? "text-red-500 hover:text-red-400" : "text-zinc-400 hover:text-white"}
+        ${isSpecial ? "text-red-700 hover:text-red-500" : "text-black hover:text-gray-600"}
         after:content-[''] after:absolute after:left-0 after:-bottom-1
-        after:w-0 after:h-[2px] after:transition-all after:duration-300
-        hover:after:w-full
-        ${isSpecial ? "after:bg-red-500" : "after:bg-white"}
+        after:h-[3px] after:transition-all after:duration-300
+        ${isActive ? "after:w-full" : "after:w-0 hover:after:w-full"}
+        ${isSpecial ? "after:bg-red-700" : "after:bg-black"}
       `}
     >
       {label}
@@ -138,7 +148,7 @@ function NavItem({
   );
 }
 
-// Componente para Links Mobile (Com visual de lista de comando)
+// Componente para Links Mobile
 function MobileNavItem({
   href,
   label,
@@ -155,11 +165,12 @@ function MobileNavItem({
       href={href}
       onClick={onClick}
       className={`
-        block w-full py-4 border-b border-zinc-800/50 
+        block w-full py-4 border-b border-gray-100
         transition-colors duration-200
-        ${isSpecial ? "text-red-500" : "text-zinc-400 hover:text-white"}
-        hover:bg-zinc-900/40 hover:pl-2
-        border-l-2 border-transparent hover:border-l-2 hover:border-red-700
+        ${isSpecial ? "text-red-700" : "text-black hover:text-gray-600"}
+        hover:bg-gray-50 hover:pl-2
+        border-l-2 border-transparent hover:border-l-2 hover:border-black
+        ${isSpecial && "hover:border-red-700"}
       `}
     >
       {label}

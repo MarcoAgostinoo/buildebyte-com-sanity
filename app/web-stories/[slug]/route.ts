@@ -90,7 +90,7 @@ export async function GET(
     <amp-story standalone
       title="${story.title}"
       publisher="Vetor Estratégico"
-      publisher-logo-src="${baseUrl}/logo.webp"
+      publisher-logo-src="${baseUrl}/logo.png"
       poster-portrait-src="${story.coverImage}">
       
       ${story.pages

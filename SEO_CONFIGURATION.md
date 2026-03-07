@@ -110,7 +110,7 @@
 
 3. **Valide imagens OG**
    - Certifique-se de que `vetorestrategico.com/og-image.png` está acessível
-   - Certifique-se de que `vetorestrategico.com/logo.webp` está acessível
+   - Certifique-se de que `vetorestrategico.com/logo.png` está acessível
 
 ---
 

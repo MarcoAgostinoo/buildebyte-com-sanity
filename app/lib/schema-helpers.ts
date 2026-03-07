@@ -87,7 +87,7 @@ export function generateNewsArticleSchema(props: {
       url: "https://vetorestrategico.com",
       logo: {
         "@type": "ImageObject",
-        url: "https://vetorestrategico.com/logo.webp",
+        url: "https://vetorestrategico.com/logo.png",
       },
     },
     publisher: {
@@ -95,7 +95,7 @@ export function generateNewsArticleSchema(props: {
       name: "Vetor Estratégico",
       logo: {
         "@type": "ImageObject",
-        url: "https://vetorestrategico.com/logo.webp",
+        url: "https://vetorestrategico.com/logo.png",
       },
     },
     mainEntity: {
@@ -137,7 +137,7 @@ export function generateBlogPostingSchema(props: {
       name: "Vetor Estratégico",
       logo: {
         "@type": "ImageObject",
-        url: "https://vetorestrategico.com/logo.webp",
+        url: "https://vetorestrategico.com/logo.png",
       },
     },
   };
@@ -206,7 +206,7 @@ export function generateWebStorySchema(props: {
       url: "https://vetorestrategico.com",
       logo: {
         "@type": "ImageObject",
-        url: "https://vetorestrategico.com/logo.webp",
+        url: "https://vetorestrategico.com/logo.png",
       },
     },
     publisher: {
@@ -214,7 +214,7 @@ export function generateWebStorySchema(props: {
       name: "Vetor Estratégico",
       logo: {
         "@type": "ImageObject",
-        url: "https://vetorestrategico.com/logo.webp",
+        url: "https://vetorestrategico.com/logo.png",
       },
     },
   };
