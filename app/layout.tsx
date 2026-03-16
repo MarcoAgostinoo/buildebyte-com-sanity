@@ -111,20 +111,20 @@ export default function RootLayout({
         description:
           "Portal brasileiro de análise técnica sobre tecnologia, defesa e infraestrutura estratégica.",
         sameAs: [
-          "https://twitter.com/vetorestrategico", // TODO: Atualize com suas URLs reais
+          "https://twitter.com/vetorestrategico",
           "https://www.linkedin.com/company/vetor-estrategico",
-          "https://www.youtube.com/c/vetorestrategico",
+          "https://www.youtube.com/@vetorestrategico",
         ],
         contactPoint: {
           "@type": "ContactPoint",
           contactType: "Customer Service",
-          email: "contato@vetorestrategico.com", // TODO: Atualize com seu email
+          email: "vetorestrategico@outlook.com",
           url: "https://vetorestrategico.com/contato",
         },
       },
       {
         "@type": "NewsMediaOrganization",
-        "@id": "https://vetorestrategico.com/#news",
+        "@id": "https://vetorestrategico.com/#organization",
         name: "Vetor Estratégico",
         url: "https://vetorestrategico.com",
         logo: {

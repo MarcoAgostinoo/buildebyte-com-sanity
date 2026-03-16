@@ -15,9 +15,7 @@
 - ✅ NewsMediaOrganization para credibilidade editorial
 - ✅ WebSite com SearchAction funcional
 - ✅ ContactPoint com email e URL de contato
-- ✅ Social Media Links (sameAs) - **⚠️ TODO: Atualize URLs reais**
-
-#### NewsArticle Schema (app/post/[slug]/page.tsx)
+- ✅ Social Media Links (sameAs)
 - ✅ Headline, Description, Image
 - ✅ datePublished e dateModified
 - ✅ Author com Organization details
@@ -95,46 +93,9 @@
 
 ### 🔴 CRÍTICO - Faça AGORA
 
-1. **Atualize as URLs de redes sociais em app/layout.tsx**
-   - Localize: `TODO: Atualize com suas URLs reais` (linhas 102-104)
-   - Exemplo:
-     ```javascript
-     "https://twitter.com/SEU_USUARIO",
-     "https://www.linkedin.com/company/SEU_EMPRESA",
-     "https://www.youtube.com/@SEU_CANAL",
-     ```
-
-2. **Atualize o email de contato em app/layout.tsx**
-   - Localize: linha 107
-   - Mude `contato@vetorestrategico.com` para seu email real
-
-3. **Valide imagens OG**
-   - Certifique-se de que `vetorestrategico.com/og-image.png` está acessível
-   - Certifique-se de que `vetorestrategico.com/logo.png` está acessível
-
----
-
-### 🟡 IMPORTANTE - Próximo Sprint
-
-1. **Implemente em Web Stories**
-   ```typescript
-   // Em app/web-stories/[slug]/route.ts, use:
-   import { generateWebStorySchema } from '@/app/lib/schema-helpers';
-   
-   const schema = generateWebStorySchema({
-     title: story.title,
-     description: story.description,
-     image: story.coverImage,
-     url: `https://vetorestrategico.com/web-stories/${story.slug}`,
-     publishedAt: story.publishedAt,
-     keywords: extractNewsKeywords(story.tags),
-   });
-   ```
-
-2. **Implemente em outros posts dinâmicos**
-   - Clusters: `app/clusters/[slug]/page.tsx`
-   - Pilares: `app/pilares/[pillar]/page.tsx`
-   - Categorias: `app/destaques/page.tsx`
+✅ URLs de redes sociais e e-mail de contato atualizados com sucesso em `app/layout.tsx`.
+{}   
+   ```ticos**e/   - Categorias: `app/destaques/page.tsx`
 
 3. **Adicione Breadcrumb Schema**
    ```typescript
@@ -226,8 +187,8 @@
 - [ ] Código revisado e sem erros de TypeScript
 - [ ] Build local: `npm run build` sem erros
 - [ ] Teste em preview deployment
-- [ ] URLs de redes sociais atualizadas
-- [ ] Email de contato correto
+- [x] URLs de redes sociais atualizadas
+- [x] Email de contato correto
 - [ ] Imagens OG acessíveis
 - [ ] Sitemap gera corretamente
 - [ ] Feed RSS válido
@@ -239,9 +200,7 @@
 ---
 
 ## 📝 Notes
-
-- **Language:** Portuguese (pt-BR) - Otimizado para Brasil
-- **Timezone:** Brasília (UTC-3)
+e*rC3)
 - **Local:** Brazil
 - **Industry:** News/Analysis - Tecnologia, Defesa, Infraestrutura
 
@@ -255,6 +214,4 @@
 4. **E-E-A-T:** Expertise, Experiência, Autoridade, Confiabilidade (Google EEAT signals)
 5. **News Cycle:** Publica regularmente para aparecer em Google News
 
----
-
-**Próxima revisão recomendada:** 30 dias após implementação
+---mi a** 30 dias após implementação
