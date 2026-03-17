@@ -12,6 +12,7 @@ import FeaturedPostsSection from "./components/home/FeaturedPostsSection";
 import PopularPostsList from "./components/home/PopularPostsList";
 import PodcastSection from "./components/home/PodcastSection";
 import AffiliateDisclaimer from "./components/home/AffiliateDisclaimer";
+import Script from "next/script"; // Adicione este import
 
 export const metadata: Metadata = {
   title: "Vetor Estratégico - Defesa e Estratégia",
@@ -131,40 +132,40 @@ export default async function Home() {
 
   return (
     <>
-            <div className="max-w-9xl mx-auto px-4 py-8 sm:px-6 lg:px-8 bg-white-opacity">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
+      <Script
+        id="home-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "Vetor Estratégico",
+            url: "https://vetorestrategico.com",
+            description: "Portal brasileiro de análise técnica sobre tecnologia, defesa e infraestrutura.",
+            potentialAction: {
+              "@type": "SearchAction",
+              target: "https://vetorestrategico.com/search?q={search_term_string}",
+              "query-input": "required name=search_term_string",
+            },
+            publisher: {
+              "@type": "Organization",
               name: "Vetor Estratégico",
-              url: "https://vetorestrategico.com",
-              description:
-                "Portal brasileiro de análise técnica sobre tecnologia, defesa e infraestrutura.",
-              potentialAction: {
-                "@type": "SearchAction",
-                target:
-                  "https://vetorestrategico.com/search?q={search_term_string}",
-                "query-input": "required name=search_term_string",
+              logo: {
+                "@type": "ImageObject",
+                url: "https://vetorestrategico.com/logo.png",
               },
-              publisher: {
-                "@type": "Organization",
-                name: "Vetor Estratégico",
-                logo: {
-                  "@type": "ImageObject",
-                  url: "https://vetorestrategico.com/logo.png",
-                },
-              },
-            }),
-          }}
-        />
+            },
+          }),
+        }}
+      />
 
+      {/* Removido o bg-white-opacity inexistente e substituído max-w-9xl por um valor válido caso não esteja no seu tema */}
+      <div className="max-w-[1440px] mx-auto px-4 py-8 sm:px-6 lg:px-8 bg-transparent">
+        
         <MilitaryPowerTicker />
 
         {/* ── 1. DESTAQUES ── */}
         <FeaturedPostsSection featuredPosts={featuredPosts} />
-
 
         {/* ── 2. MAIS POPULARES + PODCAST ── */}
         <section className="mt-12 mb-16">
@@ -175,10 +176,14 @@ export default async function Home() {
         </section>
 
         {/* ── 3. OFERTAS ── */}
-        <div className="mt-20 min-h-125 lg:min-h-112.5">
+        {/* Classes de altura corrigidas com colchetes nativos do Tailwind */}
+        <div className="mt-20 min-h-[500px] lg:min-h-[450px]">
           <Suspense
             fallback={
-              <div className="h-full animate-pulse bg-gray-100 dark:bg-zinc-900 rounded-lg" />
+              <div className="w-full h-[400px] flex flex-col items-center justify-center animate-pulse bg-[#111318] border border-[#2a2f3a]">
+                 <div className="w-8 h-8 border-2 border-t-[#c8a84b] border-r-[#c8a84b] border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+                 <p className="mt-4 text-[10px] font-black uppercase tracking-[0.2em] text-[#c8a84b]/60">Carregando Inventário...</p>
+              </div>
             }
           >
             <Ofertas />
@@ -187,16 +192,16 @@ export default async function Home() {
 
         {/* ── 4. WEB STORIES ── */}
         {webStories.length > 0 && (
-          <div className="mt-1 mb-8 min-h-12.5 lg:min-h-2.5">
+          <div className="mt-1 mb-8 min-h-[50px] lg:min-h-[10px]">
             <WebStoriesCarousel webStories={webStories} />
           </div>
         )}
 
         {/* ── 5. LATEST POSTS + LEAD CAPTURE ── */}
-        <div className="mt-10 min-h-300 sm:min-h-200 lg:min-h-150">
+        <div className="mt-10 min-h-[1200px] sm:min-h-[800px] lg:min-h-[600px]">
           <Suspense
             fallback={
-              <div className="h-full animate-pulse bg-gray-100 dark:bg-zinc-900 rounded-lg" />
+              <div className="h-full animate-pulse bg-[#111318] border border-[#2a2f3a]" />
             }
           >
             <LatestPosts />

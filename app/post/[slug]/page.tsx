@@ -814,12 +814,17 @@ export async function generateMetadata({
         .split(", ")
         .filter(Boolean),
 
+    alternates: {
+      canonical: `https://vetorestrategico.com/post/${post.slug}`,
+    },
+
     openGraph: {
       title: post.seoTitle || post.title,
       description: post.seoDescription || post.excerpt,
       type: "article",
       url: `https://vetorestrategico.com/post/${post.slug}`,
       publishedTime: post.publishedAt,
+      modifiedTime: post.publishedAt,
       authors: [post.author?.name || "Vetor Estratégico"],
       tags: post.categories?.map((c) => c.title) || [],
       images: [
@@ -911,7 +916,7 @@ export default async function PostPage({
                   <Link
                     key={cat.slug}
                     href={`/categorias/${cat.slug}`}
-                    className="text-[10px] font-bold opacity-0 absolute pointer-events-none -z-10"
+                    className="text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider border border-primary/20 text-primary/60 hover:bg-primary/5 transition-colors"
                   >
                     {cat.title}
                   </Link>
