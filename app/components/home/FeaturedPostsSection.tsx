@@ -17,28 +17,34 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
   return (
     <section className="mil-section mb-8">
       {/* Cabeçalho */}
-      <div className="mil-header">
-        <div className="mil-title-wrap">
-          <div className="mil-title-icon">
+{/* Cabeçalho */}
+      <div className="mil-header w-full flex flex-wrap items-end justify-between gap-x-2 gap-y-4">
+        <div className="mil-title-wrap flex items-end gap-3 flex-1 min-w-[240px]">
+          <div className="mil-title-icon shrink-0">
             <span />
             <span />
             <span />
           </div>
-          <h2 className="mil-section-title">
-            DESTAQUES <span>OPERACIONAIS</span>
-          </h2>
-          <div className="mil-classification">AO VIVO</div>
+          <div>
+            <h2 className="mil-section-title text-2xl sm:text-3xl leading-none">
+              DESTAQUES <span className="block sm:inline">OPERACIONAIS</span>
+            </h2>
+          </div>
+          <div className="mil-classification shrink-0 mb-1 hidden sm:flex">AO VIVO</div>
         </div>
+        
         <Link
           href="/destaques"
           aria-label="Ver todos os destaques"
-          className="mil-view-all"
+          className="mil-view-all whitespace-nowrap shrink-0 text-[10px] sm:text-xs border border-[#c8a84b]/30 px-3 py-1.5 hover:bg-[#c8a84b] hover:text-[#0a0b0d] transition-colors ml-auto flex items-center gap-1"
         >
-          MISSÕES COMPLETAS &#x2192;
+          <span className="hidden sm:inline">MISSÕES COMPLETAS</span>
+          <span className="inline sm:hidden">MISSÕES</span>
+          <span>&#x2192;</span>
         </Link>
       </div>
 
-      <div className="mil-divider" />
+      <div className="mil-divider mt-4" />
 
       {/* Grid de cards */}
       <div className="mil-grid">
