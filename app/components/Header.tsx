@@ -50,11 +50,12 @@ export default function Header() {
             >
               <div className="relative">
                 <Image
-                  src="/logo.png"
+                  src="/logo.webp"
                   width={200}
                   height={200}
                   alt="Vetor Estratégico"
                   priority
+                  sizes="(max-width: 768px) 48px, 64px"
                   className="w-12 h-12 md:w-16 md:h-16 object-contain relative z-10"
                 />
               </div>

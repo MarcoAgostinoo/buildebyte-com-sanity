@@ -106,7 +106,7 @@ export default function RootLayout({
         url: "https://vetorestrategico.com",
         logo: {
           "@type": "ImageObject",
-          url: "https://vetorestrategico.com/logo.png",
+          url: "https://vetorestrategico.com/logo.webp",
         },
         description:
           "Portal brasileiro de análise técnica sobre tecnologia, defesa e infraestrutura estratégica.",
@@ -129,7 +129,7 @@ export default function RootLayout({
         url: "https://vetorestrategico.com",
         logo: {
           "@type": "ImageObject",
-          url: "https://vetorestrategico.com/logo.png",
+          url: "https://vetorestrategico.com/logo.webp",
         },
         image: "https://vetorestrategico.com/og-image.png",
         sameAs: [
@@ -159,8 +159,8 @@ export default function RootLayout({
     <html lang="pt-BR">
       <head>
         {/* Em desktop, preconnect acelera. Em mobile 4G, economizamos banda com dns-prefetch */}
-        <link rel="dns-prefetch" href="https://cdn.sanity.io" />
-        <link rel="dns-prefetch" href="https://d3t3ozftmdmh3i.cloudfront.net" />
+        <link rel="preconnect" href="https://cdn.sanity.io" />
+        <link rel="preconnect" href="https://d3t3ozftmdmh3i.cloudfront.net" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         

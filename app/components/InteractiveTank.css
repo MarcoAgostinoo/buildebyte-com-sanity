@@ -1,0 +1,123 @@
+/* --- Tank Animation Effects --- */
+
+@keyframes tank-flash {
+  0% { transform: scale(0.5); opacity: 1; }
+  50% { transform: scale(2); opacity: 1; }
+  100% { transform: scale(0.1); opacity: 0; }
+}
+.animate-tank-flash {
+  animation: tank-flash 0.1s ease-out forwards;
+}
+
+@keyframes tank-fireball {
+  0% { transform: scale(0.5) translateX(0); opacity: 0.9; }
+  100% { transform: scale(2.5) translateX(10px); opacity: 0; filter: blur(15px); }
+}
+.animate-tank-fireball {
+  animation: tank-fireball 0.2s ease-out forwards;
+}
+
+@keyframes tank-shockwave {
+  0% { transform: scale(0.5) translateX(0); opacity: 1; border-width: 4px; }
+  100% { transform: scale(3) translateX(20px); opacity: 0; border-width: 0px; }
+}
+.animate-tank-shockwave {
+  animation: tank-shockwave 0.3s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes tank-smoke {
+  0% { transform: scale(0.5) translate(20px, 0); opacity: 0.8; }
+  100% { transform: scale(4) translate(40px, -20px); opacity: 0; filter: blur(20px); }
+}
+.animate-tank-smoke {
+  animation: tank-smoke 1.5s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes shell-eject {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  30% { transform: translate(0px, -30px) rotate(180deg); }
+  80% { transform: translate(-10px, -50px) rotate(360deg); opacity: 1; }
+  100% { transform: translate(-20px, -60px) rotate(540deg); opacity: 0; }
+}
+.animate-shell-eject {
+  animation: shell-eject 0.6s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+}
+
+/* --- Machine Gun Animation Effects --- */
+
+@keyframes mg-flash {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.3); opacity: 0; }
+}
+.animate-mg-flash {
+  animation: mg-flash 0.05s infinite alternate; 
+}
+
+@keyframes mg-shell-eject {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(-10px, -25px) rotate(360deg); opacity: 0; }
+}
+.animate-mg-shell-eject {
+  animation: mg-shell-eject 0.25s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+}
+
+/* --- Impact Animation Effects --- */
+
+@keyframes impact-flash {
+  0% { transform: scale(0); opacity: 1; }
+  10% { transform: scale(2); opacity: 1; }
+  100% { transform: scale(4); opacity: 0; }
+}
+.animate-impact-flash {
+  animation: impact-flash 0.5s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes crater-glow {
+  0% { box-shadow: 0 0 30px 10px #ea580c; border-color: #fcd34d; filter: brightness(2); opacity: 1; }
+  50% { box-shadow: 0 0 10px 2px #c2410c; border-color: #ea580c; filter: brightness(1); opacity: 0.8; }
+  100% { box-shadow: 0 0 0px 0px #ea580c; border-color: #451a03; filter: brightness(0.5); opacity: 0; }
+}
+.animate-crater-glow {
+  animation: crater-glow 3s ease-out forwards;
+}
+
+@keyframes crater-smoke {
+  0% { transform: translateY(0) scale(0.5); opacity: 1; }
+  100% { transform: translateY(-50px) scale(2); opacity: 0; filter: blur(20px); }
+}
+.animate-crater-smoke {
+  animation: crater-smoke 2s ease-out forwards;
+}
+
+@keyframes mg-impact-flash {
+  0% { transform: scale(0.5); opacity: 1; }
+  50% { transform: scale(3); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
+}
+.animate-mg-impact-flash {
+  animation: mg-impact-flash 0.2s ease-out forwards;
+}
+
+@keyframes impact-fade-away {
+  0% { opacity: 1; }
+  75% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.animate-impact-fade-away {
+  animation: impact-fade-away 4s linear forwards;
+}
+
+/* --- Trajectory Animation Effects --- */
+
+@keyframes precise-strike-cannon {
+  0% { transform: translateX(50px) scaleX(1); opacity: 1; }
+  90% { transform: translateX(calc(var(--target-dist) - 20px)) scaleX(1); opacity: 1; }
+  100% { transform: translateX(var(--target-dist)) scaleX(0.1); opacity: 0; }
+}
+
+@keyframes precise-strike-mg {
+  0% { transform: translateX(40px) scaleX(1); opacity: 1; }
+  90% { transform: translateX(calc(var(--target-dist) - 10px)) scaleX(1); opacity: 1; }
+  100% { transform: translateX(var(--target-dist)) scaleX(0.1); opacity: 0; }
+}

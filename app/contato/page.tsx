@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import ContactForm from "@/app/components/ContactForm";
 import InteractiveTank from "@/app/components/InteractiveTank"; // Importamos o tanque
+import "./contact.css";
 
 export const metadata: Metadata = {
   title: "Contato Institucional | Vetor Estratégico",

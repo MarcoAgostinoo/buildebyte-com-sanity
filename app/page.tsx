@@ -152,7 +152,7 @@ export default async function Home() {
               name: "Vetor Estratégico",
               logo: {
                 "@type": "ImageObject",
-                url: "https://vetorestrategico.com/logo.png",
+                url: "https://vetorestrategico.com/logo.webp",
               },
             },
           }),
