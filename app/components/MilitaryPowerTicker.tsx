@@ -58,7 +58,13 @@ export default function MilitaryPowerTicker() {
     carregar();
   }, []);
 
-  if (!dados.length) return null;
+  if (!dados.length) {
+    return (
+      <div className="w-full bg-black border-y border-zinc-800 overflow-hidden font-mono">
+        <div className="h-8 sm:h-10" />
+      </div>
+    );
+  }
 
   const texto = dados
     .map(
