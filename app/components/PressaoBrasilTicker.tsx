@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import styles from "./PressaoBrasilTicker.module.css";
 
 interface IndicadoresGeopoliticos {
   dolar: string;
@@ -10,7 +11,7 @@ interface IndicadoresGeopoliticos {
   fluxoTech: string;
 }
 
-export default function PowerGridTicker() {
+export default function PressaoBrasilTicker() {
   const [dados, setDados] = useState<IndicadoresGeopoliticos | null>(null);
 
   const fetchLatestBCB = async (codigo: number) => {
@@ -65,12 +66,12 @@ export default function PowerGridTicker() {
         
         {/* Container mais estreito: px-1.5 sm:px-2.5 e tracking-wide */}
         <div className="bg-amber-600 text-black text-[10px] sm:text-xs font-bold px-1.5 sm:px-2.5 h-full flex items-center tracking-wide uppercase border-r-2 border-amber-400 z-10 flex-shrink-0 whitespace-nowrap">
-          Monitor Brasil<span className="hidden sm:inline">&nbsp;BRASIL</span>
+          Monitor<span className="hidden sm:inline">&nbsp;BRASIL</span>
         </div>
         
-        <div className="flex-1 overflow-hidden relative shadow-[inset_0_0_10px_rgba(0,0,0,0.8)] h-full flex items-center">
-          <div className="whitespace-nowrap animate-ticker text-amber-500/90 text-xs sm:text-sm font-semibold pl-4 sm:pl-6 tracking-wide">
-            {texto.repeat(4)}
+        <div className={styles.tickerWrapper}>
+          <div className={`${styles.tickerContent} text-amber-500/90 text-xs sm:text-sm font-semibold pl-4 sm:pl-6 tracking-wide`}>
+            {texto.repeat(2)}
           </div>
         </div>
         

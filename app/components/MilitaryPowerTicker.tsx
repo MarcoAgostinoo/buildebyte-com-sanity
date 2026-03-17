@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import styles from "./MilitaryPowerTicker.module.css";
 
 interface Pais {
   code: string;
@@ -78,10 +79,10 @@ export default function MilitaryPowerTicker() {
           <span className="hidden sm:inline">BALANÇO DE&nbsp;</span>PODER GLOBAL
         </div>
 
-        <div className="flex-1 overflow-hidden relative shadow-[inset_0_0_12px_rgba(0,0,0,0.9)] h-full flex items-center">
+        <div className={styles.tickerWrapper}>
           {/* Texto do ticker ligeiramente menor no mobile para melhor leitura */}
-          <div className="whitespace-nowrap animate-ticker text-red-500/90 text-xs sm:text-sm font-semibold pl-4 sm:pl-6 tracking-wide">
-            {texto.repeat(4)}
+          <div className={`${styles.tickerContent} text-red-500/90 text-xs sm:text-sm font-semibold pl-4 sm:pl-6 tracking-wide`}>
+            {texto.repeat(2)}
           </div>
         </div>
 

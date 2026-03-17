@@ -1,0 +1,24 @@
+.tickerWrapper {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 0 12px rgba(0,0,0,0.9);
+  height: 100%;
+  align-items: center;
+}
+
+.tickerContent {
+  white-space: nowrap;
+  animation: ticker 40s linear infinite;
+  display: inline-block;
+}
+
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}

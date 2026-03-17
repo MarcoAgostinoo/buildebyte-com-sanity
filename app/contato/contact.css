@@ -4,20 +4,6 @@
    Do not modify or use elsewhere
    ====================================================== */
 
-@keyframes ticker {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-.animate-ticker {
-  display: inline-block;
-  animation: ticker 80s linear infinite;
-}
-
 /* --- Cinematic Flash Effects --- */
 
 @keyframes cinematic-flash {
