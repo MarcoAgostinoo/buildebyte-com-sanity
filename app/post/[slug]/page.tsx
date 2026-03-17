@@ -133,7 +133,20 @@ async function getPost(slug: string): Promise<Post | null> {
   const query = `*[_type == "post" && slug.current == $slug][0] {
     title,
     "slug": slug.current,
-    body[]{ ..., asset->{ ..., metadata } },
+    body[]{
+      ...,
+      asset->{ ..., metadata },
+      _type == "productReference" => @->{
+        title,
+        "imagem": mainImage.asset->url,
+        price,
+        originalPrice,
+        installments,
+        description,
+        affiliateLink,
+        storeName
+      }
+    },
     contentHtml,
     spotifyEmbed,
     "imagem": mainImage.asset->url,
@@ -165,7 +178,7 @@ async function getPost(slug: string): Promise<Post | null> {
 
 async function getRelatedPosts(
   categories: Category[],
-  currentPostSlug: string
+  currentPostSlug: string,
 ) {
   const categorySlugs = categories?.map((c) => c.slug) ?? [];
   const query = `*[_type == "post" && slug.current != $currentPostSlug && count((categories[]->slug.current)[@ in $categorySlugs]) > 0] | order(publishedAt desc) [0...3] {
@@ -183,32 +196,129 @@ async function getRelatedPosts(
 // ---------------------------------------------------------------------------
 const ptComponents: PortableTextComponents = {
   types: {
-   // =========================================================
+    // =========================================================
     // NOVO BLOCO: PARALAXE RENDERIZADO NO MEIO DO TEXTO
     // =========================================================
-    breakoutParallax: ({ value }: { value: { title?: string; linkText?: string; linkUrl?: string } }) => {
+    breakoutParallax: ({
+      value,
+    }: {
+      value: { title?: string; linkText?: string; linkUrl?: string };
+    }) => {
       return (
-        <div 
+        <div
           className="w-[calc(100%+1rem)] sm:w-[calc(100%+2rem)] -ml-2 sm:-ml-4 my-16 py-24 flex flex-col items-center justify-center text-center px-4 relative border-y border-primary/20 shadow-inner"
           style={{
             /* O TRUQUE MÁGICO: Copiamos o fundo exato do global.css para cá */
-            backgroundImage: "linear-gradient(rgba(0, 0, 0, 0.574), rgba(0, 0, 0, 0.564)), url('/background.webp')",
+            backgroundImage:
+              "linear-gradient(rgba(0, 0, 0, 0.574), rgba(0, 0, 0, 0.564)), url('/background.webp')",
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundAttachment: "fixed",
-            backgroundRepeat: "no-repeat"
+            backgroundRepeat: "no-repeat",
           }}
         >
           <h3 className="text-2xl sm:text-3xl font-black text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] mb-6 max-w-2xl leading-tight">
-            {value.title ?? "Mantenha-se atualizado com os desdobramentos que definem o futuro e a soberania do Brasil."}
+            {value.title ??
+              "Mantenha-se atualizado com os desdobramentos que definem o futuro e a soberania do Brasil."}
           </h3>
-          
+
           <Link
             href={value.linkUrl ?? "/radar"}
             className="bg-primary hover:bg-blue-500 text-white font-black py-4 px-10 border border-primary/50 shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] transition-all uppercase tracking-[0.2em] text-xs"
           >
             {value.linkText ?? "LER ÚLTIMAS NOTÍCIAS"}
           </Link>
+        </div>
+      );
+    },
+    // =========================================================
+
+    // =========================================================
+    // NOVO BLOCO: DOSSIÊ DO PRODUTO (NATIVE COMMERCE)
+    // =========================================================
+    productReference: ({ value }: { value: any }) => {
+      if (!value) return null;
+
+      return (
+        <div className="my-10 p-1 bg-[#111318] border border-[#2a2f3a] shadow-2xl relative overflow-hidden group">
+          {/* A linha de escaneamento visual */}
+          <div className="mil-scan-line"></div>
+          
+          <div className="flex flex-col md:flex-row gap-6 p-5 relative z-10 bg-black/40">
+            
+            {/* Imagem do Equipamento */}
+            {value.imagem && (
+              <div className="w-full md:w-2/5 shrink-0 relative aspect-square sm:aspect-auto sm:h-64 border border-[#2a2f3a] overflow-hidden bg-black/80 flex items-center justify-center p-2">
+                {/* Overlay tech na imagem */}
+                <div className="absolute inset-0 border border-[#c8a84b]/20 pointer-events-none z-10"></div>
+                <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-[#c8a84b] z-10"></div>
+                <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-[#c8a84b] z-10"></div>
+                
+                <Image 
+                  src={value.imagem} 
+                  alt={value.title}
+                  fill
+                  className="object-contain p-4 group-hover:scale-105 transition-transform duration-700 filter brightness-90 group-hover:brightness-110"
+                />
+              </div>
+            )}
+            
+            {/* Ficha Técnica e Compra */}
+            <div className="flex-1 flex flex-col justify-center">
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-2 h-2 rounded-full bg-[#6aff00] animate-pulse"></span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] animate-pulse text-[#a0fe09]">
+                    Equipamento Validado
+                  </span>
+                </div>
+                
+                <h3 className="text-xl sm:text-2xl font-black tracking-tight !text-zinc-100 mb-3 leading-tight uppercase">
+                  {value.title}
+                </h3>
+                
+                <p className="text-sm !text-zinc-400 mb-5 leading-relaxed border-l-2 border-[#c8a84b]/30 pl-3">
+                  {value.description}
+                </p>
+              </div>
+              
+              {/* Footer do Dossiê: Preço e Botão */}
+              <div className="mt-auto pt-5 border-t border-[#2a2f3a] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
+                <div>
+                  {value.originalPrice && (
+                    <span className="text-xs !text-zinc-500 line-through block mb-0.5">
+                      De: R$ {value.originalPrice.toFixed(2)}
+                    </span>
+                  )}
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-black !text-[#c8a84b]">
+                      R$ {value.price.toFixed(2)}
+                    </span>
+                    {value.installments && (
+                      <span className="text-[10px] uppercase tracking-wider !text-zinc-500">
+                        {value.installments}
+                      </span>
+                    )}
+                  </div>
+                  {value.storeName && (
+                     <span className="text-[10px] uppercase tracking-wider !text-zinc-500 block mt-1">
+                       Via {value.storeName}
+                     </span>
+                  )}
+                </div>
+                
+                <a 
+                  href={value.affiliateLink} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto text-center animate-pulse bg-[#161a20] border border-[#c8a84b]/30 hover:bg-[#c8a84b] !text-[#c8a84b] hover:!text-[#0a0b0d] font-black uppercase tracking-[0.15em] text-xs py-3.5 px-6 transition-all shadow-[0_0_15px_rgba(200,168,75,0.2)] hover:shadow-[0_0_25px_rgba(200,168,75,0.4)]"
+                >
+                  Adquirir Equipamento
+                </a>
+              </div>
+            </div>
+            
+          </div>
         </div>
       );
     },
@@ -260,7 +370,9 @@ const ptComponents: PortableTextComponents = {
         <span className="block text-[10px] font-black text-primary uppercase mb-2 tracking-[0.2em]">
           {"// Dado Técnico"}
         </span>
-        <div className="italic text-foreground/80 leading-relaxed">{children}</div>
+        <div className="italic text-foreground/80 leading-relaxed">
+          {children}
+        </div>
       </blockquote>
     ),
     normal: ({ children }) => (
@@ -319,10 +431,10 @@ const simplePtComponents: PortableTextComponents = {
 function estimateReadTime(body: Post["body"]): number {
   if (!body?.length) return 1;
   const text = body
-    .map((b) =>
-      b?.children
-        ?.map((c: { text?: string }) => c?.text ?? "")
-        .join(" ") ?? ""
+    .map(
+      (b) =>
+        b?.children?.map((c: { text?: string }) => c?.text ?? "").join(" ") ??
+        "",
     )
     .join(" ");
   const words = text.trim().split(/\s+/).length;
@@ -336,15 +448,14 @@ function estimateReadTime(body: Post["body"]): number {
 function EditorialBadge({ type }: { type: string }) {
   const label = EDITORIAL_LABELS[type] ?? type;
   const colorMap: Record<string, string> = {
-    analise:    "bg-blue-600",
-    relatorio:  "bg-slate-600",
-    guia:       "bg-emerald-600",
-    comparativo:"bg-violet-600",
-    review:     "bg-amber-600",
-    opiniao:    "bg-orange-600",
+    analise: "bg-blue-600",
+    relatorio: "bg-slate-600",
+    guia: "bg-emerald-600",
+    comparativo: "bg-violet-600",
+    review: "bg-amber-600",
+    opiniao: "bg-orange-600",
   };
   return (
-    
     <span
       className={`${colorMap[type] ?? "bg-primary"} text-white text-[10px] font-black px-2.5  py-0.5  uppercase tracking-widest`}
     >
@@ -371,10 +482,12 @@ function RatingBadge({ rating }: { rating: number }) {
     rating >= 8
       ? "text-emerald-600 dark:text-emerald-400 border-emerald-400/30 bg-emerald-400/10"
       : rating >= 6
-      ? "text-yellow-600 dark:text-yellow-400 border-yellow-400/30 bg-yellow-400/10"
-      : "text-red-600 dark:text-red-400 border-red-400/30 bg-red-400/10";
+        ? "text-yellow-600 dark:text-yellow-400 border-yellow-400/30 bg-yellow-400/10"
+        : "text-red-600 dark:text-red-400 border-red-400/30 bg-red-400/10";
   return (
-    <div className={`flex items-center px-3 py-1.5  border gap-1.5 ${colorClass}`}>
+    <div
+      className={`flex items-center px-3 py-1.5  border gap-1.5 ${colorClass}`}
+    >
       <span className="text-sm font-black leading-none">{rating}</span>
       <span className="text-xs opacity-60 font-bold">/ 10</span>
     </div>
@@ -391,7 +504,9 @@ function AuthorBio({ bio }: { bio: string | any[] }) {
       </div>
     );
   }
-  return <p className="text-sm text-foreground/60 mt-1 leading-relaxed">{bio}</p>;
+  return (
+    <p className="text-sm text-foreground/60 mt-1 leading-relaxed">{bio}</p>
+  );
 }
 
 function AuthorCard({ author }: { author: Author }) {
@@ -598,7 +713,11 @@ function FaqSection({ faq }: { faq: FaqItem[] }) {
                 stroke="currentColor"
                 strokeWidth={2.5}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </summary>
             <div className="px-4 py-4 text-foreground/70 text-sm leading-relaxed border-t border-(--border)">
@@ -657,7 +776,11 @@ function ClusterCard({ cluster }: { cluster: Cluster }) {
           stroke="currentColor"
           strokeWidth={3}
         >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M17 8l4 4m0 0l-4 4m4-4H3"
+          />
         </svg>
       </Link>
     </div>
@@ -668,20 +791,29 @@ function ClusterCard({ cluster }: { cluster: Cluster }) {
 // PAGE
 // ---------------------------------------------------------------------------
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPost(slug);
 
   if (!post) return {};
 
   const ogImage = post.imagem || "https://vetorestrategico.com/og-image.png";
-  const newsKeywords = post.categories?.map((c) => c.title).join(", ") || "tecnologia, defesa, infraestrutura";
+  const newsKeywords =
+    post.categories?.map((c) => c.title).join(", ") ||
+    "tecnologia, defesa, infraestrutura";
 
   return {
     title: post.seoTitle || post.title,
     description: post.seoDescription || post.excerpt,
-    keywords: `${newsKeywords}, análise estratégica, ${post.pillar ? PILLAR_LABELS[post.pillar] : ""}`.split(", ").filter(Boolean),
-    
+    keywords:
+      `${newsKeywords}, análise estratégica, ${post.pillar ? PILLAR_LABELS[post.pillar] : ""}`
+        .split(", ")
+        .filter(Boolean),
+
     openGraph: {
       title: post.seoTitle || post.title,
       description: post.seoDescription || post.excerpt,
@@ -699,7 +831,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         },
       ],
     },
-    
+
     twitter: {
       card: "summary_large_image",
       title: post.seoTitle || post.title,
@@ -723,7 +855,9 @@ export default async function PostPage({
   const readTime = estimateReadTime(post.body);
   const pillarLabel = post.pillar ? PILLAR_LABELS[post.pillar] : null;
 
-  const newsKeywords = post.categories?.map((c) => c.title).join(", ") || "tecnologia, defesa, infraestrutura";
+  const newsKeywords =
+    post.categories?.map((c) => c.title).join(", ") ||
+    "tecnologia, defesa, infraestrutura";
 
   const articleJsonLd = generateNewsArticleSchema({
     title: post.title,
@@ -745,270 +879,265 @@ export default async function PostPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
       <div className="max-w-10xl mx-auto px-1 py-1 sm:px-6 lg:px-2">
-      <div className="flex flex-col lg:flex-row gap-10">
-
-        {/* ================================================================ */}
-        {/* MAIN                                                             */}
-        {/* ================================================================ */}
-        <main className="w-full lg:w-2/3">
-          <div className="mb-6">
-            <PressaoBrasil />
-          </div>
-          
-          {/* PRIMEIRO CARD: Cabeçalho e Corpo do Texto */}
-          <article className="bg-(--card-bg)  p-2 sm:p-4 shadow-sm">
-
-            {/* BADGES */}
-            <div className="mb-5 flex flex-wrap items-center gap-2">
-              {post.editorialType && (
-                <EditorialBadge type={post.editorialType} />
-              )}
-              
-              {post.pillar && <PillarBadge pillar={post.pillar} />}
-              
-              {/* Link rápido para o cluster no topo */}
-              {post.cluster && post.cluster.slug && (
-                <Link
-                  href={`/clusters/${post.cluster.slug}`}
-                  className="ml-auto text-[10px] font-bold px-2.5 py-0.5  uppercase tracking-wider bg-primary/8 text-primary/70 hover:bg-primary/15 border border-primary/20 transition-all"
-                >
-                  Série: {post.cluster.title}
-                </Link>
-              )}
-              
-              {post.categories?.map((cat) => (
-                <Link
-                  key={cat.slug}
-                  href={`/categorias/${cat.slug}`}
-                  className="text-[10px] font-bold opacity-0 absolute pointer-events-none -z-10"
-                >
-                  {cat.title}
-                </Link>
-              ))}
+        <div className="flex flex-col lg:flex-row gap-10">
+          {/* ================================================================ */}
+          {/* MAIN                                                             */}
+          {/* ================================================================ */}
+          <main className="w-full lg:w-2/3">
+            <div className="mb-6">
+              <PressaoBrasil />
             </div>
+            {/* PRIMEIRO CARD: Cabeçalho e Corpo do Texto */}
+            <article className="bg-(--card-bg)  p-2 sm:p-4 shadow-sm">
+              {/* BADGES */}
+              <div className="mb-5 flex flex-wrap items-center gap-2">
+                {post.editorialType && (
+                  <EditorialBadge type={post.editorialType} />
+                )}
 
-            {/* TÍTULO */}
-            <h1 className="text-3xl sm:text-[2.6rem] font-black tracking-tight mb-4 leading-[1.1] text-foreground">
-              {post.title}
-            </h1>
+                {post.pillar && <PillarBadge pillar={post.pillar} />}
 
-            {/* EXCERPT / SUBTÍTULO CONTEXTUAL */}
-            {post.excerpt && (
-              <p className="text-lg sm:text-xl text-foreground/55 mb-7 leading-relaxed font-medium">
-                {post.excerpt}
-              </p>
-            )}
+                {/* Link rápido para o cluster no topo */}
+                {post.cluster && post.cluster.slug && (
+                  <Link
+                    href={`/clusters/${post.cluster.slug}`}
+                    className="ml-auto text-[10px] font-bold px-2.5 py-0.5  uppercase tracking-wider bg-primary/8 text-primary/70 hover:bg-primary/15 border border-primary/20 transition-all"
+                  >
+                    Série: {post.cluster.title}
+                  </Link>
+                )}
 
-            {/* META: autor + data + tempo de leitura + rating (só reviews) */}
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-foreground/55 mb-8 pb-8 border-b border-(--border)">
-              {/* Autor */}
-              <div className="flex items-center gap-2.5">
-                {post.author?.image && (
-                  <div className="w-8 h-8  overflow-hidden border border-(--border) relative shrink-0">
-                    <Image
-                      src={urlFor(post.author.image)
-                        .width(64)
-                        .height(64)
-                        .fit("crop")
-                        .url()}
-                      alt={post.author.name}
-                      fill
-                      sizes="64px"
-                      className="object-cover"
-                    />
+                {post.categories?.map((cat) => (
+                  <Link
+                    key={cat.slug}
+                    href={`/categorias/${cat.slug}`}
+                    className="text-[10px] font-bold opacity-0 absolute pointer-events-none -z-10"
+                  >
+                    {cat.title}
+                  </Link>
+                ))}
+              </div>
+
+              {/* TÍTULO */}
+              <h1 className="text-3xl sm:text-[2.6rem] font-black tracking-tight mb-4 leading-[1.1] text-foreground">
+                {post.title}
+              </h1>
+
+              {/* EXCERPT / SUBTÍTULO CONTEXTUAL */}
+              {post.excerpt && (
+                <p className="text-lg sm:text-xl text-foreground/55 mb-7 leading-relaxed font-medium">
+                  {post.excerpt}
+                </p>
+              )}
+
+              {/* META: autor + data + tempo de leitura + rating (só reviews) */}
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-foreground/55 mb-8 pb-8 border-b border-(--border)">
+                {/* Autor */}
+                <div className="flex items-center gap-2.5">
+                  {post.author?.image && (
+                    <div className="w-8 h-8  overflow-hidden border border-(--border) relative shrink-0">
+                      <Image
+                        src={urlFor(post.author.image)
+                          .width(64)
+                          .height(64)
+                          .fit("crop")
+                          .url()}
+                        alt={post.author.name}
+                        fill
+                        sizes="64px"
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+                  <span className="font-bold text-foreground/80">
+                    {post.author?.name ?? "Redação Vetor"}
+                  </span>
+                </div>
+
+                <span className="hidden sm:block text-foreground/15">|</span>
+
+                {/* Data */}
+                <time className="tabular-nums">
+                  {new Date(post.publishedAt).toLocaleDateString("pt-BR", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </time>
+
+                <span className="hidden sm:block text-foreground/15">|</span>
+
+                {/* Tempo de leitura estimado */}
+                <span className="flex items-center gap-1.5">
+                  <svg
+                    className="w-3.5 h-3.5 text-foreground/30"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                  {readTime} min de leitura
+                </span>
+
+                {/* Rating — só reviews */}
+                {isReview && post.rating != null && (
+                  <div className="ml-auto">
+                    <RatingBadge rating={post.rating} />
                   </div>
                 )}
-                <span className="font-bold text-foreground/80">
-                  {post.author?.name ?? "Redação Vetor"}
-                </span>
               </div>
 
-              <span className="hidden sm:block text-foreground/15">|</span>
-
-              {/* Data */}
-              <time className="tabular-nums">
-                {new Date(post.publishedAt).toLocaleDateString("pt-BR", {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })}
-              </time>
-
-              <span className="hidden sm:block text-foreground/15">|</span>
-
-              {/* Tempo de leitura estimado */}
-              <span className="flex items-center gap-1.5">
-                <svg
-                  className="w-3.5 h-3.5 text-foreground/30"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
-                </svg>
-                {readTime} min de leitura
-              </span>
-
-              {/* Rating — só reviews */}
-              {isReview && post.rating != null && (
-                <div className="ml-auto">
-                  <RatingBadge rating={post.rating} />
+              {/* IMAGEM PRINCIPAL */}
+              {post.imagem && (
+                <div className="mb-10 relative aspect-video  overflow-hidden shadow-xl">
+                  <Image
+                    src={post.imagem}
+                    alt={post.imagemAlt || post.title}
+                    fill
+                    priority
+                    placeholder={post.imagemLqip ? "blur" : "empty"}
+                    blurDataURL={post.imagemLqip}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 50vw"
+                    className="object-cover"
+                  />
                 </div>
               )}
-            </div>
 
-            {/* IMAGEM PRINCIPAL */}
-            {post.imagem && (
-              <div className="mb-10 relative aspect-video  overflow-hidden shadow-xl">
-                <Image
-                  src={post.imagem}
-                  alt={post.imagemAlt || post.title}
-                  fill
-                  priority
-                  placeholder={post.imagemLqip ? "blur" : "empty"}
-                  blurDataURL={post.imagemLqip}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 50vw"
-                  className="object-cover"
-                />
-              </div>
-            )}
-
-            {/* AFILIADO TOPO — só reviews/comparativos */}
-            {isReview && post.affiliateLink && (
-              <AffiliateBlock
-                href={post.affiliateLink}
-                label={post.affiliateLabel}
-                position="top"
-              />
-            )}
-
-            {/* SPOTIFY */}
-            {post.spotifyEmbed && (
-              <div
-                className="mb-10 overflow-hidden"
-                dangerouslySetInnerHTML={{
-                  __html: post.spotifyEmbed.replace(
-                    'allowfullscreen',
-                    'allow="fullscreen; encrypted-media"'
-                  ),
-                }}
-              />
-            )}
-
-            {/* CORPO DO ARTIGO */}
-            <div className="prose prose-lg max-w-none prose-headings:font-black prose-a:text-primary">
-              {post.contentHtml ? (
-                <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
-              ) : (
-                <PortableText
-                  value={post.body ?? []}
-                  components={ptComponents}
+              {/* AFILIADO TOPO — só reviews/comparativos */}
+              {isReview && post.affiliateLink && (
+                <AffiliateBlock
+                  href={post.affiliateLink}
+                  label={post.affiliateLabel}
+                  position="top"
                 />
               )}
+
+              {/* SPOTIFY */}
+              {post.spotifyEmbed && (
+                <div
+                  className="mb-10 overflow-hidden"
+                  dangerouslySetInnerHTML={{
+                    __html: post.spotifyEmbed.replace(
+                      "allowfullscreen",
+                      'allow="fullscreen; encrypted-media"',
+                    ),
+                  }}
+                />
+              )}
+
+              {/* CORPO DO ARTIGO */}
+              <div className="prose prose-lg max-w-none prose-headings:font-black prose-a:text-primary">
+                {post.contentHtml ? (
+                  <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
+                ) : (
+                  <PortableText
+                    value={post.body ?? []}
+                    components={ptComponents}
+                  />
+                )}
+              </div>
+            </article>{" "}
+            {/* FECHA O PRIMEIRO CARD */}
+            {/* ================================================================ */}
+            {/* SESSÃO PARALAX FIXA NO RODAPÉ DO ARTIGO                          */}
+            {/* ================================================================ */}
+            <div className="w-full py-24 my-6 flex flex-col items-center justify-center text-center px-4 relative bg-transparent">
+              <h3 className="text-2xl sm:text-3xl font-black text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] mb-6 max-w-2xl leading-tight">
+                Mantenha-se atualizado com os desdobramentos que definem o
+                futuro e a soberania do Brasil.
+              </h3>
+
+              <Link
+                href="/radar"
+                className="bg-primary hover:bg-blue-500 text-white font-black py-4 px-10 border border-primary/50 shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] transition-all uppercase tracking-[0.2em] text-xs"
+              >
+                LER ÚLTIMAS NOTÍCIAS
+              </Link>
             </div>
-          </article> {/* FECHA O PRIMEIRO CARD */}
+            {/* ================================================================ */}
+            {/* SEGUNDO CARD: Conteúdo Extra (Analyst View, Autor, etc) */}
+            {/* ================================================================ */}
+            <article className="bg-(--card-bg) p-2 sm:p-2 border border-(--border) shadow-sm">
+              {/* VISÃO DO ANALISTA — elemento central do branding */}
+              {post.analystView && post.analystView.length > 0 && (
+                <AnalystView content={post.analystView} />
+              )}
 
-          {/* ================================================================ */}
-          {/* SESSÃO PARALAX FIXA NO RODAPÉ DO ARTIGO                          */}
-          {/* ================================================================ */}
-          <div className="w-full py-24 my-6 flex flex-col items-center justify-center text-center px-4 relative bg-transparent">
-            <h3 className="text-2xl sm:text-3xl font-black text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] mb-6 max-w-2xl leading-tight">
-             Mantenha-se atualizado com os desdobramentos que definem o futuro e a soberania do Brasil.
-            </h3>
-            
-            <Link
-              href="/radar"
-              className="bg-primary hover:bg-blue-500 text-white font-black py-4 px-10 border border-primary/50 shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] transition-all uppercase tracking-[0.2em] text-xs"
-            >
-              LER ÚLTIMAS NOTÍCIAS
-            </Link>
-          </div>
+              {/* VEREDITO — só reviews/comparativos */}
+              {isReview && post.veredito && (
+                <VereditorBlock veredito={post.veredito} />
+              )}
 
-          {/* ================================================================ */}
-          {/* SEGUNDO CARD: Conteúdo Extra (Analyst View, Autor, etc) */}
-          {/* ================================================================ */}
-          <article className="bg-(--card-bg) p-2 sm:p-2 border border-(--border) shadow-sm">
+              {/* AFILIADO RODAPÉ — só reviews/comparativos */}
+              {isReview && post.affiliateLink && (
+                <AffiliateBlock
+                  href={post.affiliateLink}
+                  label={post.affiliateLabel}
+                  position="bottom"
+                />
+              )}
 
-            {/* VISÃO DO ANALISTA — elemento central do branding */}
-            {post.analystView && post.analystView.length > 0 && (
-              <AnalystView content={post.analystView} />
-            )}
+              {/* FAQ */}
+              {post.faq && post.faq.length > 0 && <FaqSection faq={post.faq} />}
 
-            {/* VEREDITO — só reviews/comparativos */}
-            {isReview && post.veredito && (
-              <VereditorBlock veredito={post.veredito} />
-            )}
+              {/* CLUSTER — card proeminente */}
+              {post.cluster && <ClusterCard cluster={post.cluster} />}
 
-            {/* AFILIADO RODAPÉ — só reviews/comparativos */}
-            {isReview && post.affiliateLink && (
-              <AffiliateBlock
-                href={post.affiliateLink}
-                label={post.affiliateLabel}
-                position="bottom"
-              />
-            )}
+              {/* AUTOR */}
+              {post.author && <AuthorCard author={post.author} />}
 
-            {/* FAQ */}
-            {post.faq && post.faq.length > 0 && (
-              <FaqSection faq={post.faq} />
-            )}
-
-            {/* CLUSTER — card proeminente */}
-            {post.cluster && <ClusterCard cluster={post.cluster} />}
-
-            {/* AUTOR */}
-            {post.author && <AuthorCard author={post.author} />}
-
-            {/* LEAD CAPTURE */}
+              {/* LEAD CAPTURE */}
+              <div className="mt-10">
+                <LeadCapture />
+              </div>
+            </article>{" "}
+            {/* FECHA O SEGUNDO CARD */}
+            {/* COMENTÁRIOS */}
             <div className="mt-10">
-              <LeadCapture />
+              <Comments />
             </div>
-          </article> {/* FECHA O SEGUNDO CARD */}
+          </main>
 
-          {/* COMENTÁRIOS */}
-          <div className="mt-10">
-            <Comments />
-          </div>
-        </main>
+          {/* ================================================================ */}
+          {/* SIDEBAR                                                           */}
+          {/* ================================================================ */}
+          <aside className="w-full lg:w-1/3 lg:sticky lg:top-22 self-start space-y-4">
+            {/* Pilar editorial na sidebar */}
+            {pillarLabel && post.pillar && (
+              <Link
+                href={`/pilares/${post.pillar}`}
+                className="block bg-(--card-bg)  border border-(--border) p-4 shadow-sm hover:border-primary/30 transition-colors group"
+              >
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/35 mb-1 group-hover:text-primary/60 transition-colors">
+                  Pilar Editorial
+                </p>
+                <p className="font-bold text-foreground/80 text-sm group-hover:text-primary transition-colors">
+                  {pillarLabel}
+                </p>
+                <p className="text-[10px] text-foreground/40 mt-1">
+                  Tecnologia. Poder. Direção.
+                </p>
+              </Link>
+            )}
 
-        {/* ================================================================ */}
-        {/* SIDEBAR                                                           */}
-        {/* ================================================================ */}
-        <aside className="w-full lg:w-1/3 lg:sticky lg:top-22 self-start space-y-4">
+            <div className="bg-(--card-bg)  border border-(--border) overflow-hidden shadow-sm">
+              <AdComponent />
+            </div>
 
-          {/* Pilar editorial na sidebar */}
-          {pillarLabel && post.pillar && (
-            <Link
-              href={`/pilares/${post.pillar}`}
-              className="block bg-(--card-bg)  border border-(--border) p-4 shadow-sm hover:border-primary/30 transition-colors group"
-            >
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/35 mb-1 group-hover:text-primary/60 transition-colors">
-                Pilar Editorial
-              </p>
-              <p className="font-bold text-foreground/80 text-sm group-hover:text-primary transition-colors">{pillarLabel}</p>
-              <p className="text-[10px] text-foreground/40 mt-1">
-                Tecnologia. Poder. Direção.
-              </p>
-            </Link>
-          )}
+            <div className="bg-(--card-bg)  border border-(--border) p-4 shadow-sm hidden lg:block">
+              <SecondAdComponent />
+            </div>
+          </aside>
+        </div>
 
-          <div className="bg-(--card-bg)  border border-(--border) overflow-hidden shadow-sm">
-            <AdComponent />
-          </div>
-
-          <div className="bg-(--card-bg)  border border-(--border) p-4 shadow-sm hidden lg:block">
-            <SecondAdComponent />
-          </div>
-        </aside>
+        {/* LEIA TAMBÉM */}
+        <div className="mt-16">
+          <ReadNext posts={relatedPosts} />
+        </div>
       </div>
-
-      {/* LEIA TAMBÉM */}
-      <div className="mt-16">
-        <ReadNext posts={relatedPosts} />
-      </div>
-    </div>
     </>
   );
 }

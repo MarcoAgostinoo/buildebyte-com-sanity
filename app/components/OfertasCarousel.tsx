@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { FaChevronLeft, FaChevronRight, FaShoppingCart, FaStore } from "react-icons/fa";
 import Image from "next/image";
-import { client, urlForMobile } from "@/app/lib/sanity";
+import { client } from "@/app/lib/sanity";
 import { createImageUrlBuilder } from "@sanity/image-url";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -13,10 +13,6 @@ const builder = createImageUrlBuilder(client as any);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function urlFor(source: any) {
   return builder.image(source).width(400).height(400).fit("fillmax").auto("format").quality(75).url();
-}
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function urlForMobileOferta(source: any) {
-  return builder.image(source).width(400).height(400).fit("fillmax").auto("format").quality(60).url();
 }
 
 export interface Oferta {
@@ -42,26 +38,14 @@ function calcDiscount(original: number, current: number) {
 export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true, align: "start", slidesToScroll: 1 },
-    [Autoplay({ delay: 5000, stopOnInteraction: false, playOnInit: false })]
+    [Autoplay({ delay: 5000, stopOnInteraction: false })]
   );
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
-  useEffect(() => {
-    if (emblaApi) {
-      const autoplay = emblaApi.plugins().autoplay;
-      if (!autoplay) return;
-
-      // Inicia o autoplay após 2 segundos para aliviar o TBT inicial
-      const timer = setTimeout(() => autoplay.play(), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [emblaApi]);
-
   return (
     <div className="w-full">
-      {/* Aviso legal */}
       <div className="relative group/carousel max-w-9xl mx-auto px-4">
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex touch-pan-y -ml-4">
@@ -74,21 +58,27 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
                   return (
                     <div
                       key={oferta._id}
-                      className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_25%] min-w-0 pl-4 py-4"
+                      className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.33%] min-w-0 pl-4 py-4"
                     >
-                      <article className="flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-lg hover:border-zinc-400 dark:hover:border-zinc-600 transition-all duration-300 h-full">
+                      {/* CARD TÁTICO: Fundos e Bordas hardcoded para blindar contra CSS global */}
+                      <article className="flex flex-col bg-[#111318] border border-[#2a2f3a] hover:border-[#c8a84b]/50 hover:shadow-[0_0_15px_rgba(200,168,75,0.15)] transition-all duration-300 h-full relative group">
+                        
+                        {/* Elementos visuais de HUD Militar */}
+                        <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[#c8a84b] opacity-0 group-hover:opacity-100 transition-opacity z-20"></div>
+                        <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[#c8a84b] opacity-0 group-hover:opacity-100 transition-opacity z-20"></div>
 
-                        {/* Imagem */}
-                        <div className="relative aspect-square bg-zinc-50 dark:bg-zinc-950 p-4">
+                        {/* Imagem Container */}
+                        <div className="relative aspect-square bg-black/80 p-4 border-b border-[#2a2f3a]">
+                          
                           {/* Badge loja */}
-                          <div className="absolute top-2 left-2 z-10 bg-black/70 text-white text-[10px] px-2 py-1 flex items-center gap-1">
-                            <FaStore size={9} />
-                            {oferta.storeName || "Mercado Livre"}
+                          <div className="absolute top-2 left-2 z-10 bg-[#0a0b0d]/90 border border-[#2a2f3a] !text-zinc-300 text-[10px] uppercase tracking-widest px-2 py-1 flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 bg-[#27ae60] rounded-full animate-pulse"></span>
+                            {oferta.storeName || "Estoque Geral"}
                           </div>
 
                           {/* Badge desconto */}
                           {discount > 0 && (
-                            <div className="absolute top-2 right-2 z-10 bg-green-500 text-white text-[10px] font-bold px-2 py-1">
+                            <div className="absolute top-2 right-2 z-10 bg-[#c0392b] !text-white text-[10px] font-black tracking-wider px-2 py-1">
                               -{discount}%
                             </div>
                           )}
@@ -97,7 +87,7 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
                             href={oferta.affiliateLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            aria-label={`Ver imagem da oferta: ${oferta.title}`} // 👈 Acessibilidade da imagem
+                            aria-label={`Ver imagem da oferta: ${oferta.title}`}
                             className="block w-full h-full relative"
                           >
                             {imgUrl ? (
@@ -106,32 +96,33 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
                                 alt={oferta.title}
                                 fill
                                 loading="lazy"
-                                className="object-contain hover:scale-105 transition-transform duration-300"
-                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                                className="object-contain p-4 hover:scale-105 transition-transform duration-500 filter brightness-90 group-hover:brightness-110"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
-                                <FaStore className="text-4xl text-zinc-300 dark:text-zinc-700" />
+                                <FaStore className="text-4xl !text-[#2a2f3a]" />
                               </div>
                             )}
                           </a>
                         </div>
 
-                        {/* Conteúdo */}
-                        <div className="p-4 flex flex-col flex-1">
-                          <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100 line-clamp-2 min-h-10 mb-2">
+                        {/* Conteúdo Textual */}
+                        <div className="p-5 flex flex-col flex-1">
+                          <h3 className="text-lg font-black line-clamp-2 min-h-10 mb-2 uppercase tracking-tight">
+                            {/* !text-zinc-100 blinda o link contra a regra global azul */}
                             <a
                               href={oferta.affiliateLink}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="hover:text-[#0070f3] transition-colors"
+                              className="!text-zinc-100 hover:!text-[#c8a84b] transition-colors"
                             >
                               {oferta.title}
                             </a>
                           </h3>
 
                           {oferta.description && (
-                            <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-2 mb-2">
+                            <p className="text-base !text-zinc-400 line-clamp-2 mb-3 border-l-2 border-[#c8a84b]/30 pl-2">
                               {oferta.description}
                             </p>
                           )}
@@ -139,33 +130,32 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
                           {/* Preço */}
                           <div className="mt-auto mb-4">
                             {hasDiscount && (
-                              <p className="text-xs text-zinc-400 line-through">
+                              <p className="text-[10px] !text-zinc-500 line-through mb-0.5">
                                 {formatMoney(oferta.originalPrice!)}
                               </p>
                             )}
-                            <div className="flex items-baseline gap-1 flex-wrap">
-                              <span className="text-xl font-black text-green-600 dark:text-green-400">
+                            <div className="flex items-baseline gap-2 flex-wrap">
+                              <span className="text-xl font-black !text-[#c8a84b]">
                                 {formatMoney(oferta.price)}
                               </span>
-                              <span className="text-[10px] text-zinc-400">*</span>
                             </div>
                             {oferta.installments && (
-                              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                              <p className="text-[10px] !text-zinc-500 mt-1 uppercase tracking-wider">
                                 {oferta.installments}
                               </p>
                             )}
                           </div>
 
-                          {/* Botão */}
+                          {/* Botão de Compra */}
                           <a
                             href={oferta.affiliateLink}
                             target="_blank"
                             rel="noopener noreferrer sponsored"
-                            aria-label={`Pegar promoção do produto: ${oferta.title}`} // 👈 Resolve o erro "Links idênticos"
-                            className="w-full bg-yellow-400 hover:bg-yellow-500 text-zinc-900 font-bold py-2 flex items-center justify-center gap-2 transition-colors text-sm"
+                            aria-label={`Adquirir equipamento: ${oferta.title}`}
+                            className="w-full bg-[#161a20] border border-[#c8a84b]/30 hover:bg-[#c8a84b] !text-[#c8a84b] hover:!text-[#0a0b0d] font-black py-2.5 flex items-center justify-center gap-2 transition-all text-base uppercase tracking-[0.15em]"
                           >
-                            <FaShoppingCart size={13} />
-                            Pegar Promoção
+                            <FaShoppingCart size={12} />
+                            Adquirir Equipamento
                           </a>
                         </div>
                       </article>
@@ -175,25 +165,25 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
           </div>
         </div>
 
-        {/* Setas */}
+        {/* Setas Táticas */}
         <button
           onClick={scrollPrev}
-          aria-label="Ver ofertas anteriores" // 👈 Resolve o erro "Botões não têm um nome"
-          className="absolute top-1/2 -left-2 md:-left-4 -translate-y-1/2 p-3 bg-white dark:bg-zinc-800 shadow-lg text-zinc-700 dark:text-zinc-200 hover:bg-yellow-400 hover:text-zinc-900 transition-all z-20"
+          aria-label="Ver ofertas anteriores"
+          className="absolute top-1/2 -left-2 md:-left-4 -translate-y-1/2 p-3 bg-[#0a0b0d]/90 border border-[#c8a84b]/30 shadow-lg !text-[#c8a84b] hover:bg-[#c8a84b] hover:!text-[#0a0b0d] transition-all z-20 opacity-0 group-hover/carousel:opacity-100"
         >
           <FaChevronLeft />
         </button>
         <button
           onClick={scrollNext}
-          aria-label="Ver próximas ofertas" // 👈 Resolve o erro "Botões não têm um nome"
-          className="absolute top-1/2 -right-2 md:-right-4 -translate-y-1/2 p-3 bg-white dark:bg-zinc-800 shadow-lg text-zinc-700 dark:text-zinc-200 hover:bg-yellow-400 hover:text-zinc-900 transition-all z-20"
+          aria-label="Ver próximas ofertas"
+          className="absolute top-1/2 -right-2 md:-right-4 -translate-y-1/2 p-3 bg-[#0a0b0d]/90 border border-[#c8a84b]/30 shadow-lg !text-[#c8a84b] hover:bg-[#c8a84b] hover:!text-[#0a0b0d] transition-all z-20 opacity-0 group-hover/carousel:opacity-100"
         >
           <FaChevronRight />
         </button>
       </div>
 
-      <p className="text-xs text-zinc-400 mt-2 text-center font-mono">
-        * Preços atualizados manualmente • Links de afiliado — podemos receber comissão sem custo adicional para você
+      <p className="text-[10px] !text-zinc-500 mt-4 text-center font-mono uppercase tracking-widest">
+        * Inventário sujeito a alteração • Logística via parceiros afiliados
       </p>
     </div>
   );

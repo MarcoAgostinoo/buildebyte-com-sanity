@@ -1,15 +1,21 @@
 import { client } from "@/app/lib/sanity";
 import dynamic from 'next/dynamic';
 
-// 👇 Removemos apenas a linha "ssr: false"
+// Carregamento dinâmico sem o falso problema de SSR
 const OfertasCarousel = dynamic(
   () => import('./OfertasCarousel').then((mod) => mod.OfertasCarousel),
   { 
-    loading: () => <div className="h-64 flex items-center justify-center animate-pulse bg-gray-100 dark:bg-zinc-800">Carregando ofertas...</div>
+    loading: () => (
+      <div className="h-80 flex flex-col items-center justify-center animate-pulse bg-mil-dark border border-mil-border">
+        <div className="w-8 h-8 border-2 border-t-mil-gold border-r-mil-gold border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+        <p className="mt-4 text-[10px] font-black uppercase tracking-[0.2em] text-mil-gold/60">Sincronizando Dados Logísticos...</p>
+      </div>
+    )
   }
 );
 
-const QUERY = `*[_type == "oferta"] | order(publishedAt desc) {
+// A Query permanece a mesma, pois seu schema Sanity está correto
+const QUERY = `*[_type == "oferta" && destaqueHome == true] | order(publishedAt desc) {
   _id, title, price, originalPrice, installments,
   storeName, affiliateLink, mainImage, description
 }`;
@@ -17,42 +23,59 @@ const QUERY = `*[_type == "oferta"] | order(publishedAt desc) {
 export default async function Ofertas() {
   const ofertas = await client.fetch(QUERY, {}, { next: { revalidate: 3600 } });
 
-  return (
-    <section className="py-12 border-y border-(--border) bg-linear-to-b from-transparent via-blue-50/5 to-transparent">
-      <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
+  // Se não houver ofertas cadastradas, não exibe o bloco (evita espaços em branco)
+  if (!ofertas || ofertas.length === 0) return null;
 
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full bg-yellow-400 opacity-75"></span>
-                <span className="relative inline-flex h-2 w-2 bg-yellow-500"></span>
-              </span>
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-yellow-500">
-                Ofertas Selecionadas
-              </span>
+  return (
+    <section className="py-12 mil-section relative overflow-hidden">
+      {/* A classe mil-section do seu globals.css já traz o fundo com ruído 
+        e o mil-black padrão. Aqui reforçamos a imersão tática.
+      */}
+      
+      <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+
+        {/* --- HEADER TÁTICO --- */}
+        <div className="mil-header">
+          <div className="mil-title-wrap">
+            <div className="mil-title-icon">
+              <span></span>
+              <span></span>
+              <span></span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black text-white uppercase tracking-tighter">
-              Melhores <span className="text-[#0070f3]">Ofertas</span>
+            <h2 className="mil-section-title">
+              Equipamento <span>Recomendado</span>
             </h2>
           </div>
+          
+          <div className="hidden md:flex flex-col items-end">
+             <div className="mil-classification">
+               Status: Operacional
+             </div>
+             <p className="text-[10px] uppercase tracking-wider text-mil-muted mt-1">
+               Protocolo EDC
+             </p>
+          </div>
+        </div>
+        
+        <div className="mil-divider"></div>
 
-          <div className="flex flex-col md:items-end gap-1 max-w-md">
-            <p className="text-sm md:text-right bg-amber-50 bg-clip-border font-medium">
-              Equipamentos e tecnologia selecionados com os melhores preços.
-            </p>
-            <p className="text-xs bg-amber-50 text-yellow-600 dark:text-yellow-400 md:text-right font-mono">
-              ⚠️ Preços podem variar. Confirme o valor antes de comprar.
-            </p>
+        {/* --- CARROSSEL / PAINEL --- */}
+        <div className="relative bg-mil-panel border border-mil-border shadow-2xl p-1 overflow-hidden group">
+          {/* Efeito Scanline do seu CSS global */}
+          <div className="mil-scan-line"></div>
+          
+          <div className="relative z-10 p-4 sm:p-6 bg-black/30">
+             {/* Componente Cliente que renderiza os cards */}
+            <OfertasCarousel ofertas={ofertas} />
           </div>
         </div>
 
-        {/* Carousel */}
-        <div className="relative p-1 bg-(--border)/30 bg-yellow-400 shadow-inner">
-          <div className="bg-(--card-bg) bg-amber-50 p-4 sm:p-8 border border-(--border) shadow-2xl">
-            <OfertasCarousel ofertas={ofertas} />
-          </div>
+        {/* --- FOOTER TÁTICO (Disclaimer) --- */}
+        <div className="mil-statusbar justify-end mt-2">
+           <div className="mil-status-right">
+             <span>Inventário Logístico Sujeito à Demanda do Fornecedor</span>
+             <div className="mil-status-dot hidden sm:block"></div>
+           </div>
         </div>
 
       </div>
