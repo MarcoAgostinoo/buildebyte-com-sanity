@@ -1,17 +1,21 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
+import dynamic from 'next/dynamic';
 import { client, urlFor } from "@/app/lib/sanity";
-import Ofertas from "./components/Ofertas";
-import LatestPosts from "./components/LatestPosts";
-import { WebStoriesCarousel } from "./components/WebStoriesCarousel";
-import LeadCapture from "./components/LeadCapture";
 import { CategoryWithPosts, WebStory, FeaturedPost } from "@/app/lib";
 import { getPodcastEpisodes } from "@/app/lib/podcast-service";
 import MilitaryPowerTicker from "./components/MilitaryPowerTicker";
 import FeaturedPostsSection from "./components/home/FeaturedPostsSection";
-import PopularPostsList from "./components/home/PopularPostsList";
-import PodcastSection from "./components/home/PodcastSection";
+import PodcastSectionClient from "./components/home/PodcastSectionClient";
 import AffiliateDisclaimer from "./components/home/AffiliateDisclaimer";
+
+const PopularPostsList = dynamic(() => import('./components/home/PopularPostsList'));
+const Ofertas = dynamic(() => import('./components/Ofertas'), {
+  loading: () => <div className="h-80 animate-pulse bg-gray-200 dark:bg-zinc-900" />,
+});
+const WebStoriesCarousel = dynamic(() => import('./components/WebStoriesCarousel').then(mod => mod.WebStoriesCarousel));
+const LeadCapture = dynamic(() => import('./components/LeadCapture'));
+const LatestPosts = dynamic(() => import('./components/LatestPosts'));
 
 export const metadata: Metadata = {
   title: "Vetor Estratégico - Defesa e Estratégia",
@@ -170,7 +174,7 @@ export default async function Home() {
         <section className="mt-12 mb-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
             <PopularPostsList posts={popularPosts} />
-            <PodcastSection episodes={episodes} />
+            <PodcastSectionClient episodes={episodes} />
           </div>
         </section>
 

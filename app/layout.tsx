@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Barlow } from "next/font/google";
 import Script from "next/script";
+import { GoogleTagManager } from "@next/third-parties/google";
 import "./globals.css";
 import { ThemeInit } from "../.flowbite-react/init";
 import Header from "./components/Header";
@@ -160,9 +161,6 @@ export default function RootLayout({
       <head>
         {/* Em desktop, preconnect acelera. Em mobile 4G, economizamos banda com dns-prefetch */}
         <link rel="preconnect" href="https://cdn.sanity.io" />
-        <link rel="preconnect" href="https://d3t3ozftmdmh3i.cloudfront.net" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         
         <Script
           id="vetor-estrategico-schema"
@@ -183,20 +181,7 @@ export default function RootLayout({
         <PreviewBanner />
         <Analytics />
         {process.env.NEXT_PUBLIC_GA_ID && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-              strategy="lazyOnload"
-            />
-            <Script id="google-analytics" strategy="lazyOnload">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
-              `}
-            </Script>
-          </>
+          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GA_ID} />
         )}
       </body>
     </html>

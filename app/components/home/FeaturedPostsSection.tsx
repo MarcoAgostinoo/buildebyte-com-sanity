@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { FeaturedPost } from "@/app/lib";
 import { formatDate } from "@/app/lib/utils";
+import styles from '../MilitaryTheme.module.css';
 
 const DEFAULT_IMAGE = "/images/placeholder.png";
 
@@ -15,28 +16,28 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
   }
 
   return (
-    <section className="mil-section mb-8">
+    <section className={`${styles.mil_section} mb-8`}>
       {/* Cabeçalho */}
 {/* Cabeçalho */}
-      <div className="mil-header w-full flex flex-wrap items-end justify-between gap-x-2 gap-y-4">
-        <div className="mil-title-wrap flex items-end gap-3 flex-1 min-w-[240px]">
-          <div className="mil-title-icon shrink-0">
+      <div className={`${styles.mil_header} w-full flex flex-wrap items-end justify-between gap-x-2 gap-y-4`}>
+        <div className={`${styles.mil_title_wrap} flex items-end gap-3 flex-1 min-w-[240px]`}>
+          <div className={`${styles.mil_title_icon} shrink-0`}>
             <span />
             <span />
             <span />
           </div>
           <div>
-            <h2 className="mil-section-title text-2xl sm:text-3xl leading-none">
+            <h2 className={`${styles.mil_section_title} text-2xl sm:text-3xl leading-none`}>
               DESTAQUES <span className="block sm:inline">OPERACIONAIS</span>
             </h2>
           </div>
-          <div className="mil-classification shrink-0 mb-1 hidden sm:flex">AO VIVO</div>
+          <div className={`${styles.mil_classification} shrink-0 mb-1 hidden sm:flex`}>AO VIVO</div>
         </div>
         
         <Link
           href="/destaques"
           aria-label="Ver todos os destaques"
-          className="mil-view-all whitespace-nowrap shrink-0 text-[10px] sm:text-xs border border-[#c8a84b]/30 px-3 py-1.5 hover:bg-[#c8a84b] hover:text-[#0a0b0d] transition-colors ml-auto flex items-center gap-1"
+          className={`${styles.mil_view_all} whitespace-nowrap shrink-0 text-[10px] sm:text-xs border border-[#c8a84b]/30 px-3 py-1.5 hover:bg-[#c8a84b] hover:text-[#0a0b0d] transition-colors ml-auto flex items-center gap-1`}
         >
           <span className="hidden sm:inline">MISSÕES COMPLETAS</span>
           <span className="inline sm:hidden">MISSÕES</span>
@@ -44,23 +45,23 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
         </Link>
       </div>
 
-      <div className="mil-divider mt-4" />
+      <div className={`${styles.mil_divider} mt-4`} />
 
       {/* Grid de cards */}
-      <div className="mil-grid">
+      <div className={styles.mil_grid}>
         {featuredPosts.map((post, index) => {
           const isHero = index === 0;
           return (
             <article
               key={post._id}
-              className={`mil-card${isHero ? " mil-card-hero" : ""}`}
+              className={`${styles.mil_card}${isHero ? ` ${styles.mil_card_hero}` : ""}`}
             >
-              {isHero && <div className="mil-top-accent" />}
-              <div className="mil-scan-line" />
+              {isHero && <div className={styles.mil_top_accent} />}
+              <div className={styles.mil_scan_line} />
 
-              <Link href={`/post/${post.slug}`} className="mil-card-link">
+              <Link href={`/post/${post.slug}`} className={styles.mil_card_link}>
                 {/* Imagem de fundo */}
-                <div className="mil-card-img">
+                <div className={styles.mil_card_img}>
                   <Image
                     src={post.imagem || DEFAULT_IMAGE}
                     alt={post.imagemAlt || post.title || "Imagem do artigo"}
@@ -79,35 +80,35 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
                   />
                 </div>
 
-                <div className="mil-card-overlay" />
+                <div className={styles.mil_card_overlay} />
 
                 {/* Conteúdo */}
-                <div className="mil-card-content">
+                <div className={styles.mil_card_content}>
                   <span
-                    className={`mil-badge ${
-                      isHero ? "mil-badge-manchete" : "mil-badge-alta"
+                    className={`${styles.mil_badge} ${
+                      isHero ? styles.mil_badge_manchete : styles.mil_badge_alta
                     }`}
                   >
                     {isHero ? "MANCHETE" : "EM ALTA"}
                   </span>
 
                   <h3
-                    className={`mil-card-title ${
-                      isHero ? "mil-card-title-hero" : "mil-card-title-sm"
+                    className={`${styles.mil_card_title} ${
+                      isHero ? styles.mil_card_title_hero : styles.mil_card_title_sm
                     }`}
                   >
                     {post.title}
                   </h3>
 
                   {isHero && post.excerpt && (
-                    <p className="mil-card-excerpt">{post.excerpt}</p>
+                    <p className={styles.mil_card_excerpt}>{post.excerpt}</p>
                   )}
 
-                  <div className="mil-card-meta">
-                    <span className="mil-card-meta-author">
+                  <div className={styles.mil_card_meta}>
+                    <span className={styles.mil_card_meta_author}>
                       {post.author}
                     </span>
-                    <span className="mil-card-meta-sep">◆</span>
+                    <span className={styles.mil_card_meta_sep}>◆</span>
                     <span>{formatDate(post.publishedAt)}</span>
                   </div>
                 </div>
@@ -118,13 +119,13 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
       </div>
 
       {/* Barra de status */}
-      <div className="mil-statusbar">
-        <div className="mil-status-left">
-          <div className="mil-status-dot" />
+      <div className={styles.mil_statusbar}>
+        <div className={styles.mil_status_left}>
+          <div className={styles.mil_status_dot} />
           <span>TRANSMISSÃO SEGURA</span>
           <span>NÍVEL: PÚBLICO</span>
         </div>
-        <div className="mil-status-right">
+        <div className={styles.mil_status_right}>
           <span>BRASIL</span>
           <span>◆</span>
           <span>DEFESA NACIONAL</span>

@@ -1,5 +1,6 @@
 import { client } from "@/app/lib/sanity";
 import dynamic from 'next/dynamic';
+import styles from './MilitaryTheme.module.css';
 
 // Carregamento dinâmico sem o falso problema de SSR
 const OfertasCarousel = dynamic(
@@ -27,7 +28,7 @@ export default async function Ofertas() {
   if (!ofertas || ofertas.length === 0) return null;
 
   return (
-    <section className="py-12 mil-section relative overflow-hidden">
+    <section className={`py-12 ${styles.mil_section} relative overflow-hidden`}>
       {/* A classe mil-section do seu globals.css já traz o fundo com ruído 
         e o mil-black padrão. Aqui reforçamos a imersão tática.
       */}
@@ -35,20 +36,20 @@ export default async function Ofertas() {
       <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* --- HEADER TÁTICO --- */}
-        <div className="mil-header">
-          <div className="mil-title-wrap">
-            <div className="mil-title-icon">
+        <div className={styles.mil_header}>
+          <div className={styles.mil_title_wrap}>
+            <div className={styles.mil_title_icon}>
               <span></span>
               <span></span>
               <span></span>
             </div>
-            <h2 className="mil-section-title">
+            <h2 className={styles.mil_section_title}>
               Equipamento <span>Recomendado</span>
             </h2>
           </div>
           
           <div className="hidden md:flex flex-col items-end">
-             <div className="mil-classification">
+             <div className={styles.mil_classification}>
                Status: Operacional
              </div>
              <p className="text-[10px] uppercase tracking-wider text-mil-muted mt-1">
@@ -57,12 +58,12 @@ export default async function Ofertas() {
           </div>
         </div>
         
-        <div className="mil-divider"></div>
+        <div className={styles.mil_divider}></div>
 
         {/* --- CARROSSEL / PAINEL --- */}
-        <div className="relative bg-mil-panel border border-mil-border shadow-2xl p-1 overflow-hidden group">
+        <div className={`relative bg-mil-panel border border-mil-border shadow-2xl p-1 overflow-hidden group`}>
           {/* Efeito Scanline do seu CSS global */}
-          <div className="mil-scan-line"></div>
+          <div className={styles.mil_scan_line}></div>
           
           <div className="relative z-10 p-4 sm:p-6 bg-black/30">
              {/* Componente Cliente que renderiza os cards */}
@@ -71,10 +72,10 @@ export default async function Ofertas() {
         </div>
 
         {/* --- FOOTER TÁTICO (Disclaimer) --- */}
-        <div className="mil-statusbar justify-end mt-2">
-           <div className="mil-status-right">
+        <div className={`${styles.mil_statusbar} justify-end mt-2`}>
+           <div className={styles.mil_status_right}>
              <span>Inventário Logístico Sujeito à Demanda do Fornecedor</span>
-             <div className="mil-status-dot hidden sm:block"></div>
+             <div className={`${styles.mil_status_dot} hidden sm:block`}></div>
            </div>
         </div>
 
