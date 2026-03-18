@@ -26,12 +26,12 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
             <span />
             <span />
           </div>
-          <div>
+          <div className="hidden sm:block">
             <h2 className={`${styles.mil_section_title} text-2xl sm:text-3xl leading-none`}>
               DESTAQUES <span className="block sm:inline">OPERACIONAIS</span>
             </h2>
           </div>
-          <div className={`${styles.mil_classification} shrink-0 mb-1 hidden sm:flex`}>AO VIVO</div>
+          <div className={`${styles.mil_classification} shrink-0 mb-1 hidden sm:flex`}>Atualidade</div>
         </div>
         
         <Link
@@ -40,7 +40,7 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
           className={`${styles.mil_view_all} whitespace-nowrap shrink-0 text-[10px] sm:text-xs border border-[#c8a84b]/30 px-3 py-1.5 hover:bg-[#c8a84b] hover:text-[#0a0b0d] transition-colors ml-auto flex items-center gap-1`}
         >
           <span className="hidden sm:inline">MISSÕES COMPLETAS</span>
-          <span className="inline sm:hidden">MISSÕES</span>
+          <span className="hidden sm:inline">MISSÕES</span>
           <span>&#x2192;</span>
         </Link>
       </div>

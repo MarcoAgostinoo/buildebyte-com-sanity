@@ -57,6 +57,7 @@ interface SanityImage {
 
 interface Author {
   name: string;
+  linkedin?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   bio?: string | any[];
   image?: SanityImage;
@@ -155,6 +156,7 @@ async function getPost(slug: string): Promise<Post | null> {
     "author": author->{
       name,
       bio,
+      linkedin,
       "image": image{ ..., asset->{ ..., metadata } }
     },
     publishedAt,
@@ -527,7 +529,18 @@ function AuthorCard({ author }: { author: Author }) {
         <p className="text-[10px] uppercase tracking-widest text-foreground/40 font-black mb-0.5">
           Análise por
         </p>
-        <p className="font-black text-foreground text-base">{author.name}</p>
+        {author.linkedin ? (
+          <a
+            href={author.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-black text-foreground text-base hover:text-primary transition-colors"
+          >
+            {author.name}
+          </a>
+        ) : (
+          <p className="font-black text-foreground text-base">{author.name}</p>
+        )}
         {author.bio && <AuthorBio bio={author.bio} />}
       </div>
     </div>

@@ -88,6 +88,7 @@ export default function Header() {
               <NavItem href="/radar" label="Radar" isSpecial /> 
               <NavItem href="/categorias" label="Categorias" />
               <NavItem href="/videos" label="Vídeos" />
+              <NavItem href="/concursos" label="Concursos" />
               <NavItem href="/contato" label="Contato" />
               
               {/* Ícone de busca idêntico à referência */}
@@ -110,6 +111,7 @@ export default function Header() {
                 <MobileNavItem href="/radar" label="Radar" onClick={closeMenu} isSpecial />
                 <MobileNavItem href="/categorias" label="Categorias" onClick={closeMenu} />
                 <MobileNavItem href="/videos" label="Vídeos" onClick={closeMenu} />
+                <MobileNavItem href="/concursos" label="Concursos" onClick={closeMenu} />
                 <MobileNavItem href="/contato" label="Contato" onClick={closeMenu} />
               </div>
             </div>
