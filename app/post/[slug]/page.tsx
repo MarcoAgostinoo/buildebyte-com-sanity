@@ -1,5 +1,6 @@
 import { client, previewClient } from "@/app/lib/sanity";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
+import { type PortableTextBlock, type PortableTextSpan } from "@portabletext/types";
 import { notFound } from "next/navigation";
 import { type Metadata } from "next";
 import Script from "next/script";
@@ -58,16 +59,14 @@ interface SanityImage {
 interface Author {
   name: string;
   linkedin?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  bio?: string | any[];
+  bio?: string | PortableTextBlock[];
   image?: SanityImage;
 }
 
 interface Post {
   title: string;
   slug: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  body: any[];
+  body: PortableTextBlock[];
   contentHtml?: string;
   imagem?: string;
   imagemAlt?: string;
@@ -82,8 +81,7 @@ interface Post {
   excerpt?: string;
   spotifyEmbed?: string;
   // Análise estratégica — campo central do branding
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  analystView?: any[];
+  analystView?: PortableTextBlock[];
   // Review
   veredito?: Veredito;
   rating?: number;
@@ -92,6 +90,18 @@ interface Post {
   // Editorial
   editorialType?: string;
   faq?: FaqItem[];
+}
+
+interface ProductReferenceValue {
+  _type: "productReference";
+  title: string;
+  imagem: string;
+  price: number;
+  originalPrice?: number;
+  installments?: string;
+  description: string;
+  affiliateLink: string;
+  storeName?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -238,7 +248,7 @@ const ptComponents: PortableTextComponents = {
     // =========================================================
     // NOVO BLOCO: DOSSIÊ DO PRODUTO (NATIVE COMMERCE)
     // =========================================================
-    productReference: ({ value }: { value: any }) => {
+    productReference: ({ value }: { value: ProductReferenceValue }) => {
       if (!value) return null;
 
       return (
@@ -275,11 +285,11 @@ const ptComponents: PortableTextComponents = {
                   </span>
                 </div>
                 
-                <h3 className="text-xl sm:text-2xl font-black tracking-tight !text-zinc-100 mb-3 leading-tight uppercase">
+                <h3 className="text-xl sm:text-2xl font-black tracking-tight text-zinc-100 mb-3 leading-tight uppercase">
                   {value.title}
                 </h3>
                 
-                <p className="text-sm !text-zinc-400 mb-5 leading-relaxed border-l-2 border-[#c8a84b]/30 pl-3">
+                <p className="text-sm text-zinc-600 mb-5 leading-relaxed border-l-2 border-[#c8a84b]/30 pl-3">
                   {value.description}
                 </p>
               </div>
@@ -288,22 +298,22 @@ const ptComponents: PortableTextComponents = {
               <div className="mt-auto pt-5 border-t border-[#2a2f3a] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
                 <div>
                   {value.originalPrice && (
-                    <span className="text-xs !text-zinc-500 line-through block mb-0.5">
+                    <span className="text-xs text-zinc-500 line-through block mb-0.5">
                       De: R$ {value.originalPrice.toFixed(2)}
                     </span>
                   )}
                   <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-black !text-[#c8a84b]">
+                    <span className="text-3xl font-black text-[#c8a84b]">
                       R$ {value.price.toFixed(2)}
                     </span>
                     {value.installments && (
-                      <span className="text-[10px] uppercase tracking-wider !text-zinc-500">
+                      <span className="text-[10px] uppercase tracking-wider text-zinc-500">
                         {value.installments}
                       </span>
                     )}
                   </div>
                   {value.storeName && (
-                     <span className="text-[10px] uppercase tracking-wider !text-zinc-500 block mt-1">
+                     <span className="text-[10px] uppercase tracking-wider text-zinc-500 block mt-1">
                        Via {value.storeName}
                      </span>
                   )}
@@ -313,7 +323,7 @@ const ptComponents: PortableTextComponents = {
                   href={value.affiliateLink} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="w-full sm:w-auto text-center animate-pulse bg-[#161a20] border border-[#c8a84b]/30 hover:bg-[#c8a84b] !text-[#c8a84b] hover:!text-[#0a0b0d] font-black uppercase tracking-[0.15em] text-xs py-3.5 px-6 transition-all shadow-[0_0_15px_rgba(200,168,75,0.2)] hover:shadow-[0_0_25px_rgba(200,168,75,0.4)]"
+                  className="w-full sm:w-auto text-center animate-pulse bg-[#161a20] border border-[#c8a84b]/30 hover:bg-[#c8a84b] text-[#c8a84b] hover:text-[#0a0b0d] font-black uppercase tracking-[0.15em] text-xs py-3.5 px-6 transition-all shadow-[0_0_15px_rgba(200,168,75,0.2)] hover:shadow-[0_0_25px_rgba(200,168,75,0.4)]"
                 >
                   Adquirir Equipamento
                 </a>
@@ -330,21 +340,31 @@ const ptComponents: PortableTextComponents = {
       if (!value?.asset?.metadata?.dimensions) return null;
       const { aspectRatio } = value.asset.metadata.dimensions;
       const w = 1200;
+      
+      // Define o texto a ser exibido (prioriza a legenda, se não houver, usa o alt)
+      const descriptionText = value.caption || value.alt;
+
       return (
-        <figure className="my-8 sm:my-12 overflow-hidden  shadow-lg">
-          <Image
-            src={urlFor(value).width(w).fit("max").auto("format").url()}
-            alt={value.alt ?? "Imagem do artigo"}
-            width={w}
-            height={Math.round(w / aspectRatio)}
-            placeholder={value.asset.metadata?.lqip ? "blur" : "empty"}
-            blurDataURL={value.asset.metadata?.lqip}
-            className="w-full h-auto object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 85vw"
-          />
-          {value.caption && (
-            <figcaption className="mt-2 text-center text-xs text-foreground/50 italic px-4 pb-2">
-              {value.caption}
+        <figure className="my-8 sm:my-12">
+          {/* Container da Imagem */}
+          <div className="overflow-hidden shadow-md border border-primary/10">
+            <Image
+              src={urlFor(value).width(w).fit("max").auto("format").url()}
+              alt={value.alt ?? "Imagem do artigo"}
+              title={value.alt ?? "Imagem do artigo"}
+              width={w}
+              height={Math.round(w / aspectRatio)}
+              placeholder={value.asset.metadata?.lqip ? "blur" : "empty"}
+              blurDataURL={value.asset.metadata?.lqip}
+              className="w-full h-auto object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 85vw"
+            />
+          </div>
+          
+          {/* Legenda Minimalista Fixa */}
+          {descriptionText && (
+            <figcaption className="mt-3 text-[11px] sm:text-xs text-foreground/50 leading-relaxed border-l-2 border-primary/30 pl-3 font-medium">
+              {descriptionText}
             </figcaption>
           )}
         </figure>
@@ -363,7 +383,7 @@ const ptComponents: PortableTextComponents = {
       </h3>
     ),
     h4: ({ children }) => (
-      <h4 className="text-lg font-bold mt-6 mb-2 text-foreground/90">
+      <h4 className="text-lg font-bold mt-6 mb-2 text-foreground">
         {children}
       </h4>
     ),
@@ -372,13 +392,13 @@ const ptComponents: PortableTextComponents = {
         <span className="block text-[10px] font-black text-primary uppercase mb-2 tracking-[0.2em]">
           {"// Dado Técnico"}
         </span>
-        <div className="italic text-foreground/80 leading-relaxed">
+        <div className="italic text-foreground leading-relaxed">
           {children}
         </div>
       </blockquote>
     ),
     normal: ({ children }) => (
-      <p className="mb-5 leading-relaxed text-foreground/80">{children}</p>
+      <p className="mb-5 leading-relaxed text-foreground">{children}</p>
     ),
   },
   list: {
@@ -388,7 +408,7 @@ const ptComponents: PortableTextComponents = {
   },
   listItem: {
     bullet: ({ children }) => (
-      <li className="relative pl-4 text-foreground/80 leading-relaxed before:content-['→'] before:absolute before:left-0 before:text-primary before:font-bold">
+      <li className="relative pl-4 text-foreground leading-relaxed before:content-['→'] before:absolute before:left-0 before:text-primary before:font-bold">
         {children}
       </li>
     ),
@@ -408,7 +428,7 @@ const ptComponents: PortableTextComponents = {
       <strong className="font-bold text-foreground">{children}</strong>
     ),
     em: ({ children }) => (
-      <em className="italic text-foreground/75">{children}</em>
+      <em className="italic text-foreground">{children}</em>
     ),
   },
 };
@@ -435,7 +455,7 @@ function estimateReadTime(body: Post["body"]): number {
   const text = body
     .map(
       (b) =>
-        b?.children?.map((c: { text?: string }) => c?.text ?? "").join(" ") ??
+        b?.children?.map((c) => (c as PortableTextSpan).text ?? "").join(" ") ??
         "",
     )
     .join(" ");
@@ -496,8 +516,7 @@ function RatingBadge({ rating }: { rating: number }) {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function AuthorBio({ bio }: { bio: string | any[] }) {
+function AuthorBio({ bio }: { bio: string | PortableTextBlock[] }) {
   if (!bio) return null;
   if (Array.isArray(bio)) {
     return (
@@ -552,8 +571,7 @@ function AuthorCard({ author }: { author: Author }) {
  * Elemento diferenciador central do Vetor Estratégico — visual destacado e
  * separado claramente do corpo do artigo.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function AnalystView({ content }: { content: any[] }) {
+function AnalystView({ content }: { content: PortableTextBlock[] }) {
   return (
     <aside className="mt-14 relative overflow-hidden  border border-primary/20">
       {/* Gradiente de fundo sutil */}
@@ -585,7 +603,7 @@ function AnalystView({ content }: { content: any[] }) {
       </div>
 
       {/* Conteúdo */}
-      <div className="relative px-6 py-5 text-foreground/85 leading-relaxed">
+      <div className="relative px-6 py-5 text-foreground/95 leading-relaxed">
         <PortableText value={content} components={simplePtComponents} />
       </div>
 
@@ -680,7 +698,7 @@ function VereditorBlock({ veredito }: { veredito: Veredito }) {
             <h4 className="text-emerald-600 font-black uppercase text-xs mb-3 flex items-center gap-2 tracking-wider">
               ✓ Vale se...
             </h4>
-            <p className="text-sm text-foreground/80 leading-relaxed">
+            <p className="text-sm text-foreground/90 leading-relaxed">
               {veredito.buyIf}
             </p>
           </div>
@@ -690,7 +708,7 @@ function VereditorBlock({ veredito }: { veredito: Veredito }) {
             <h4 className="text-red-600 font-black uppercase text-xs mb-3 flex items-center gap-2 tracking-wider">
               ✕ Evite se...
             </h4>
-            <p className="text-sm text-foreground/80 leading-relaxed">
+            <p className="text-sm text-foreground/90 leading-relaxed">
               {veredito.avoidIf}
             </p>
           </div>
@@ -733,7 +751,7 @@ function FaqSection({ faq }: { faq: FaqItem[] }) {
                 />
               </svg>
             </summary>
-            <div className="px-4 py-4 text-foreground/70 text-sm leading-relaxed border-t border-(--border)">
+            <div className="px-4 py-4 text-foreground/80 text-sm leading-relaxed border-t border-(--border)">
               {item.answer}
             </div>
           </details>
@@ -943,7 +961,7 @@ export default async function PostPage({
 
               {/* EXCERPT / SUBTÍTULO CONTEXTUAL */}
               {post.excerpt && (
-                <p className="text-lg sm:text-xl text-foreground/55 mb-7 leading-relaxed font-medium">
+                <p className="text-lg sm:text-xl text-foreground/85 mb-7 leading-relaxed font-medium ">
                   {post.excerpt}
                 </p>
               )}
@@ -967,7 +985,7 @@ export default async function PostPage({
                       />
                     </div>
                   )}
-                  <span className="font-bold text-foreground/80">
+                  <span className="font-bold text-foreground/90">
                     {post.author?.name ?? "Redação Vetor"}
                   </span>
                 </div>
@@ -1010,18 +1028,29 @@ export default async function PostPage({
 
               {/* IMAGEM PRINCIPAL */}
               {post.imagem && (
-                <div className="mb-10 relative aspect-video  overflow-hidden shadow-xl">
-                  <Image
-                    src={post.imagem}
-                    alt={post.imagemAlt || post.title}
-                    fill
-                    priority
-                    placeholder={post.imagemLqip ? "blur" : "empty"}
-                    blurDataURL={post.imagemLqip}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 50vw"
-                    className="object-cover"
-                  />
-                </div>
+                <figure className="mb-10">
+                  {/* Container da Imagem da Capa */}
+                  <div className="relative aspect-video overflow-hidden shadow-lg border border-primary/10">
+                    <Image
+                      src={post.imagem}
+                      alt={post.imagemAlt || post.title}
+                      title={post.imagemAlt || post.title}
+                      fill
+                      priority
+                      placeholder={post.imagemLqip ? "blur" : "empty"}
+                      blurDataURL={post.imagemLqip}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 50vw"
+                      className="object-cover"
+                    />
+                  </div>
+                  
+                  {/* Legenda Minimalista da Capa */}
+                  {post.imagemAlt && (
+                    <figcaption className="mt-3 text-[11px] sm:text-xs text-foreground/50 leading-relaxed border-l-2 border-primary/30 pl-3 font-medium">
+                      {post.imagemAlt}
+                    </figcaption>
+                  )}
+                </figure>
               )}
 
               {/* AFILIADO TOPO — só reviews/comparativos */}
@@ -1047,7 +1076,7 @@ export default async function PostPage({
               )}
 
               {/* CORPO DO ARTIGO */}
-              <div className="prose prose-lg max-w-none prose-headings:font-black prose-a:text-primary">
+              <div className="prose prose-lg max-w-none prose-headings:font-black prose-a:text-primary text-foreground prose-p:text-foreground prose-li:text-foreground prose-blockquote:text-foreground prose-strong:text-foreground">
                 {post.contentHtml ? (
                   <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
                 ) : (
@@ -1063,7 +1092,7 @@ export default async function PostPage({
             {/* SESSÃO PARALAX FIXA NO RODAPÉ DO ARTIGO                          */}
             {/* ================================================================ */}
             <div className="w-full py-24 my-6 flex flex-col items-center justify-center text-center px-4 relative bg-transparent">
-              <h3 className="text-2xl sm:text-3xl font-black text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] mb-6 max-w-2xl leading-tight">
+              <h3 className="text-2xl sm:text-3xl font-black text-black drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)] mb-6 max-w-2xl leading-tight">
                 Mantenha-se atualizado com os desdobramentos que definem o
                 futuro e a soberania do Brasil.
               </h3>
@@ -1132,7 +1161,7 @@ export default async function PostPage({
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/35 mb-1 group-hover:text-primary/60 transition-colors">
                   Pilar Editorial
                 </p>
-                <p className="font-bold text-foreground/80 text-sm group-hover:text-primary transition-colors">
+                <p className="font-bold text-foreground/90 text-sm group-hover:text-primary transition-colors">
                   {pillarLabel}
                 </p>
                 <p className="text-[10px] text-foreground/40 mt-1">
