@@ -6,6 +6,21 @@ import styles from '../MilitaryTheme.module.css';
 
 const DEFAULT_IMAGE = "/images/placeholder.png";
 
+// ---------------------------------------------------------------------------
+// MAPEAMENTO DOS EIXOS (O que vai aparecer na etiqueta)
+// ---------------------------------------------------------------------------
+const EIXO_LABELS: Record<string, string> = {
+  geopolitica_defesa: "Geopolítica & Defesa",
+  arsenal_tecnologia: "Arsenal & Tecnologia",
+  teatro_operacoes: "Teatro de Operações",
+  defesa_tecnologia: "Defesa & Tecnologia",
+  infraestrutura_digital: "Infraestrutura Digital",
+  ia_automacao: "IA & Automação",
+  economia_poder: "Economia de Poder",
+  brasil: "Brasil Estratégico",
+  global: "Cenário Global",
+};
+
 type FeaturedPostsSectionProps = {
   featuredPosts: FeaturedPost[];
 };
@@ -18,7 +33,6 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
   return (
     <section className={`${styles.mil_section} mb-8`}>
       {/* Cabeçalho */}
-{/* Cabeçalho */}
       <div className={`${styles.mil_header} w-full flex flex-wrap items-end justify-between gap-x-2 gap-y-4`}>
         <div className={`${styles.mil_title_wrap} flex items-end gap-3 flex-1 min-w-[240px]`}>
           <div className={`${styles.mil_title_icon} shrink-0`}>
@@ -50,7 +64,13 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
       {/* Grid de cards */}
       <div className={styles.mil_grid}>
         {featuredPosts.map((post, index) => {
-          const isHero = index === 0;
+          const isHero = index === 0; // O índice 0 sempre será Geopolítica graças à nossa nova query
+          
+          // AQUI: Lê o nome do pilar do banco e converte para MAIÚSCULO
+          const badgeText = post.pillar && EIXO_LABELS[post.pillar] 
+            ? EIXO_LABELS[post.pillar].toUpperCase() 
+            : (isHero ? "MANCHETE" : "EM ALTA");
+
           return (
             <article
               key={post._id}
@@ -84,12 +104,14 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
 
                 {/* Conteúdo */}
                 <div className={styles.mil_card_content}>
+                  
+                  {/* BADGE COM O NOME EXATO DO EIXO (EX: GEOPOLÍTICA & DEFESA) */}
                   <span
                     className={`${styles.mil_badge} ${
                       isHero ? styles.mil_badge_manchete : styles.mil_badge_alta
                     }`}
                   >
-                    {isHero ? "MANCHETE" : "EM ALTA"}
+                    {badgeText}
                   </span>
 
                   <h3

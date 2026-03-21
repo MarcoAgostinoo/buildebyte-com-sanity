@@ -109,6 +109,9 @@ interface ProductReferenceValue {
 // ---------------------------------------------------------------------------
 
 const PILLAR_LABELS: Record<string, string> = {
+  geopolitica_defesa: "Geopolítica & Defesa",
+  arsenal_tecnologia: "Arsenal & Tecnologia",
+  teatro_operacoes: "Teatro de Operações",
   defesa_tecnologia: "Defesa & Tecnologia",
   infraestrutura_digital: "Infraestrutura Digital",
   ia_automacao: "IA & Automação",
@@ -491,7 +494,7 @@ function PillarBadge({ pillar }: { pillar: string }) {
   if (!label) return null;
   return (
     <Link
-      href={`/pilares/${pillar.replace(/_/g, "-")}`}
+      href={`/eixos/${pillar.replace(/_/g, "-")}`}
       className="relative z-10 text-[10px] font-bold px-2 py-0.5  uppercase tracking-wider border border-primary/30 text-primary/70 hover:bg-primary/5 transition-colors"
     >
       {label}
@@ -944,13 +947,12 @@ export default async function PostPage({
                 )}
 
                 {post.categories?.map((cat) => (
-                  <Link
+                  <span
                     key={cat.slug}
-                    href={`/categorias/${cat.slug}`}
-                    className="text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider border border-primary/20 text-primary/60 hover:bg-primary/5 transition-colors"
+                    className="text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider border border-primary/20 text-primary/60"
                   >
                     {cat.title}
-                  </Link>
+                  </span>
                 ))}
               </div>
 
@@ -998,10 +1000,25 @@ export default async function PostPage({
                     day: "numeric",
                     month: "long",
                     year: "numeric",
+                  })}{" "}
+                  às{" "}
+                  {new Date(post.publishedAt).toLocaleTimeString("pt-BR", {
+                    hour: "2-digit",
+                    minute: "2-digit",
                   })}
                 </time>
 
                 <span className="hidden sm:block text-foreground/15">|</span>
+                {pillarLabel && (
+                  <>
+                    <span className="font-black uppercase tracking-wider text-[11px] text-primary">
+                      {pillarLabel}
+                    </span>
+                    <span className="hidden sm:block text-foreground/15">
+                      |
+                    </span>
+                  </>
+                )}
 
                 {/* Tempo de leitura estimado */}
                 <span className="flex items-center gap-1.5">
@@ -1148,36 +1165,57 @@ export default async function PostPage({
             </div>
           </main>
 
-          {/* ================================================================ */}
-          {/* SIDEBAR                                                           */}
-          {/* ================================================================ */}
-          <aside className="w-full lg:w-1/3 lg:sticky lg:top-22 self-start space-y-4">
-            {/* Pilar editorial na sidebar */}
-            {pillarLabel && post.pillar && (
-              <Link
-                href={`/pilares/${post.pillar}`}
-                className="block bg-(--card-bg)  border border-(--border) p-4 shadow-sm hover:border-primary/30 transition-colors group"
-              >
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground/35 mb-1 group-hover:text-primary/60 transition-colors">
-                  Pilar Editorial
-                </p>
-                <p className="font-bold text-foreground/90 text-sm group-hover:text-primary transition-colors">
-                  {pillarLabel}
-                </p>
-                <p className="text-[10px] text-foreground/40 mt-1">
-                  Tecnologia. Poder. Direção.
-                </p>
-              </Link>
-            )}
+          {/*
+  SIDEBAR — Post Page
+  ─────────────────────────────────────────────────────────────────
+  All breakpoints: vertical stack of compact horizontal cards.
+  The two AdComponents are always visible (no hidden lg:block).
+  Each card is ~80px tall (image w-24 × text py-2.5) — proportional
+  to the sidebar width at any viewport.
+  ─────────────────────────────────────────────────────────────────
+*/}
+<aside className="w-full lg:w-1/3 lg:sticky lg:top-22 self-start">
+  <div className="flex flex-col gap-3">
 
-            <div className="bg-(--card-bg)  border border-(--border) overflow-hidden shadow-sm">
-              <AdComponent />
-            </div>
+    {/* ── PILLAR CARD ── */}
+    {pillarLabel && post.pillar && (
+      <Link
+        href={`/eixos/${post.pillar.replace(/_/g, "-")}`}
+        className="
+          flex items-center justify-between gap-3
+          border border-(--border) bg-(--card-bg)
+          hover:border-primary/40 transition-colors
+          px-4 py-3 group
+        "
+      >
+        <div className="min-w-0">
+          <p className="text-[9px] font-black uppercase tracking-[0.22em] text-primary/50 mb-0.5 group-hover:text-primary/70 transition-colors">
+            Eixo Estratégico
+          </p>
+          <p className="font-black text-sm text-(--foreground) group-hover:text-primary transition-colors truncate">
+            {pillarLabel}
+          </p>
+          <p className="text-[9px] text-(--foreground)/40 mt-0.5">
+            Tecnologia. Poder. Direção.
+          </p>
+        </div>
+        <svg
+          className="w-3.5 h-3.5 shrink-0 text-primary/30 group-hover:text-primary group-hover:translate-x-0.5 transition-all"
+          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </Link>
+    )}
 
-            <div className="bg-(--card-bg)  border border-(--border) p-4 shadow-sm hidden lg:block">
-              <SecondAdComponent />
-            </div>
-          </aside>
+    {/* ── AD 1 ── */}
+    <AdComponent />
+
+    {/* ── AD 2 ── (always visible — no hidden lg:block) */}
+    <SecondAdComponent />
+
+  </div>
+</aside>
         </div>
 
         {/* LEIA TAMBÉM */}

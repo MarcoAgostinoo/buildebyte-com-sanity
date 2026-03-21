@@ -2,8 +2,13 @@ import { client } from "@/app/lib/sanity";
 import Image from "next/image";
 import Link from "next/link";
 
-async function getData() {
-  // Busca uma lista de ofertas (ex: as 50 últimas)
+interface Offer {
+  title: string;
+  imagem: string;
+  affiliateLink: string;
+}
+
+async function getData(): Promise<Offer | null> {
   const query = `
     *[_type == "oferta" && !(_id in path('drafts.**'))] | order(_createdAt desc)[0...49] {
       title,
@@ -11,49 +16,73 @@ async function getData() {
       affiliateLink
     }
   `;
-  
-  // "revalidate: 0" garante que a busca ocorra a cada request
   const data = await client.fetch(query, {}, { next: { revalidate: 0 } });
-
-  // CORREÇÃO: Movemos a lógica de seleção aleatória para aqui.
-  // Isso evita chamar Math.random() durante a renderização do componente.
-  if (data && data.length > 0) {
-    return data[Math.floor(Math.random() * data.length)];
+  if (data?.length > 0) {
+    return data[Math.floor(Math.random() * data.length)] as Offer;
   }
-
   return null;
 }
 
-export default async function AdComponent({ className = '' }: { className?: string }) {
-  // O componente agora recebe apenas a oferta já selecionada (ou null)
-  const randomOffer = await getData();
+export default async function AdComponent({ className = "" }: { className?: string }) {
+  const offer = await getData();
 
-  if (!randomOffer || !randomOffer.affiliateLink) {
+  if (!offer?.affiliateLink) {
     return (
-      <div className={`bg-primary/10 p-4  text-center text-primary dark:text-primary-300 ${className}`}>
-        <p>Espaço Publicitário</p>
+      <div className={`p-4 text-center border border-(--border) bg-(--card-bg) ${className}`}>
+        <p className="text-[10px] font-black uppercase tracking-widest text-primary">
+          Espaço Publicitário
+        </p>
       </div>
     );
   }
 
   return (
-    <div className={`bg-primary/10  text-primary dark:text-primary-300 ${className}`}>
-      <Link href={randomOffer.affiliateLink} target="_blank" rel="noopener noreferrer">
-        <div className="relative w-full h-42 mb-4">
-          {randomOffer.imagem && (
-            <Image
-              src={randomOffer.imagem}
-              alt={randomOffer.title}
-              fill
-              loading="lazy"
-              sizes="100%"
-              className="object-cover "
-            />
-          )}
+    <Link
+      href={offer.affiliateLink}
+      target="_blank"
+      rel="noopener noreferrer nofollow"
+      className={`
+        group flex flex-row items-stretch
+        border border-(--border) bg-(--card-bg)
+        hover:border-primary/40 transition-all duration-200 overflow-hidden
+        ${className}
+      `}
+    >
+      {/* Image — 40% of sidebar width, square crop */}
+      <div className="relative w-2/5 shrink-0 min-h-36">
+        {offer.imagem && (
+          <Image
+            src={offer.imagem}
+            alt={offer.title}
+            fill
+            loading="lazy"
+            sizes="(max-width: 1024px) 40vw, 160px"
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        )}
+      </div>
+
+      {/* Text — remaining 60% */}
+      <div className="flex flex-col justify-between gap-2 px-4 py-4 min-w-0 flex-1">
+        <div className="flex flex-col gap-1.5">
+          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/60">
+            Oferta Verificada
+          </p>
+          <h3 className="font-black text-sm leading-snug text-(--foreground) line-clamp-3 group-hover:text-primary transition-colors">
+            {offer.title}
+          </h3>
         </div>
-        <h3 className="font-bold p-4 text-lg text-center hover:underline">{randomOffer.title}</h3>
-        <p className="text-sm mb-2 text-center">Confira esta oferta!</p>
-      </Link>
-    </div>
+
+        <span className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-primary/70 group-hover:text-primary transition-colors">
+          Ver oferta
+          <svg
+            className="w-3 h-3 group-hover:translate-x-0.5 transition-transform"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </span>
+      </div>
+    </Link>
   );
 }

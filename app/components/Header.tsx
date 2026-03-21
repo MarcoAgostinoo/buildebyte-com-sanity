@@ -86,7 +86,7 @@ export default function Header() {
               <NavItem href="/" label="Início" isActive /> {/* isActive simula o "HOME" sublinhado da imagem */}
               <NavItem href="/destaques" label="Destaques" />
               <NavItem href="/radar" label="Radar" isSpecial /> 
-              <NavItem href="/categorias" label="Categorias" />
+              <NavItem href="/eixos" label="Eixos" />
               <NavItem href="/videos" label="Vídeos" />
               <NavItem href="/concursos" label="Concursos" />
               <NavItem href="/contato" label="Contato" />
@@ -109,7 +109,7 @@ export default function Header() {
                 <MobileNavItem href="/" label="Início" onClick={closeMenu} />
                 <MobileNavItem href="/destaques" label="Destaques" onClick={closeMenu} />
                 <MobileNavItem href="/radar" label="Radar" onClick={closeMenu} isSpecial />
-                <MobileNavItem href="/categorias" label="Categorias" onClick={closeMenu} />
+                <MobileNavItem href="/eixos" label="Eixos" onClick={closeMenu} />
                 <MobileNavItem href="/videos" label="Vídeos" onClick={closeMenu} />
                 <MobileNavItem href="/concursos" label="Concursos" onClick={closeMenu} />
                 <MobileNavItem href="/contato" label="Contato" onClick={closeMenu} />

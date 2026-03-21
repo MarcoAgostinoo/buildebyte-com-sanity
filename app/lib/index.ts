@@ -8,6 +8,7 @@ export interface BasePost {
   excerpt: string;
   author: string;
   publishedAt: string;
+  pillar?: string;
 }
 
 export type FeaturedPost = BasePost;
