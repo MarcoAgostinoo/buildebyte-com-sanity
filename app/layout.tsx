@@ -92,88 +92,46 @@ export const metadata: Metadata = {
   category: "Engenharia de Sistemas e Defesa",
 };
 
-export default function RootLayout({
+import { client } from "./lib/sanity";
+
+// ... (imports existentes)
+
+export interface Pillar {
+  title: string;
+  slug: string;
+}
+
+async function getPillars(): Promise<Pillar[]> {
+  const query = `*[_type == "pillar"] | order(title asc) {
+    title,
+    "slug": slug.current
+  }`;
+  return client.fetch(query);
+}
+
+// ... (metadados existentes)
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pillars = await getPillars();
   const jsonLd = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://vetorestrategico.com/#organization",
-        name: "Vetor Estratégico",
-        url: "https://vetorestrategico.com",
-        logo: {
-          "@type": "ImageObject",
-          url: "https://vetorestrategico.com/logo.webp",
-        },
-        description:
-          "Portal brasileiro de análise técnica sobre tecnologia, defesa e infraestrutura estratégica.",
-        sameAs: [
-          "https://twitter.com/vetorestrategico",
-          "https://www.linkedin.com/company/vetor-estrategico",
-          "https://www.youtube.com/@vetorestrategico",
-        ],
-        contactPoint: {
-          "@type": "ContactPoint",
-          contactType: "Customer Service",
-          email: "vetorestrategico@outlook.com",
-          url: "https://vetorestrategico.com/contato",
-        },
-      },
-      {
-        "@type": "NewsMediaOrganization",
-        "@id": "https://vetorestrategico.com/#organization",
-        name: "Vetor Estratégico",
-        url: "https://vetorestrategico.com",
-        logo: {
-          "@type": "ImageObject",
-          url: "https://vetorestrategico.com/logo.webp",
-        },
-        image: "https://vetorestrategico.com/og-image.png",
-        sameAs: [
-          "https://twitter.com/vetorestrategico",
-          "https://www.linkedin.com/company/vetor-estrategico",
-        ],
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://vetorestrategico.com/#website",
-        url: "https://vetorestrategico.com",
-        name: "Vetor Estratégico",
-        description: "Portal de análise estratégica sobre tecnologia, defesa e infraestrutura.",
-        publisher: {
-          "@id": "https://vetorestrategico.com/#organization",
-        },
-        potentialAction: {
-          "@type": "SearchAction",
-          target: "https://vetorestrategico.com/search?q={search_term_string}",
-          "query-input": "required name=search_term_string",
-        },
-      },
-    ],
+    // ... (jsonLd existente)
   };
 
   return (
     <html lang="pt-BR">
       <head>
-        {/* Em desktop, preconnect acelera. Em mobile 4G, economizamos banda com dns-prefetch */}
-        <link rel="preconnect" href="https://cdn.sanity.io" />
-        
-        <Script
-          id="vetor-estrategico-schema"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        {/* ... */}
       </head>
 
       <body
         className={`${bebas_neue.variable} ${barlow.variable} flex flex-col min-h-screen bg-zinc-950 text-zinc-100 antialiased`}
       >
         <ThemeInit />
-        <Header />
+        <Header pillars={pillars} />
 
         <main className="grow">{children}</main>
 

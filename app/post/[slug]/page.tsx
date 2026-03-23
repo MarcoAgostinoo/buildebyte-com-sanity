@@ -30,9 +30,11 @@ interface Veredito {
   avoidIf?: string;
 }
 
-interface Category {
+// NOVO: Interface do Pilar Relacional
+interface Pillar {
   title: string;
   slug: string;
+  description?: string;
 }
 
 interface Cluster {
@@ -73,23 +75,20 @@ interface Post {
   imagemLqip?: string;
   author: Author;
   publishedAt: string;
-  categories?: Category[];
   cluster?: Cluster;
-  pillar?: string;
+  pillar?: Pillar; // Atualizado para receber o objeto e não mais uma string
   seoTitle?: string;
   seoDescription?: string;
   excerpt?: string;
   spotifyEmbed?: string;
-  // Análise estratégica — campo central do branding
   analystView?: PortableTextBlock[];
-  // Review
   veredito?: Veredito;
   rating?: number;
   affiliateLink?: string;
   affiliateLabel?: string;
-  // Editorial
   editorialType?: string;
   faq?: FaqItem[];
+  keywords?: string[];
 }
 
 interface ProductReferenceValue {
@@ -108,18 +107,6 @@ interface ProductReferenceValue {
 // CONSTANTES
 // ---------------------------------------------------------------------------
 
-const PILLAR_LABELS: Record<string, string> = {
-  geopolitica_defesa: "Geopolítica & Defesa",
-  arsenal_tecnologia: "Arsenal & Tecnologia",
-  teatro_operacoes: "Teatro de Operações",
-  defesa_tecnologia: "Defesa & Tecnologia",
-  infraestrutura_digital: "Infraestrutura Digital",
-  ia_automacao: "IA & Automação",
-  economia_poder: "Economia de Poder",
-  brasil: "Brasil Estratégico",
-  global: "Cenário Global",
-};
-
 const EDITORIAL_LABELS: Record<string, string> = {
   analise: "Análise Estratégica",
   relatorio: "Relatório Técnico",
@@ -130,7 +117,7 @@ const EDITORIAL_LABELS: Record<string, string> = {
 };
 
 // Tipos editoriais que exibem elementos de compra/afiliado
-const REVIEW_TYPES = new Set(["review", "comparativo", "relatorio"]);
+const REVIEW_TYPES = new Set(["review", "comparativo", "relatorio", "guia"]);
 
 // ---------------------------------------------------------------------------
 // SANITY
@@ -144,6 +131,7 @@ async function getPost(slug: string): Promise<Post | null> {
   const { isEnabled } = await draftMode();
   const currentClient = isEnabled && previewClient ? previewClient : client;
 
+  // QUERY ATUALIZADA: Puxando Pillar e Cluster como objetos resolvidos
   const query = `*[_type == "post" && slug.current == $slug][0] {
     title,
     "slug": slug.current,
@@ -173,11 +161,11 @@ async function getPost(slug: string): Promise<Post | null> {
       "image": image{ ..., asset->{ ..., metadata } }
     },
     publishedAt,
-    categories[]->{title, "slug": slug.current},
     "cluster": cluster->{ title, "slug": slug.current, description },
-    pillar,
+    "pillar": pillar->{ title, "slug": slug.current, description },
     seoTitle,
     seoDescription,
+    keywords,
     excerpt,
     analystView,
     veredito,
@@ -191,29 +179,26 @@ async function getPost(slug: string): Promise<Post | null> {
   return await currentClient.fetch(query, { slug });
 }
 
-async function getRelatedPosts(
-  categories: Category[],
-  currentPostSlug: string,
-) {
-  const categorySlugs = categories?.map((c) => c.slug) ?? [];
-  const query = `*[_type == "post" && slug.current != $currentPostSlug && count((categories[]->slug.current)[@ in $categorySlugs]) > 0] | order(publishedAt desc) [0...3] {
+// QUERY ATUALIZADA: Busca posts relacionados baseados no Pilar Pai
+async function getRelatedPosts(pillarSlug: string | undefined, currentPostSlug: string) {
+  if (!pillarSlug) return [];
+  
+  const query = `*[_type == "post" && slug.current != $currentPostSlug && pillar->slug.current == $pillarSlug] | order(publishedAt desc) [0...3] {
     title,
     "slug": slug.current,
     "imagem": mainImage.asset->url,
     excerpt,
-    pillar,
+    "pillar": pillar->title,
     publishedAt
   }`;
-  return await client.fetch(query, { currentPostSlug, categorySlugs });
+  return await client.fetch(query, { currentPostSlug, pillarSlug });
 }
+
 // ---------------------------------------------------------------------------
 // PORTABLE TEXT
 // ---------------------------------------------------------------------------
 const ptComponents: PortableTextComponents = {
   types: {
-    // =========================================================
-    // NOVO BLOCO: PARALAXE RENDERIZADO NO MEIO DO TEXTO
-    // =========================================================
     breakoutParallax: ({
       value,
     }: {
@@ -223,7 +208,6 @@ const ptComponents: PortableTextComponents = {
         <div
           className="w-[calc(100%+1rem)] sm:w-[calc(100%+2rem)] -ml-2 sm:-ml-4 my-16 py-24 flex flex-col items-center justify-center text-center px-4 relative border-y border-primary/20 shadow-inner"
           style={{
-            /* O TRUQUE MÁGICO: Copiamos o fundo exato do global.css para cá */
             backgroundImage:
               "linear-gradient(rgba(0, 0, 0, 0.574), rgba(0, 0, 0, 0.564)), url('/background.webp')",
             backgroundSize: "cover",
@@ -246,25 +230,16 @@ const ptComponents: PortableTextComponents = {
         </div>
       );
     },
-    // =========================================================
 
-    // =========================================================
-    // NOVO BLOCO: DOSSIÊ DO PRODUTO (NATIVE COMMERCE)
-    // =========================================================
     productReference: ({ value }: { value: ProductReferenceValue }) => {
       if (!value) return null;
 
       return (
         <div className="my-10 p-1 bg-[#111318] border border-[#2a2f3a] shadow-2xl relative overflow-hidden group">
-          {/* A linha de escaneamento visual */}
           <div className="mil-scan-line"></div>
-          
           <div className="flex flex-col md:flex-row gap-6 p-5 relative z-10 bg-black/40">
-            
-            {/* Imagem do Equipamento */}
             {value.imagem && (
               <div className="w-full md:w-2/5 shrink-0 relative aspect-square sm:aspect-auto sm:h-64 border border-[#2a2f3a] overflow-hidden bg-black/80 flex items-center justify-center p-2">
-                {/* Overlay tech na imagem */}
                 <div className="absolute inset-0 border border-[#c8a84b]/20 pointer-events-none z-10"></div>
                 <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-[#c8a84b] z-10"></div>
                 <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-[#c8a84b] z-10"></div>
@@ -278,7 +253,6 @@ const ptComponents: PortableTextComponents = {
               </div>
             )}
             
-            {/* Ficha Técnica e Compra */}
             <div className="flex-1 flex flex-col justify-center">
               <div>
                 <div className="flex items-center gap-2 mb-3">
@@ -297,7 +271,6 @@ const ptComponents: PortableTextComponents = {
                 </p>
               </div>
               
-              {/* Footer do Dossiê: Preço e Botão */}
               <div className="mt-auto pt-5 border-t border-[#2a2f3a] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
                 <div>
                   {value.originalPrice && (
@@ -332,24 +305,19 @@ const ptComponents: PortableTextComponents = {
                 </a>
               </div>
             </div>
-            
           </div>
         </div>
       );
     },
-    // =========================================================
 
     image: ({ value }: { value: SanityImage }) => {
       if (!value?.asset?.metadata?.dimensions) return null;
       const { aspectRatio } = value.asset.metadata.dimensions;
       const w = 1200;
-      
-      // Define o texto a ser exibido (prioriza a legenda, se não houver, usa o alt)
       const descriptionText = value.caption || value.alt;
 
       return (
         <figure className="my-8 sm:my-12">
-          {/* Container da Imagem */}
           <div className="overflow-hidden shadow-md border border-primary/10">
             <Image
               src={urlFor(value).width(w).fit("max").auto("format").url()}
@@ -363,8 +331,6 @@ const ptComponents: PortableTextComponents = {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 85vw"
             />
           </div>
-          
-          {/* Legenda Minimalista Fixa */}
           {descriptionText && (
             <figcaption className="mt-3 text-[11px] sm:text-xs text-foreground/50 leading-relaxed border-l-2 border-primary/30 pl-3 font-medium">
               {descriptionText}
@@ -436,7 +402,6 @@ const ptComponents: PortableTextComponents = {
   },
 };
 
-// PortableText mínimo para seções de texto curto (bio, analystView)
 const simplePtComponents: PortableTextComponents = {
   block: {
     normal: ({ children }) => (
@@ -489,15 +454,15 @@ function EditorialBadge({ type }: { type: string }) {
   );
 }
 
-function PillarBadge({ pillar }: { pillar: string }) {
-  const label = PILLAR_LABELS[pillar];
-  if (!label) return null;
+// COMPONENTE ATUALIZADO: Usando o objeto Pillar dinâmico
+function PillarBadge({ pillar }: { pillar: Pillar }) {
+  if (!pillar) return null;
   return (
     <Link
-      href={`/eixos/${pillar.replace(/_/g, "-")}`}
+      href={`/frentes/${pillar.slug}`}
       className="relative z-10 text-[10px] font-bold px-2 py-0.5  uppercase tracking-wider border border-primary/30 text-primary/70 hover:bg-primary/5 transition-colors"
     >
-      {label}
+      {pillar.title}
     </Link>
   );
 }
@@ -569,21 +534,12 @@ function AuthorCard({ author }: { author: Author }) {
   );
 }
 
-/**
- * VISÃO DO ANALISTA
- * Elemento diferenciador central do Vetor Estratégico — visual destacado e
- * separado claramente do corpo do artigo.
- */
 function AnalystView({ content }: { content: PortableTextBlock[] }) {
   return (
     <aside className="mt-14 relative overflow-hidden  border border-primary/20">
-      {/* Gradiente de fundo sutil */}
       <div className="absolute inset-0 bg-linear-to-br from-primary/8 via-transparent to-transparent pointer-events-none" />
-
-      {/* Header */}
       <div className="relative flex items-center gap-3 px-6 pt-6 pb-4 border-b border-primary/15">
         <div className="w-9 h-9  bg-primary/10 flex items-center justify-center shrink-0">
-          {/* Ícone de mira/vetor */}
           <svg
             className="w-4 h-4 text-primary"
             fill="none"
@@ -604,13 +560,9 @@ function AnalystView({ content }: { content: PortableTextBlock[] }) {
           </h3>
         </div>
       </div>
-
-      {/* Conteúdo */}
       <div className="relative px-6 py-5 text-foreground/95 leading-relaxed">
         <PortableText value={content} components={simplePtComponents} />
       </div>
-
-      {/* Rodapé decorativo */}
       <div className="relative px-6 pb-5 flex items-center gap-3">
         <div className="h-px flex-1 bg-primary/10" />
         <span className="text-[10px] font-black text-primary/30 uppercase tracking-widest">
@@ -764,7 +716,6 @@ function FaqSection({ faq }: { faq: FaqItem[] }) {
   );
 }
 
-/** Card de cluster proeminente — série editorial */
 function ClusterCard({ cluster }: { cluster: Cluster }) {
   return (
     <div className="mt-12 p-6  border border-primary/20 bg-linear-to-br from-primary/5 to-transparent">
@@ -836,17 +787,18 @@ export async function generateMetadata({
   if (!post) return {};
 
   const ogImage = post.imagem || "https://vetorestrategico.com/og-image.png";
-  const newsKeywords =
-    post.categories?.map((c) => c.title).join(", ") ||
-    "tecnologia, defesa, infraestrutura";
+  
+  // ATUALIZADO: Palavras chaves baseadas no Pilar e Cluster em vez das antigas categorias
+  const seoKeywords = [
+    post.pillar?.title, 
+    post.cluster?.title, 
+    ...(post.keywords || [])
+  ].filter(Boolean).join(", ");
 
   return {
     title: post.seoTitle || post.title,
     description: post.seoDescription || post.excerpt,
-    keywords:
-      `${newsKeywords}, análise estratégica, ${post.pillar ? PILLAR_LABELS[post.pillar] : ""}`
-        .split(", ")
-        .filter(Boolean),
+    keywords: seoKeywords,
 
     alternates: {
       canonical: `https://vetorestrategico.com/post/${post.slug}`,
@@ -860,7 +812,6 @@ export async function generateMetadata({
       publishedTime: post.publishedAt,
       modifiedTime: post.publishedAt,
       authors: [post.author?.name || "Vetor Estratégico"],
-      tags: post.categories?.map((c) => c.title) || [],
       images: [
         {
           url: ogImage,
@@ -889,14 +840,16 @@ export default async function PostPage({
   const post = await getPost(slug);
   if (!post) notFound();
 
-  const relatedPosts = await getRelatedPosts(post.categories ?? [], slug);
+  // ATUALIZADO: Passando o slug do pilar para alimentar os artigos recomendados
+  const relatedPosts = await getRelatedPosts(post.pillar?.slug, slug);
   const isReview = REVIEW_TYPES.has(post.editorialType ?? "");
   const readTime = estimateReadTime(post.body);
-  const pillarLabel = post.pillar ? PILLAR_LABELS[post.pillar] : null;
 
-  const newsKeywords =
-    post.categories?.map((c) => c.title).join(", ") ||
-    "tecnologia, defesa, infraestrutura";
+  const seoKeywords = [
+    post.pillar?.title, 
+    post.cluster?.title, 
+    ...(post.keywords || [])
+  ].filter(Boolean).join(", ");
 
   const articleJsonLd = generateNewsArticleSchema({
     title: post.title,
@@ -904,9 +857,9 @@ export default async function PostPage({
     image: post.imagem || "https://vetorestrategico.com/og-image.png",
     url: `https://vetorestrategico.com/post/${post.slug}`,
     publishedAt: post.publishedAt,
-    keywords: newsKeywords,
+    keywords: seoKeywords,
     authorName: post.author?.name,
-    articleSection: post.pillar ? PILLAR_LABELS[post.pillar] : undefined,
+    articleSection: post.pillar?.title, // Extraído de forma dinâmica do novo Pilar
     slug: post.slug,
   });
 
@@ -926,8 +879,8 @@ export default async function PostPage({
             <div className="mb-6">
               <PressaoBrasil />
             </div>
-            {/* PRIMEIRO CARD: Cabeçalho e Corpo do Texto */}
-            <article className="bg-(--card-bg)  p-2 sm:p-4 shadow-sm">
+            
+            <article className="bg-(--card-bg) p-2 sm:p-4 shadow-sm">
               {/* BADGES */}
               <div className="mb-5 flex flex-wrap items-center gap-2">
                 {post.editorialType && (
@@ -936,7 +889,6 @@ export default async function PostPage({
 
                 {post.pillar && <PillarBadge pillar={post.pillar} />}
 
-                {/* Link rápido para o cluster no topo */}
                 {post.cluster && post.cluster.slug && (
                   <Link
                     href={`/clusters/${post.cluster.slug}`}
@@ -945,15 +897,6 @@ export default async function PostPage({
                     Série: {post.cluster.title}
                   </Link>
                 )}
-
-                {post.categories?.map((cat) => (
-                  <span
-                    key={cat.slug}
-                    className="text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider border border-primary/20 text-primary/60"
-                  >
-                    {cat.title}
-                  </span>
-                ))}
               </div>
 
               {/* TÍTULO */}
@@ -970,7 +913,6 @@ export default async function PostPage({
 
               {/* META: autor + data + tempo de leitura + rating (só reviews) */}
               <div className="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-foreground/55 mb-8 pb-8 border-b border-(--border)">
-                {/* Autor */}
                 <div className="flex items-center gap-2.5">
                   {post.author?.image && (
                     <div className="w-8 h-8  overflow-hidden border border-(--border) relative shrink-0">
@@ -994,7 +936,6 @@ export default async function PostPage({
 
                 <span className="hidden sm:block text-foreground/15">|</span>
 
-                {/* Data */}
                 <time className="tabular-nums">
                   {new Date(post.publishedAt).toLocaleDateString("pt-BR", {
                     day: "numeric",
@@ -1009,10 +950,11 @@ export default async function PostPage({
                 </time>
 
                 <span className="hidden sm:block text-foreground/15">|</span>
-                {pillarLabel && (
+                
+                {post.pillar && (
                   <>
                     <span className="font-black uppercase tracking-wider text-[11px] text-primary">
-                      {pillarLabel}
+                      {post.pillar.title}
                     </span>
                     <span className="hidden sm:block text-foreground/15">
                       |
@@ -1020,7 +962,6 @@ export default async function PostPage({
                   </>
                 )}
 
-                {/* Tempo de leitura estimado */}
                 <span className="flex items-center gap-1.5">
                   <svg
                     className="w-3.5 h-3.5 text-foreground/30"
@@ -1035,7 +976,6 @@ export default async function PostPage({
                   {readTime} min de leitura
                 </span>
 
-                {/* Rating — só reviews */}
                 {isReview && post.rating != null && (
                   <div className="ml-auto">
                     <RatingBadge rating={post.rating} />
@@ -1046,7 +986,6 @@ export default async function PostPage({
               {/* IMAGEM PRINCIPAL */}
               {post.imagem && (
                 <figure className="mb-10">
-                  {/* Container da Imagem da Capa */}
                   <div className="relative aspect-video overflow-hidden shadow-lg border border-primary/10">
                     <Image
                       src={post.imagem}
@@ -1061,7 +1000,6 @@ export default async function PostPage({
                     />
                   </div>
                   
-                  {/* Legenda Minimalista da Capa */}
                   {post.imagemAlt && (
                     <figcaption className="mt-3 text-[11px] sm:text-xs text-foreground/50 leading-relaxed border-l-2 border-primary/30 pl-3 font-medium">
                       {post.imagemAlt}
@@ -1103,11 +1041,8 @@ export default async function PostPage({
                   />
                 )}
               </div>
-            </article>{" "}
-            {/* FECHA O PRIMEIRO CARD */}
-            {/* ================================================================ */}
-            {/* SESSÃO PARALAX FIXA NO RODAPÉ DO ARTIGO                          */}
-            {/* ================================================================ */}
+            </article>
+            
             <div className="w-full py-24 my-6 flex flex-col items-center justify-center text-center px-4 relative bg-transparent">
               <h3 className="text-2xl sm:text-3xl font-black text-black drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)] mb-6 max-w-2xl leading-tight">
                 Mantenha-se atualizado com os desdobramentos que definem o
@@ -1121,21 +1056,16 @@ export default async function PostPage({
                 LER ÚLTIMAS NOTÍCIAS
               </Link>
             </div>
-            {/* ================================================================ */}
-            {/* SEGUNDO CARD: Conteúdo Extra (Analyst View, Autor, etc) */}
-            {/* ================================================================ */}
+            
             <article className="bg-(--card-bg) p-2 sm:p-2 border border-(--border) shadow-sm">
-              {/* VISÃO DO ANALISTA — elemento central do branding */}
               {post.analystView && post.analystView.length > 0 && (
                 <AnalystView content={post.analystView} />
               )}
 
-              {/* VEREDITO — só reviews/comparativos */}
               {isReview && post.veredito && (
                 <VereditorBlock veredito={post.veredito} />
               )}
 
-              {/* AFILIADO RODAPÉ — só reviews/comparativos */}
               {isReview && post.affiliateLink && (
                 <AffiliateBlock
                   href={post.affiliateLink}
@@ -1144,78 +1074,61 @@ export default async function PostPage({
                 />
               )}
 
-              {/* FAQ */}
               {post.faq && post.faq.length > 0 && <FaqSection faq={post.faq} />}
 
-              {/* CLUSTER — card proeminente */}
               {post.cluster && <ClusterCard cluster={post.cluster} />}
 
-              {/* AUTOR */}
               {post.author && <AuthorCard author={post.author} />}
 
-              {/* LEAD CAPTURE */}
               <div className="mt-10">
                 <LeadCapture />
               </div>
-            </article>{" "}
-            {/* FECHA O SEGUNDO CARD */}
-            {/* COMENTÁRIOS */}
+            </article>
+            
             <div className="mt-10">
               <Comments />
             </div>
           </main>
 
-          {/*
-  SIDEBAR — Post Page
-  ─────────────────────────────────────────────────────────────────
-  All breakpoints: vertical stack of compact horizontal cards.
-  The two AdComponents are always visible (no hidden lg:block).
-  Each card is ~80px tall (image w-24 × text py-2.5) — proportional
-  to the sidebar width at any viewport.
-  ─────────────────────────────────────────────────────────────────
-*/}
-<aside className="w-full lg:w-1/3 lg:sticky lg:top-22 self-start">
-  <div className="flex flex-col gap-3">
+          <aside className="w-full lg:w-1/3 lg:sticky lg:top-22 self-start">
+            <div className="flex flex-col gap-3">
 
-    {/* ── PILLAR CARD ── */}
-    {pillarLabel && post.pillar && (
-      <Link
-        href={`/eixos/${post.pillar.replace(/_/g, "-")}`}
-        className="
-          flex items-center justify-between gap-3
-          border border-(--border) bg-(--card-bg)
-          hover:border-primary/40 transition-colors
-          px-4 py-3 group
-        "
-      >
-        <div className="min-w-0">
-          <p className="text-[9px] font-black uppercase tracking-[0.22em] text-primary/50 mb-0.5 group-hover:text-primary/70 transition-colors">
-            Eixo Estratégico
-          </p>
-          <p className="font-black text-sm text-(--foreground) group-hover:text-primary transition-colors truncate">
-            {pillarLabel}
-          </p>
-          <p className="text-[9px] text-(--foreground)/40 mt-0.5">
-            Tecnologia. Poder. Direção.
-          </p>
-        </div>
-        <svg
-          className="w-3.5 h-3.5 shrink-0 text-primary/30 group-hover:text-primary group-hover:translate-x-0.5 transition-all"
-          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
-      </Link>
-    )}
+              {/* ── PILLAR CARD ATUALIZADO ── */}
+              {post.pillar && (
+                <Link
+                  href={`/frentes/${post.pillar.slug}`}
+                  className="
+                    flex items-center justify-between gap-3
+                    border border-(--border) bg-(--card-bg)
+                    hover:border-primary/40 transition-colors
+                    px-4 py-3 group
+                  "
+                >
+                  <div className="min-w-0">
+                    <p className="text-[9px] font-black uppercase tracking-[0.22em] text-primary/50 mb-0.5 group-hover:text-primary/70 transition-colors">
+                      Eixo Estratégico
+                    </p>
+                    <p className="font-black text-sm text-(--foreground) group-hover:text-primary transition-colors truncate">
+                      {post.pillar.title}
+                    </p>
+                    <p className="text-[9px] text-(--foreground)/40 mt-0.5">
+                      Tecnologia. Poder. Direção.
+                    </p>
+                  </div>
+                  <svg
+                    className="w-3.5 h-3.5 shrink-0 text-primary/30 group-hover:text-primary group-hover:translate-x-0.5 transition-all"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link>
+              )}
 
-    {/* ── AD 1 ── */}
-    <AdComponent />
+              <AdComponent />
+              <SecondAdComponent />
 
-    {/* ── AD 2 ── (always visible — no hidden lg:block) */}
-    <SecondAdComponent />
-
-  </div>
-</aside>
+            </div>
+          </aside>
         </div>
 
         {/* LEIA TAMBÉM */}

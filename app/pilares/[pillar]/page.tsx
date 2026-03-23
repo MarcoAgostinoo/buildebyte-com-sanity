@@ -151,7 +151,7 @@ export default async function PillarPage({
         {/* Hero do Pilar */}
         <div className="relative overflow-hidden border border-(--border) bg-(--card-bg) p-8 sm:p-12">
           {/* Gradiente decorativo */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
           
           <div className="relative">
             <div className="flex items-start gap-4 mb-4">
