@@ -26,87 +26,122 @@ export default function LeadCapture() {
       } else {
         setStatus("error");
       }
-    } catch (error) {
+    } catch {
       setStatus("error");
     }
   };
 
   return (
-    <div className="my-12 border border-zinc-200 overflow-hidden shadow-lg bg-amber-50">
-      {/* Cabeçalho Chamativo (Headline Quente) */}
-      {/* Nota: O header já usava cores fixas (bg-primary, text-white), então ele já era imune ao tema */}
-      <div className="bg-primary p-6 text-center">
-        <h3 className="text-2xl font-black text-white uppercase tracking-tight flex items-center justify-center gap-2">
-          <FaBolt className="text-yellow-300" />
-          Receba análises estratégicas semanais
+    <div className="my-16 relative bg-[#0a0b0d] border border-[#2a2f3a] overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.8)]">
+      
+      {/* ── MÁSCARA TÁTICA E GRADIENTE ── */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent pointer-events-none" />
+      
+      {/* ── LINHA DE SCAN NO TOPO ── */}
+      <div className="absolute top-0 left-0 w-full h-0.5 bg-linear-to-r from-transparent via-primary to-transparent opacity-70" />
+
+      {/* ── CABEÇALHO TÁTICO ── */}
+      <div className="bg-[#111318] border-b border-[#2a2f3a] p-6 sm:p-8 relative z-10">
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <span className="w-2 h-2 bg-red-600 animate-pulse shadow-[0_0_10px_rgba(220,38,38,0.8)]"></span>
+          <span className="text-[12px] font-mono font-black tracking-[0.3em] text-red-500 uppercase">
+            Acesso Restrito
+          </span>
+        </div>
+        
+        <h3 className="text-2xl sm:text-3xl font-black text-zinc-100 uppercase tracking-tight text-center flex items-center justify-center gap-2">
+          <FaBolt className="text-primary hidden sm:block" />
+          Rede de Inteligência do Vetor
         </h3>
-        <p className="mt-2 font-medium" style={{ color: "#FFFFFF" }}>
-  Inteligência sobre defesa, tecnologia e infraestrutura crítica — entregues 
-  na sua caixa de entrada. Análise técnica, sem sensacionalismo, com foco no Brasil.
-</p>
+        
+        <p className="mt-3 text-sm text-zinc-400 max-w-2xl mx-auto text-center leading-relaxed font-medium">
+          Receba relatórios operacionais sobre defesa, tecnologia e infraestrutura crítica diretamente no seu terminal. Análise técnica, sem viés, com foco na soberania nacional.
+        </p>
       </div>
 
-      <div className="p-8 grid md:grid-cols-2 gap-8 items-center">
-        {/* Coluna 1: Email (Lead) */}
+      <div className="p-6 sm:p-8 grid md:grid-cols-2 gap-8 md:gap-12 items-center relative z-10">
+        
+        {/* ── COLUNA 1: CAPTURA DE E-MAIL ── */}
         <div>
-          <p className="text-zinc-600 mb-4 text-sm font-medium">
-            Analistas, estrategistas e curiosos sobre geopolítica e defesa moderna.
+          <p className="text-[12px] uppercase tracking-widest text-zinc-500 font-bold mb-4 font-mono border-l-2 border-primary pl-3">
+            Insira suas credenciais de contato:
           </p>
-          <form onSubmit={handleSubmit} className="space-y-3">
-            <input
-              type="email"
-              placeholder="Seu melhor e-mail profissional"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              // Removido dark:border-zinc-700 e dark:bg-zinc-950
-              className="w-full px-4 py-3  border border-zinc-300 bg-zinc-50 focus:ring-2 focus:ring-primary outline-none transition-all text-zinc-900"
-            />
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="relative">
+              <input
+                type="email"
+                placeholder="Seu e-mail operacional principal..."
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-4 border border-[#2a2f3a] bg-[#05080b] focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-zinc-200 placeholder-zinc-700 text-sm font-medium"
+              />
+              {/* Marcador visual no input */}
+              <div className="absolute top-1/2 right-4 -translate-y-1/2 w-1.5 h-1.5 bg-zinc-700 rounded-full" />
+            </div>
+
             <button
               type="submit"
               disabled={status === "loading" || status === "success"}
-              // Removido dark:bg-white e dark:text-zinc-900. Mantido o estilo original dark (preto com texto branco)
-              className="w-full bg-zinc-900 text-white font-bold py-3  hover:opacity-90 transition-opacity disabled:opacity-50 uppercase tracking-wide text-sm"
+              className="w-full bg-primary hover:bg-blue-600 text-white font-black py-4 transition-all disabled:opacity-50 uppercase tracking-[0.2em] text-[12px] flex items-center justify-center gap-2 relative overflow-hidden group"
             >
-              {status === "loading"
-                ? "Processando..."
-                : status === "success"
-                  ? "Inscrito com Sucesso!"
-                  : "Acessar Newsletter"}
-            
+              <div className="absolute inset-0 w-full h-full bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out" />
+              <span className="relative z-10">
+                {status === "loading"
+                  ? "Sincronizando..."
+                  : status === "success"
+                    ? "Credencial Aprovada!"
+                    : "Solicitar Acesso aos Relatórios"}
+              </span>
             </button>
+            
             {status === "error" && (
-              <p className="text-red-500 text-xs">
-                Erro ao inscrever. Tente novamente.
+              <p className="text-red-500 text-[12px] font-bold uppercase tracking-wider text-center mt-2 font-mono">
+                [!] Falha na transmissão. Tente novamente.
               </p>
             )}
           </form>
         </div>
 
-        {/* Coluna 2: Grupos (Comunidade) */}
-        <div className="border-t md:border-t-0 md:border-l border-zinc-200 pt-6 md:pt-0 md:pl-8">
-          {/* Removido dark:text-white */}
-          <p className="text-zinc-900 font-bold mb-4 uppercase text-sm">
-            Ou entre direto na fonte:
+        {/* ── COLUNA 2: COMUNIDADE (CANAIS DIRETOS) ── */}
+        <div className="border-t md:border-t-0 md:border-l border-[#2a2f3a] pt-8 md:pt-0 md:pl-8 lg:pl-12">
+          <p className="text-[12px] uppercase tracking-widest text-zinc-500 font-bold mb-5 font-mono border-l-2 border-zinc-700 pl-3">
+            Conexão em Tempo Real:
           </p>
+          
           <div className="space-y-3">
-            {/* Removido dark:bg-blue-900/20 dark:text-blue-400 etc */}
             <a
               href="#"
-              className="flex items-center gap-3 p-3  bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors font-bold text-sm"
+              className="group flex items-center gap-4 p-4 bg-[#111318] border border-[#2a2f3a] hover:border-[#0088cc] transition-all"
             >
-              <FaTelegramPlane size={20} /> Canal no Telegram
+              <div className="bg-[#0088cc]/10 p-2 text-[#0088cc] group-hover:bg-[#0088cc] group-hover:text-white transition-colors">
+                <FaTelegramPlane size={20} />
+              </div>
+              <span className="text-sm font-bold text-zinc-300 uppercase tracking-wider group-hover:text-white transition-colors">
+                Canal no Telegram
+              </span>
             </a>
-            {/* Removido dark:bg-green-900/20 dark:text-green-400 etc */}
+            
             <a
               href="#"
-              className="flex items-center gap-3 p-3  bg-green-50 text-green-600 hover:bg-green-100 transition-colors font-bold text-sm"
+              className="group flex items-center gap-4 p-4 bg-[#111318] border border-[#2a2f3a] hover:border-[#25D366] transition-all"
             >
-              <FaWhatsapp size={20} /> Grupo VIP WhatsApp
+              <div className="bg-[#25D366]/10 p-2 text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                <FaWhatsapp size={20} />
+              </div>
+              <span className="text-sm font-bold text-zinc-300 uppercase tracking-wider group-hover:text-white transition-colors">
+                Transmissão via WhatsApp
+              </span>
             </a>
           </div>
         </div>
+
       </div>
+
+      {/* ── MARCADORES DE BORDA TÁTICOS ── */}
+      <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-primary/50 pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-primary/50 pointer-events-none" />
     </div>
   );
 }

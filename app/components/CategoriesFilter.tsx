@@ -105,7 +105,7 @@ export default function CategoriesFilter({
                 key={post._id}
                 className="bg-white shadow-sm border border-zinc-200 overflow-hidden transform hover:shadow-lg transition-all duration-300 group"
               >
-                <Link href={`/post/${post.slug}`}>
+                <Link href={`/artigo/${post.slug}`}>
                   <div className="cursor-pointer h-full flex flex-col">
                     {/* IMAGEM */}
                     {imageUrl && (

@@ -35,7 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const posts = await client.fetch<SanitySitemapItem[]>(postsQuery);
 
     const postRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
-      url: `${baseUrl}/post/${post.slug}`, 
+      url: `${baseUrl}/artigo/${post.slug}`, 
       lastModified: new Date(post._updatedAt),
       changeFrequency: 'weekly',
       priority: 0.7,

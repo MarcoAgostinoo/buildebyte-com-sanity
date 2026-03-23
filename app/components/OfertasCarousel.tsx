@@ -71,14 +71,14 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
                         <div className="relative aspect-square bg-black/80 p-4 border-b border-[#2a2f3a]">
                           
                           {/* Badge loja */}
-                          <div className="absolute top-2 left-2 z-10 bg-[#0a0b0d]/90 border border-[#2a2f3a] !text-zinc-300 text-[10px] uppercase tracking-widest px-2 py-1 flex items-center gap-1.5">
+                          <div className="absolute top-2 left-2 z-10 bg-[#0a0b0d]/90 border border-[#2a2f3a] !text-zinc-300 text-[12px] uppercase tracking-widest px-2 py-1 flex items-center gap-1.5">
                             <span className="w-1.5 h-1.5 bg-[#27ae60] rounded-full animate-pulse"></span>
                             {oferta.storeName || "Estoque Geral"}
                           </div>
 
                           {/* Badge desconto */}
                           {discount > 0 && (
-                            <div className="absolute top-2 right-2 z-10 bg-[#c0392b] !text-white text-[10px] font-black tracking-wider px-2 py-1">
+                            <div className="absolute top-2 right-2 z-10 bg-[#c0392b] !text-white text-[12px] font-black tracking-wider px-2 py-1">
                               -{discount}%
                             </div>
                           )}
@@ -130,7 +130,7 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
                           {/* Preço */}
                           <div className="mt-auto mb-4">
                             {hasDiscount && (
-                              <p className="text-[10px] !text-zinc-500 line-through mb-0.5">
+                              <p className="text-[12px] !text-zinc-500 line-through mb-0.5">
                                 {formatMoney(oferta.originalPrice!)}
                               </p>
                             )}
@@ -140,7 +140,7 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
                               </span>
                             </div>
                             {oferta.installments && (
-                              <p className="text-[10px] !text-zinc-500 mt-1 uppercase tracking-wider">
+                              <p className="text-[12px] !text-zinc-500 mt-1 uppercase tracking-wider">
                                 {oferta.installments}
                               </p>
                             )}
@@ -182,7 +182,7 @@ export function OfertasCarousel({ ofertas }: { ofertas: Oferta[] }) {
         </button>
       </div>
 
-      <p className="text-[10px] !text-zinc-500 mt-4 text-center font-mono uppercase tracking-widest">
+      <p className="text-[12px] !text-zinc-500 mt-4 text-center font-mono uppercase tracking-widest">
         * Inventário sujeito a alteração • Logística via parceiros afiliados
       </p>
     </div>

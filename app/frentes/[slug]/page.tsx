@@ -120,12 +120,12 @@ export default async function FrentePage({ params }: { params: Promise<{ slug: s
         <section className="mb-16">
           <div className="mb-6 flex items-center gap-3">
             <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-red-500">
+            <h2 className="text-[12px] font-black uppercase tracking-[0.2em] text-red-500">
               Dossiê Definitivo (Âncora)
             </h2>
           </div>
 
-          <Link href={`/post/${anchorPost.slug}`} className="group block relative bg-[#111318] border border-[#2a2f3a] hover:border-primary/50 transition-all overflow-hidden shadow-2xl">
+          <Link href={`/artigo/${anchorPost.slug}`} className="group block relative bg-[#111318] border border-[#2a2f3a] hover:border-primary/50 transition-all overflow-hidden shadow-2xl">
             <div className="flex flex-col md:flex-row">
               <div className="w-full md:w-3/5 relative aspect-video md:aspect-auto">
                 {anchorPost.imagem ? (
@@ -146,12 +146,12 @@ export default async function FrentePage({ params }: { params: Promise<{ slug: s
               <div className="w-full md:w-2/5 p-8 flex flex-col justify-center relative z-10">
                 <div className="flex gap-2 mb-4">
                   {anchorPost.editorialType && (
-                    <span className="bg-primary/10 border border-primary/20 text-primary text-[9px] font-black px-2 py-0.5 uppercase tracking-widest">
+                    <span className="bg-primary/10 border border-primary/20 text-primary text-[12px] font-black px-2 py-0.5 uppercase tracking-widest">
                       {anchorPost.editorialType}
                     </span>
                   )}
                   {anchorPost.clusterName && (
-                    <span className="border border-zinc-700 text-zinc-400 text-[9px] font-black px-2 py-0.5 uppercase tracking-widest">
+                    <span className="border border-zinc-700 text-zinc-400 text-[12px] font-black px-2 py-0.5 uppercase tracking-widest">
                       {anchorPost.clusterName}
                     </span>
                   )}
@@ -169,7 +169,7 @@ export default async function FrentePage({ params }: { params: Promise<{ slug: s
                   <span className="text-xs text-zinc-500 font-bold">
                     Por {anchorPost.authorName || "Redação"}
                   </span>
-                  <span className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-1 group-hover:gap-2 transition-all">
+                  <span className="text-[12px] font-black text-primary uppercase tracking-widest flex items-center gap-1 group-hover:gap-2 transition-all">
                     Ler Dossiê <span aria-hidden="true">&rarr;</span>
                   </span>
                 </div>
@@ -196,7 +196,7 @@ export default async function FrentePage({ params }: { params: Promise<{ slug: s
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Correção TypeScript: tipo alterado de any para PostData */}
             {regularPosts.map((post: PostData) => (
-              <Link key={post._id} href={`/post/${post.slug}`} className="group flex flex-col bg-[#111318] border border-[#2a2f3a] hover:border-primary/40 transition-colors shadow-md h-full">
+              <Link key={post._id} href={`/artigo/${post.slug}`} className="group flex flex-col bg-[#111318] border border-[#2a2f3a] hover:border-primary/40 transition-colors shadow-md h-full">
                 
                 <div className="relative aspect-video w-full overflow-hidden border-b border-[#2a2f3a]">
                   {post.imagem ? (
@@ -212,7 +212,7 @@ export default async function FrentePage({ params }: { params: Promise<{ slug: s
                   )}
                   <div className="absolute top-3 left-3 flex gap-2">
                     {post.editorialType && (
-                      <span className="bg-black/80 backdrop-blur-sm border border-primary/30 text-primary text-[9px] font-black px-2 py-0.5 uppercase tracking-widest shadow-lg">
+                      <span className="bg-black/80 backdrop-blur-sm border border-primary/30 text-primary text-[12px] font-black px-2 py-0.5 uppercase tracking-widest shadow-lg">
                         {post.editorialType}
                       </span>
                     )}
@@ -221,7 +221,7 @@ export default async function FrentePage({ params }: { params: Promise<{ slug: s
 
                 <div className="p-5 flex flex-col flex-1">
                   {post.clusterName && (
-                    <span className="text-[9px] font-black text-primary/60 uppercase tracking-widest mb-2 block">
+                    <span className="text-[12px] font-black text-primary/60 uppercase tracking-widest mb-2 block">
                       Série: {post.clusterName}
                     </span>
                   )}

@@ -88,7 +88,7 @@ export default async function EditorialPillars() {
       {/* HEADER */}
       <div className="flex items-end justify-between mb-6">
         <div>
-          <p className="text-[9px] font-black uppercase tracking-[0.35em] text-zinc-600 mb-1">
+          <p className="text-[12px] font-black uppercase tracking-[0.35em] text-zinc-600 mb-1">
             Arquitetura Editorial
           </p>
 
@@ -102,7 +102,7 @@ export default async function EditorialPillars() {
 
         <Link
           href="/frentes"
-          className="hidden sm:flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-900 transition-colors group"
+          className="hidden sm:flex items-center gap-2 text-[12px] font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-900 transition-colors group"
         >
           Ver todas
           <svg
@@ -151,7 +151,7 @@ export default async function EditorialPillars() {
             {/* CONTENT */}
             <div className="relative z-10 mt-auto p-6">
               <p
-                className="text-[10px] font-black uppercase tracking-[0.25em] mb-2"
+                className="text-[12px] font-black uppercase tracking-[0.25em] mb-2"
                 style={{ color: pillar.accentLight }}
               >
                 {pillar.tagline}

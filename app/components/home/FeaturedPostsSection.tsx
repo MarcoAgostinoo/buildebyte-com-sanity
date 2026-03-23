@@ -51,7 +51,7 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
         <Link
           href="/destaques"
           aria-label="Ver todos os destaques"
-          className={`${styles.mil_view_all} whitespace-nowrap shrink-0 text-[10px] sm:text-xs border border-[#c8a84b]/30 px-3 py-1.5 hover:bg-[#c8a84b] hover:text-[#0a0b0d] transition-colors ml-auto flex items-center gap-1`}
+          className={`${styles.mil_view_all} whitespace-nowrap shrink-0 text-[12px] sm:text-xs border border-[#c8a84b]/30 px-3 py-1.5 hover:bg-[#c8a84b] hover:text-[#0a0b0d] transition-colors ml-auto flex items-center gap-1`}
         >
           <span className="hidden sm:inline">MISSÕES COMPLETAS</span>
           <span className="hidden sm:inline">MISSÕES</span>
@@ -79,7 +79,7 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
               {isHero && <div className={styles.mil_top_accent} />}
               <div className={styles.mil_scan_line} />
 
-              <Link href={`/post/${post.slug}`} className={styles.mil_card_link}>
+              <Link href={`/artigo/${post.slug}`} className={styles.mil_card_link}>
                 {/* Imagem de fundo */}
                 <div className={styles.mil_card_img}>
                   <Image

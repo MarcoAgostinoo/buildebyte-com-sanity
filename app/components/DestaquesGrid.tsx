@@ -79,7 +79,7 @@ export default function DestaquesGrid({ initialPosts }: { initialPosts: Post[] }
             key={post._id}
             className="bg-(--card-bg) shadow-sm border border-(--border) overflow-hidden transform hover:shadow-lg transition-all duration-300 group"
           >
-            <Link href={`/post/${post.slug}`}>
+            <Link href={`/artigo/${post.slug}`}>
               <div className="cursor-pointer h-full flex flex-col">
                 {post.imagem && (
                   <div className="overflow-hidden h-52 relative">

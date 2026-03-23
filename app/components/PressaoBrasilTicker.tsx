@@ -65,7 +65,7 @@ export default function PressaoBrasilTicker() {
       <div className="flex items-center h-8 sm:h-10 relative">
         
         {/* Container mais estreito: px-1.5 sm:px-2.5 e tracking-wide */}
-        <div className="bg-amber-600 text-black text-[10px] sm:text-xs font-bold px-1.5 sm:px-2.5 h-full flex items-center tracking-wide uppercase border-r-2 border-amber-400 z-10 flex-shrink-0 whitespace-nowrap">
+        <div className="bg-amber-600 text-black text-[12px] sm:text-xs font-bold px-1.5 sm:px-2.5 h-full flex items-center tracking-wide uppercase border-r-2 border-amber-400 z-10 flex-shrink-0 whitespace-nowrap">
           Monitor<span className="hidden sm:inline">&nbsp;BRASIL</span>
         </div>
         

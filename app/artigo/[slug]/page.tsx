@@ -257,7 +257,7 @@ const ptComponents: PortableTextComponents = {
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <span className="w-2 h-2 rounded-full bg-[#6aff00] animate-pulse"></span>
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] animate-pulse text-[#a0fe09]">
+                  <span className="text-[12px] font-black uppercase tracking-[0.2em] animate-pulse text-[#a0fe09]">
                     Equipamento Validado
                   </span>
                 </div>
@@ -283,13 +283,13 @@ const ptComponents: PortableTextComponents = {
                       R$ {value.price.toFixed(2)}
                     </span>
                     {value.installments && (
-                      <span className="text-[10px] uppercase tracking-wider text-zinc-500">
+                      <span className="text-[12px] uppercase tracking-wider text-zinc-500">
                         {value.installments}
                       </span>
                     )}
                   </div>
                   {value.storeName && (
-                     <span className="text-[10px] uppercase tracking-wider text-zinc-500 block mt-1">
+                     <span className="text-[12px] uppercase tracking-wider text-zinc-500 block mt-1">
                        Via {value.storeName}
                      </span>
                   )}
@@ -332,7 +332,7 @@ const ptComponents: PortableTextComponents = {
             />
           </div>
           {descriptionText && (
-            <figcaption className="mt-3 text-[11px] sm:text-xs text-foreground/50 leading-relaxed border-l-2 border-primary/30 pl-3 font-medium">
+            <figcaption className="mt-3 text-[12px] sm:text-xs text-foreground/50 leading-relaxed border-l-2 border-primary/30 pl-3 font-medium">
               {descriptionText}
             </figcaption>
           )}
@@ -358,7 +358,7 @@ const ptComponents: PortableTextComponents = {
     ),
     blockquote: ({ children }) => (
       <blockquote className="my-8 border-l-4 border-primary pl-5 bg-primary/5 py-4 pr-4 ">
-        <span className="block text-[10px] font-black text-primary uppercase mb-2 tracking-[0.2em]">
+        <span className="block text-[12px] font-black text-primary uppercase mb-2 tracking-[0.2em]">
           {"// Dado Técnico"}
         </span>
         <div className="italic text-foreground leading-relaxed">
@@ -447,7 +447,7 @@ function EditorialBadge({ type }: { type: string }) {
   };
   return (
     <span
-      className={`${colorMap[type] ?? "bg-primary"} text-white text-[10px] font-black px-2.5  py-0.5  uppercase tracking-widest`}
+      className={`${colorMap[type] ?? "bg-primary"} text-white text-[12px] font-black px-2.5  py-0.5  uppercase tracking-widest`}
     >
       {label}
     </span>
@@ -460,7 +460,7 @@ function PillarBadge({ pillar }: { pillar: Pillar }) {
   return (
     <Link
       href={`/frentes/${pillar.slug}`}
-      className="relative z-10 text-[10px] font-bold px-2 py-0.5  uppercase tracking-wider border border-primary/30 text-primary/70 hover:bg-primary/5 transition-colors"
+      className="relative z-10 text-[12px] font-bold px-2 py-0.5  uppercase tracking-wider border border-primary/30 text-primary/70 hover:bg-primary/5 transition-colors"
     >
       {pillar.title}
     </Link>
@@ -513,7 +513,7 @@ function AuthorCard({ author }: { author: Author }) {
         </div>
       )}
       <div className="flex-1 min-w-0">
-        <p className="text-[10px] uppercase tracking-widest text-foreground/40 font-black mb-0.5">
+        <p className="text-[12px] uppercase tracking-widest text-foreground/40 font-black mb-0.5">
           Análise por
         </p>
         {author.linkedin ? (
@@ -552,7 +552,7 @@ function AnalystView({ content }: { content: PortableTextBlock[] }) {
           </svg>
         </div>
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">
+          <p className="text-[12px] font-black uppercase tracking-[0.2em] text-primary/60">
             Vetor Estratégico
           </p>
           <h3 className="text-base font-black text-foreground leading-tight">
@@ -565,7 +565,7 @@ function AnalystView({ content }: { content: PortableTextBlock[] }) {
       </div>
       <div className="relative px-6 pb-5 flex items-center gap-3">
         <div className="h-px flex-1 bg-primary/10" />
-        <span className="text-[10px] font-black text-primary/30 uppercase tracking-widest">
+        <span className="text-[12px] font-black text-primary/30 uppercase tracking-widest">
           Análise Estratégica
         </span>
         <div className="h-px flex-1 bg-primary/10" />
@@ -592,7 +592,7 @@ function AffiliateBlock({
         className="mb-10 flex items-center justify-between bg-primary text-white p-4  hover:brightness-110 transition-all shadow-lg group"
       >
         <div>
-          <p className="text-[10px] uppercase tracking-widest opacity-70 font-bold mb-0.5">
+          <p className="text-[12px] uppercase tracking-widest opacity-70 font-bold mb-0.5">
             Link verificado
           </p>
           <span className="font-black tracking-wide">
@@ -618,7 +618,7 @@ function AffiliateBlock({
 
   return (
     <div className="mt-11 bg-primary/5 border border-primary/20 p-6  text-center">
-      <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1">
+      <p className="text-[12px] font-black text-primary uppercase tracking-widest mb-1">
         Onde Adquirir
       </p>
       <p className="text-sm text-foreground/60 mb-4 italic">
@@ -721,7 +721,7 @@ function ClusterCard({ cluster }: { cluster: Cluster }) {
     <div className="mt-12 p-6  border border-primary/20 bg-linear-to-br from-primary/5 to-transparent">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 mb-1">
+          <p className="text-[12px] font-black uppercase tracking-[0.2em] text-primary/60 mb-1">
             Série de Análises
           </p>
           <h4 className="font-black text-foreground text-base leading-tight">
@@ -801,14 +801,14 @@ export async function generateMetadata({
     keywords: seoKeywords,
 
     alternates: {
-      canonical: `https://vetorestrategico.com/post/${post.slug}`,
+      canonical: `https://vetorestrategico.com/artigo/${post.slug}`,
     },
 
     openGraph: {
       title: post.seoTitle || post.title,
       description: post.seoDescription || post.excerpt,
       type: "article",
-      url: `https://vetorestrategico.com/post/${post.slug}`,
+      url: `https://vetorestrategico.com/artigo/${post.slug}`,
       publishedTime: post.publishedAt,
       modifiedTime: post.publishedAt,
       authors: [post.author?.name || "Vetor Estratégico"],
@@ -855,7 +855,7 @@ export default async function PostPage({
     title: post.title,
     description: post.seoDescription || post.excerpt || post.title,
     image: post.imagem || "https://vetorestrategico.com/og-image.png",
-    url: `https://vetorestrategico.com/post/${post.slug}`,
+    url: `https://vetorestrategico.com/artigo/${post.slug}`,
     publishedAt: post.publishedAt,
     keywords: seoKeywords,
     authorName: post.author?.name,
@@ -892,7 +892,7 @@ export default async function PostPage({
                 {post.cluster && post.cluster.slug && (
                   <Link
                     href={`/clusters/${post.cluster.slug}`}
-                    className="ml-auto text-[10px] font-bold px-2.5 py-0.5  uppercase tracking-wider bg-primary/8 text-primary/70 hover:bg-primary/15 border border-primary/20 transition-all"
+                    className="ml-auto text-[12px] font-bold px-2.5 py-0.5  uppercase tracking-wider bg-primary/8 text-primary/70 hover:bg-primary/15 border border-primary/20 transition-all"
                   >
                     Série: {post.cluster.title}
                   </Link>
@@ -953,7 +953,7 @@ export default async function PostPage({
                 
                 {post.pillar && (
                   <>
-                    <span className="font-black uppercase tracking-wider text-[11px] text-primary">
+                    <span className="font-black uppercase tracking-wider text-[12px] text-primary">
                       {post.pillar.title}
                     </span>
                     <span className="hidden sm:block text-foreground/15">
@@ -1001,7 +1001,7 @@ export default async function PostPage({
                   </div>
                   
                   {post.imagemAlt && (
-                    <figcaption className="mt-3 text-[11px] sm:text-xs text-foreground/50 leading-relaxed border-l-2 border-primary/30 pl-3 font-medium">
+                    <figcaption className="mt-3 text-[12px] sm:text-xs text-foreground/50 leading-relaxed border-l-2 border-primary/30 pl-3 font-medium">
                       {post.imagemAlt}
                     </figcaption>
                   )}
@@ -1105,13 +1105,13 @@ export default async function PostPage({
                   "
                 >
                   <div className="min-w-0">
-                    <p className="text-[9px] font-black uppercase tracking-[0.22em] text-primary/50 mb-0.5 group-hover:text-primary/70 transition-colors">
+                    <p className="text-[12px] font-black uppercase tracking-[0.22em] text-primary/50 mb-0.5 group-hover:text-primary/70 transition-colors">
                       Eixo Estratégico
                     </p>
                     <p className="font-black text-sm text-(--foreground) group-hover:text-primary transition-colors truncate">
                       {post.pillar.title}
                     </p>
-                    <p className="text-[9px] text-(--foreground)/40 mt-0.5">
+                    <p className="text-[12px] text-(--foreground)/40 mt-0.5">
                       Tecnologia. Poder. Direção.
                     </p>
                   </div>

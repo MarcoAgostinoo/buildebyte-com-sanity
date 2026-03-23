@@ -171,7 +171,7 @@ export default async function ClusterPage({
               </div>
 
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 mb-1">
+                <p className="text-[12px] font-black uppercase tracking-[0.2em] text-primary/60 mb-1">
                   Série de Análises
                 </p>
                 <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-foreground leading-tight">
@@ -250,7 +250,7 @@ function ClusterPostCard({
 
       {/* Imagem */}
       <Link
-        href={`/post/${post.slug}`}
+        href={`/artigo/${post.slug}`}
         className="block relative w-36 sm:w-48 shrink-0 overflow-hidden bg-foreground/5"
       >
         {post.imagem ? (
@@ -275,20 +275,20 @@ function ClusterPostCard({
         <div className="flex flex-wrap items-center gap-2 mb-3">
           {post.editorialType && (
             <span
-              className={`${editorialColor} text-white text-[9px] font-black px-2 py-0.5  uppercase tracking-widest`}
+              className={`${editorialColor} text-white text-[12px] font-black px-2 py-0.5  uppercase tracking-widest`}
             >
               {editorialLabel}
             </span>
           )}
           {pillarLabel && post.pillar && (
-            <Link href={`/pilares/${post.pillar}`} className="text-[9px] font-bold text-foreground/40 uppercase tracking-widest border border-foreground/15 px-1.5 py-0.5  hover:bg-foreground/5 transition-colors">
+            <Link href={`/pilares/${post.pillar}`} className="text-[12px] font-bold text-foreground/40 uppercase tracking-widest border border-foreground/15 px-1.5 py-0.5  hover:bg-foreground/5 transition-colors">
               {pillarLabel}
             </Link>
           )}
         </div>
 
         {/* Título */}
-        <Link href={`/post/${post.slug}`}>
+        <Link href={`/artigo/${post.slug}`}>
           <h2 className="font-black text-foreground leading-tight mb-2 group-hover:text-primary transition-colors line-clamp-2">
             {post.title}
           </h2>
@@ -320,8 +320,8 @@ function ClusterPostCard({
           </div>
 
           <Link
-            href={`/post/${post.slug}`}
-            className="flex items-center gap-1 text-[10px] font-black text-primary uppercase tracking-wider hover:gap-2 transition-all"
+            href={`/artigo/${post.slug}`}
+            className="flex items-center gap-1 text-[12px] font-black text-primary uppercase tracking-wider hover:gap-2 transition-all"
           >
             Ler análise
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>

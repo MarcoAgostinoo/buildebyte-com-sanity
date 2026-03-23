@@ -15,15 +15,21 @@ import PodcastSectionClient from "./components/home/PodcastSectionClient";
 import AffiliateDisclaimer from "./components/home/AffiliateDisclaimer";
 
 // ── Lazy (abaixo do fold) ──
-const PopularPostsList = dynamic(() => import("./components/home/PopularPostsList"));
+const PopularPostsList = dynamic(
+  () => import("./components/home/PopularPostsList"),
+);
 const Ofertas = dynamic(() => import("./components/Ofertas"), {
-  loading: () => <div className="h-80 animate-pulse bg-zinc-900 border border-zinc-800" />,
+  loading: () => (
+    <div className="h-80 animate-pulse bg-zinc-900 border border-zinc-800" />
+  ),
 });
 const WebStoriesCarousel = dynamic(() =>
-  import("./components/WebStoriesCarousel").then((m) => m.WebStoriesCarousel)
+  import("./components/WebStoriesCarousel").then((m) => m.WebStoriesCarousel),
 );
 const LeadCapture = dynamic(() => import("./components/LeadCapture"));
-const LatestPosts  = dynamic(() => import("./components/LatestPosts"));
+
+// ATUALIZAÇÃO TÁTICA: Renomeado para refletir o novo Módulo de Sobrevivência
+const SurvivalPosts = dynamic(() => import("./components/SurvivalPosts"));
 
 export const metadata: Metadata = {
   title: "Vetor Estratégico - Defesa e Estratégia",
@@ -38,57 +44,74 @@ export const metadata: Metadata = {
 const PILLAR_PRIORITY: Record<string, number> = {
   "Geopolítica & Defesa": 0,
   "Arsenal & Tecnologia": 1,
-  "Teatro de Operações":  2,
+  "Teatro de Operações": 2,
+  "Carreiras Estratégicas": 3,
+  "Manual de Sobrevivência": 4,
 };
 
 const DEFAULT_IMAGE = "/images/placeholder.png";
 
 // ---------------------------------------------------------------------------
-// QUERIES
+// QUERIES ATUALIZADAS (Adequadas para a nova arquitetura relacional)
 // ---------------------------------------------------------------------------
 async function getFeaturedPosts(): Promise<FeaturedPost[]> {
   const query = `*[_type == "post" && featured == true && !(_id in path('drafts.**'))] | order(publishedAt desc) [0...3] {
     _id, title, "slug": slug.current, excerpt, mainImage,
     "imagemAlt": mainImage.alt,
     "imagemLqip": mainImage.asset->metadata.lqip,
-    publishedAt, pillar, editorialType, "author": author->name
+    publishedAt, "pillar": pillar->title, editorialType, "author": author->name
   }`;
   const data = await client.fetch(query, {}, { next: { revalidate: 300 } });
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const posts: FeaturedPost[] = data.map((p: any) => ({
     ...p,
     imagem: p.mainImage
-      ? urlFor(p.mainImage).width(1200).height(800).quality(80).auto("format").url()
+      ? urlFor(p.mainImage)
+          .width(1200)
+          .height(800)
+          .quality(80)
+          .auto("format")
+          .url()
       : DEFAULT_IMAGE,
   }));
+
   return posts.sort(
     (a, b) =>
       (PILLAR_PRIORITY[a.pillar ?? ""] ?? 99) -
-      (PILLAR_PRIORITY[b.pillar ?? ""] ?? 99)
+      (PILLAR_PRIORITY[b.pillar ?? ""] ?? 99),
   );
 }
 
-async function getCategories(): Promise<CategoryWithPosts[]> {
-  const query = `*[_type == "category" && !(_id in path('drafts.**')) && count(*[_type == "post" && references(^._id)]) > 0] {
+async function getPillarsWithPosts(): Promise<CategoryWithPosts[]> {
+  const query = `*[_type == "pillar" && !(_id in path('drafts.**')) && count(*[_type == "post" && references(^._id)]) > 0] {
     _id, title, "slug": slug.current,
     "posts": *[_type == "post" && references(^._id)] | order(publishedAt desc) [0...4] {
       _id, title, "slug": slug.current, mainImage,
       "imagemAlt": mainImage.alt,
       "imagemLqip": mainImage.asset->metadata.lqip,
-      excerpt, "author": author->name, publishedAt, pillar, editorialType
+      excerpt, "author": author->name, publishedAt, "pillar": pillar->title, editorialType
     }
   }`;
-  const categories = await client.fetch(query, {}, { next: { revalidate: 300 } });
+  const pillars = await client.fetch(query, {}, { next: { revalidate: 300 } });
+
   const seenTitles = new Set<string>();
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return categories.filter((cat: any) => {
-    if (seenTitles.has(cat.title)) return false;
-    seenTitles.add(cat.title);
+  return pillars.filter((pillar: any) => {
+    if (seenTitles.has(pillar.title)) return false;
+    seenTitles.add(pillar.title);
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    cat.posts = cat.posts.map((p: any) => ({
+    pillar.posts = pillar.posts.map((p: any) => ({
       ...p,
       imagem: p.mainImage
-        ? urlFor(p.mainImage).width(600).height(400).quality(80).auto("format").url()
+        ? urlFor(p.mainImage)
+            .width(600)
+            .height(400)
+            .quality(80)
+            .auto("format")
+            .url()
         : DEFAULT_IMAGE,
     }));
     return true;
@@ -100,11 +123,17 @@ async function getWebStories(): Promise<WebStory[]> {
     _id, title, "slug": slug.current, coverImage, description, ctaText
   }`;
   const data = await client.fetch(query, {}, { next: { revalidate: 300 } });
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return data.map((s: any) => ({
     ...s,
     coverImage: s.coverImage
-      ? urlFor(s.coverImage).width(450).height(800).quality(80).auto("format").url()
+      ? urlFor(s.coverImage)
+          .width(450)
+          .height(800)
+          .quality(80)
+          .auto("format")
+          .url()
       : DEFAULT_IMAGE,
   }));
 }
@@ -113,9 +142,9 @@ async function getWebStories(): Promise<WebStory[]> {
 // PAGE
 // ---------------------------------------------------------------------------
 export default async function Home() {
-  const [featuredPosts, categories, webStories, episodes] = await Promise.all([
+  const [featuredPosts, pillarsData, webStories, episodes] = await Promise.all([
     getFeaturedPosts(),
-    getCategories(),
+    getPillarsWithPosts(),
     getWebStories(),
     getPodcastEpisodes(),
   ]);
@@ -123,8 +152,8 @@ export default async function Home() {
   const renderedPostIds = new Set<string>();
   featuredPosts.forEach((p) => renderedPostIds.add(p._id));
 
-  const popularPosts = categories
-    .flatMap((c) => c.posts)
+  const popularPosts = pillarsData
+    .flatMap((p) => p.posts)
     .filter((p) => !renderedPostIds.has(p._id))
     .sort((a, b) => {
       const diff =
@@ -138,7 +167,6 @@ export default async function Home() {
 
   return (
     <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8">
-
       {/* ── 1. TICKER ── */}
       <div className="py-4">
         <MilitaryPowerTicker />
@@ -150,32 +178,28 @@ export default async function Home() {
       {/* ── 3. THREAT INDEX BAR ── */}
       <ThreatIndexBar />
 
-      {/* ── 4. MAIS POPULARES + PODCAST ──────────────────────────────────
-       *  REGRA: col-span NUNCA dentro dos componentes filhos.
-       *  Os <div> wrappers abaixo são filhos diretos do grid e controlam
-       *  quantas colunas cada bloco ocupa.
-       * ─────────────────────────────────────────────────────────────── */}
-      <section className="mt-12 mb-10">
-        {/* Divisor tático */}
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-1 h-5 bg-zinc-700" />
-          <div className="flex-1 h-px bg-zinc-800" />
-          <span className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-700">
+      {/* ── 4. MAIS POPULARES + PODCAST ── */}
+      <section className="my-16 relative">
+        {/* Divisor Tático (Feixe de Transmissão) */}
+        <div className="flex items-center gap-4 mb-10 w-full">
+          <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--primary-rgb),0.8)] shrink-0" />
+          <div className="flex-1 h-px bg-gradient-to-r from-primary/50 via-[#2a2f3a] to-[#2a2f3a]" />
+          <span className="text-[12px] font-black uppercase tracking-[0.4em] text-primary/80 font-mono shrink-0 px-2">
             Inteligência & Transmissão
           </span>
-          <div className="flex-1 h-px bg-zinc-800" />
-          <div className="w-1 h-5 bg-zinc-700" />
+          <div className="flex-1 h-px bg-gradient-to-l from-primary/50 via-[#2a2f3a] to-[#2a2f3a]" />
+          <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--primary-rgb),0.8)] shrink-0" />
         </div>
 
-        {/* Grid 12 colunas — col-span nos wrappers diretos */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Popular: 4 colunas */}
-          <div className="lg:col-span-4 border-b lg:border-b-0 lg:border-r border-zinc-800 pb-8 lg:pb-0 lg:pr-8">
+        {/* Grid Operacional (Sem bordas vazadas, as bordas agora estão nos componentes filhos) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+          {/* Top Decodificações (4 colunas) */}
+          <div className="lg:col-span-4 flex flex-col h-full">
             <PopularPostsList posts={popularPosts} />
           </div>
 
-          {/* Podcast: 8 colunas */}
-          <div className="lg:col-span-8">
+          {/* Podcast / Áudio (8 colunas) */}
+          <div className="lg:col-span-8 flex flex-col h-full">
             <PodcastSectionClient episodes={episodes} />
           </div>
         </div>
@@ -192,7 +216,11 @@ export default async function Home() {
 
       {/* ── 7. OFERTAS ── */}
       <section className="mb-14">
-        <Suspense fallback={<div className="h-80 animate-pulse bg-zinc-900 border border-zinc-800" />}>
+        <Suspense
+          fallback={
+            <div className="h-80 animate-pulse bg-zinc-900 border border-zinc-800" />
+          }
+        >
           <Ofertas />
         </Suspense>
       </section>
@@ -207,10 +235,14 @@ export default async function Home() {
         </section>
       )}
 
-      {/* ── 9. ÚLTIMAS PUBLICAÇÕES ── */}
+      {/* ── 9. PROTOCOLOS DE SOBREVIVÊNCIA ── */}
       <section className="mb-6">
-        <Suspense fallback={<div className="h-96 animate-pulse bg-zinc-900 border border-zinc-800" />}>
-          <LatestPosts />
+        <Suspense
+          fallback={
+            <div className="h-96 animate-pulse bg-zinc-900 border border-zinc-800" />
+          }
+        >
+          <SurvivalPosts />
         </Suspense>
       </section>
 
@@ -221,7 +253,6 @@ export default async function Home() {
 
       {/* ── 11. DISCLAIMER ── */}
       <AffiliateDisclaimer />
-
     </div>
   );
 }

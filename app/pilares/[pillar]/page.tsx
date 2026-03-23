@@ -159,7 +159,7 @@ export default async function PillarPage({
                 🎯
               </div>
               <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 mb-1">
+                <p className="text-[12px] font-black uppercase tracking-[0.2em] text-primary/60 mb-1">
                   PILAR EDITORIAL
                 </p>
                 <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-foreground leading-tight">
@@ -213,7 +213,7 @@ function PostCard({ post }: { post: PostCard }) {
   return (
     <article className="group flex flex-col bg-(--card-bg) border border-(--border) overflow-hidden shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-300">
       {/* Imagem */}
-      <Link href={`/post/${post.slug}`} className="block relative aspect-video overflow-hidden bg-foreground/5">
+      <Link href={`/artigo/${post.slug}`} className="block relative aspect-video overflow-hidden bg-foreground/5">
         {post.imagem ? (
           <Image
             src={post.imagem}
@@ -231,7 +231,7 @@ function PostCard({ post }: { post: PostCard }) {
         {/* Badge editorial sobre a imagem */}
         {post.editorialType && (
           <span
-            className={`absolute top-3 left-3 ${editorialColor} text-white text-[9px] font-black px-2 py-0.5 uppercase tracking-widest`}
+            className={`absolute top-3 left-3 ${editorialColor} text-white text-[12px] font-black px-2 py-0.5 uppercase tracking-widest`}
           >
             {editorialLabel}
           </span>
@@ -246,7 +246,7 @@ function PostCard({ post }: { post: PostCard }) {
             {post.topics.map((cat) => (
               <span
                 key={cat.slug}
-                className="text-[9px] font-bold text-foreground/40 uppercase tracking-widest"
+                className="text-[12px] font-bold text-foreground/40 uppercase tracking-widest"
               >
                 {cat.title}
               </span>
@@ -255,7 +255,7 @@ function PostCard({ post }: { post: PostCard }) {
         )}
 
         {/* Título */}
-        <Link href={`/post/${post.slug}`}>
+        <Link href={`/artigo/${post.slug}`}>
           <h2 className="font-black text-foreground leading-tight mb-3 group-hover:text-primary transition-colors line-clamp-3">
             {post.title}
           </h2>
@@ -278,8 +278,8 @@ function PostCard({ post }: { post: PostCard }) {
             })}
           </span>
           <Link
-            href={`/post/${post.slug}`}
-            className="text-[10px] font-black text-primary uppercase tracking-wider hover:gap-2 flex items-center gap-1 transition-all"
+            href={`/artigo/${post.slug}`}
+            className="text-[12px] font-black text-primary uppercase tracking-wider hover:gap-2 flex items-center gap-1 transition-all"
           >
             Ler
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>

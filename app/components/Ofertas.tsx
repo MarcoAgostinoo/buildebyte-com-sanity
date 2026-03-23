@@ -9,7 +9,7 @@ const OfertasCarousel = dynamic(
     loading: () => (
       <div className="h-80 flex flex-col items-center justify-center animate-pulse bg-mil-dark border border-mil-border">
         <div className="w-8 h-8 border-2 border-t-mil-gold border-r-mil-gold border-b-transparent border-l-transparent rounded-full animate-spin"></div>
-        <p className="mt-4 text-[10px] font-black uppercase tracking-[0.2em] text-mil-gold/60">Sincronizando Dados Logísticos...</p>
+        <p className="mt-4 text-[12px] font-black uppercase tracking-[0.2em] text-mil-gold/60">Sincronizando Dados Logísticos...</p>
       </div>
     )
   }
@@ -52,7 +52,7 @@ export default async function Ofertas() {
              <div className={styles.mil_classification}>
                Status: Operacional
              </div>
-             <p className="text-[10px] uppercase tracking-wider text-mil-muted mt-1">
+             <p className="text-[12px] uppercase tracking-wider text-mil-muted mt-1">
                Protocolo EDC
              </p>
           </div>

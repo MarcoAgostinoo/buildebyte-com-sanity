@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Pillar } from "@/app/layout";
 
 // ✅ DATA DIRETA (sem state / sem effect)
 const currentDate = new Date().toLocaleDateString("pt-BR", {
@@ -22,15 +23,15 @@ type NavItemProps = {
 type DropdownItemProps = {
   href: string;
   label: string;
+  isHighlight?: boolean;
 };
 
 type MobileNavItemProps = {
   href: string;
   label: string;
   onClick: () => void;
+  isHighlight?: boolean;
 };
-
-import { Pillar } from "@/app/layout";
 
 export default function Header({ pillars }: { pillars: Pillar[] }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -44,7 +45,7 @@ export default function Header({ pillars }: { pillars: Pillar[] }) {
   return (
     <>
       {/* TOP BAR */}
-      <div className="w-full bg-[#05080b] text-zinc-500 text-[10px] md:text-xs border-b border-zinc-800/80 font-mono">
+      <div className="w-full bg-[#05080b] text-zinc-500 text-[12px] md:text-xs border-b border-zinc-800/80 font-mono">
         <div className="max-w-7xl mx-auto px-4 h-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="w-2 h-2 rounded-full bg-red-700 animate-pulse"></span>
@@ -94,23 +95,34 @@ export default function Header({ pillars }: { pillars: Pillar[] }) {
             </button>
 
             {/* MENU DESKTOP */}
-            <div className="hidden md:flex items-center gap-6 text-sm font-bold uppercase relative">
+            <div className="hidden md:flex items-center gap-6 text-sm font-bold uppercase relative h-full">
               <NavItem href="/" label="Início" />
-              <NavItem href="/destaques" label="Destaques" />
               <NavItem href="/radar" label="Radar" isSpecial />
 
-              {/* DROPDOWN */}
+              {/* DROPDOWN COM PONTE INVISÍVEL */}
               <div
-                className="relative"
+                className="relative h-full flex items-center group"
                 onMouseEnter={() => setIsDropdownOpen(true)}
                 onMouseLeave={() => setIsDropdownOpen(false)}
               >
-                <button className="text-black hover:text-gray-600 py-2">
-                  Frentes Estratégicas ▾
+                <button className="text-black hover:text-gray-600 h-full flex items-center gap-1 transition-colors">
+                  Frentes Estratégicas 
+                  <svg className={`w-4 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
                 </button>
 
-                {isDropdownOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-64 bg-white border border-gray-200 shadow-xl">
+                {/* O TRUQUE DA PONTE: 
+                  - "pt-4" cria a ponte invisível cobrindo o vão. 
+                  - top-full garante que ele desça exatamente após o header.
+                */}
+                <div 
+                  className={`absolute top-full right-0 pt-2 w-72 transition-all duration-200 ease-in-out origin-top ${
+                    isDropdownOpen ? 'opacity-100 scale-y-100 visible' : 'opacity-0 scale-y-95 invisible'
+                  }`}
+                >
+                  <div className="bg-white border border-gray-200 shadow-2xl rounded-sm overflow-hidden flex flex-col">
+                    {/* Lista dinâmica de Pilares */}
                     {pillars.map((pillar) => (
                       <DropdownItem
                         key={pillar.slug}
@@ -118,12 +130,19 @@ export default function Header({ pillars }: { pillars: Pillar[] }) {
                         label={pillar.title}
                       />
                     ))}
+                    
+                    {/* Opção para Ver Todas (A página incrível) */}
+                    <DropdownItem
+                        href="/frentes"
+                        label="Ver Todas as Frentes &rarr;"
+                        isHighlight
+                      />
                   </div>
-                )}
+                </div>
               </div>
 
               <NavItem href="/videos" label="Vídeos" />
-              <NavItem href="/concursos" label="Concursos" />
+              <NavItem href="/frentes/carreiras-estrategicas" label="Concursos" />
               <NavItem href="/contato" label="Contato" />
 
               {/* BUSCA */}
@@ -148,22 +167,24 @@ export default function Header({ pillars }: { pillars: Pillar[] }) {
 
           {/* MOBILE MENU */}
           {isMenuOpen && (
-            <div className="md:hidden bg-white border-t shadow-lg">
+            <div className="md:hidden bg-white border-t shadow-lg py-2">
               <MobileNavItem href="/" label="Início" onClick={closeMenu} />
-              <MobileNavItem href="/destaques" label="Destaques" onClick={closeMenu} />
               <MobileNavItem href="/radar" label="Radar" onClick={closeMenu} />
 
               {/* DROPDOWN MOBILE */}
-              <div className="border-b">
+              <div className="border-b border-gray-100">
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="w-full text-left py-4 font-bold"
+                  className="w-full text-left py-4 px-4 font-bold flex justify-between items-center bg-gray-50/50"
                 >
                   Frentes Estratégicas
+                  <svg className={`w-4 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
                 </button>
 
                 {isDropdownOpen && (
-                  <div className="pl-4">
+                  <div className="pl-4 bg-gray-50/30 pb-2">
                     {pillars.map((pillar) => (
                       <MobileNavItem
                         key={pillar.slug}
@@ -172,12 +193,18 @@ export default function Header({ pillars }: { pillars: Pillar[] }) {
                         onClick={closeMenu}
                       />
                     ))}
+                    <MobileNavItem
+                        href="/frentes"
+                        label="Ver Todas as Frentes &rarr;"
+                        onClick={closeMenu}
+                        isHighlight
+                      />
                   </div>
                 )}
               </div>
 
               <MobileNavItem href="/videos" label="Vídeos" onClick={closeMenu} />
-              <MobileNavItem href="/concursos" label="Concursos" onClick={closeMenu} />
+              <MobileNavItem href="/frentes/carreiras-estrategicas" label="Concursos" onClick={closeMenu} />
               <MobileNavItem href="/contato" label="Contato" onClick={closeMenu} />
             </div>
           )}
@@ -187,36 +214,44 @@ export default function Header({ pillars }: { pillars: Pillar[] }) {
   );
 }
 
-// COMPONENTES
+// ---------------------------------------------------------------------------
+// COMPONENTES AUXILIARES
+// ---------------------------------------------------------------------------
 
 function NavItem({ href, label, isSpecial = false }: NavItemProps) {
   return (
     <Link
       href={href}
-      className={`${isSpecial ? "text-red-700" : "text-black"} hover:text-gray-600`}
+      className={`${isSpecial ? "text-red-700" : "text-black"} hover:text-gray-600 transition-colors h-full flex items-center`}
     >
       {label}
     </Link>
   );
 }
 
-function DropdownItem({ href, label }: DropdownItemProps) {
+function DropdownItem({ href, label, isHighlight = false }: DropdownItemProps) {
   return (
     <Link
       href={href}
-      className="block px-4 py-3 text-sm text-black hover:bg-gray-100 transition-colors"
+      className={`block px-5 py-3.5 text-[12px] font-black tracking-widest uppercase transition-colors ${
+        isHighlight 
+        ? "bg-zinc-50 border-t border-gray-200 text-primary hover:bg-primary/5" 
+        : "text-zinc-600 hover:bg-zinc-100 hover:text-black"
+      }`}
     >
       {label}
     </Link>
   );
 }
 
-function MobileNavItem({ href, label, onClick }: MobileNavItemProps) {
+function MobileNavItem({ href, label, onClick, isHighlight = false }: MobileNavItemProps) {
   return (
     <Link
       href={href}
       onClick={onClick}
-      className="block py-4 border-b border-gray-100"
+      className={`block py-4 px-4 border-b border-gray-100 uppercase font-bold text-sm tracking-wide ${
+        isHighlight ? "text-primary bg-primary/5" : "text-gray-800"
+      }`}
     >
       {label}
     </Link>

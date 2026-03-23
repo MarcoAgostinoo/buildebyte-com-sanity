@@ -37,7 +37,7 @@ export async function GET() {
     <atom:link href="${siteUrl}/feed.xml" rel="self" type="application/rss+xml" />
     <copyright>Todos os direitos reservados ${new Date().getFullYear()}, Vetor Estratégico</copyright>
     ${posts.map((post: Post) => {
-      const postUrl = `${siteUrl}/post/${post.slug}`;
+      const postUrl = `${siteUrl}/artigo/${post.slug}`;
       // Fallback para garantir que sempre haja uma descrição
       const summary = post.description || post.overview || '';
       

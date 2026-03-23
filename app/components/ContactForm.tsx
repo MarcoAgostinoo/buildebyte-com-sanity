@@ -135,7 +135,7 @@ export default function ContactForm() {
               {'// CANAL DE UPLINK TÁTICO //'}
             </span>
           </div>
-          <div className="text-[9px] font-mono text-primary/70 uppercase tracking-widest hidden sm:block">
+          <div className="text-[12px] font-mono text-primary/70 uppercase tracking-widest hidden sm:block">
             Acesso Autorizado Nível 3
           </div>
         </div>
@@ -145,7 +145,7 @@ export default function ContactForm() {
             
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2 relative group">
-                <label htmlFor="nome" className="block text-[10px] font-black uppercase tracking-[0.15em] text-foreground/60 border-l-2 border-primary pl-2">
+                <label htmlFor="nome" className="block text-[12px] font-black uppercase tracking-[0.15em] text-foreground/60 border-l-2 border-primary pl-2">
                   Identificação do Operador
                 </label>
                 <input
@@ -160,7 +160,7 @@ export default function ContactForm() {
               </div>
 
               <div className="space-y-2 relative">
-                <label htmlFor="email" className="block text-[10px] font-black uppercase tracking-[0.15em] text-foreground/60 border-l-2 border-primary pl-2">
+                <label htmlFor="email" className="block text-[12px] font-black uppercase tracking-[0.15em] text-foreground/60 border-l-2 border-primary pl-2">
                   Vetor de Resposta (E-mail)
                 </label>
                 <input
@@ -177,10 +177,10 @@ export default function ContactForm() {
 
             <div className="space-y-2">
               <div className="flex justify-between items-end border-l-2 border-primary pl-2 mb-2">
-                <label htmlFor="mensagem" className="block text-[10px] font-black uppercase tracking-[0.15em] text-foreground/60">
+                <label htmlFor="mensagem" className="block text-[12px] font-black uppercase tracking-[0.15em] text-foreground/60">
                   Relatório de Situação (SITREP)
                 </label>
-                <span className="text-[9px] font-mono text-red-500/80 uppercase tracking-widest hidden sm:block font-bold">
+                <span className="text-[12px] font-mono text-red-500/80 uppercase tracking-widest hidden sm:block font-bold">
                   Omitir Dados Críticos
                 </span>
               </div>
@@ -265,7 +265,7 @@ export default function ContactForm() {
           </form>
         </div>
         
-        <div className="bg-primary/5 px-4 sm:px-6 py-3 border-t border-(--border) text-[10px] font-mono text-foreground/40 flex justify-between uppercase tracking-widest">
+        <div className="bg-primary/5 px-4 sm:px-6 py-3 border-t border-(--border) text-[12px] font-mono text-foreground/40 flex justify-between uppercase tracking-widest">
           <span>STATUS: CRIPTOGRAFADO (AES-256)</span>
           <span className="hidden sm:block">LATÊNCIA: 14ms</span>
         </div>

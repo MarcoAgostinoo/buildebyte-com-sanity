@@ -40,7 +40,7 @@ export async function GET(
   }
 
   const ctaLink = story.targetSlug
-    ? `${baseUrl}/post/${story.targetSlug}`
+    ? `${baseUrl}/artigo/${story.targetSlug}`
     : baseUrl;
 
   // USO DO HELPER DE SEO OFICIAL

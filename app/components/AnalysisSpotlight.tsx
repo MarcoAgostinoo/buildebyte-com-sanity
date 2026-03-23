@@ -86,7 +86,7 @@ export default async function AnalysisSpotlight() {
       {/* Label acima */}
       <div className="flex items-center gap-3 mb-0">
         <div className="w-1 h-5 bg-amber-500" />
-        <p className="text-[9px] font-black uppercase tracking-[0.35em] text-zinc-500">
+        <p className="text-[12px] font-black uppercase tracking-[0.35em] text-zinc-500">
           Dossiê em Destaque
         </p>
         <div className="flex-1 h-px bg-zinc-800" />
@@ -94,7 +94,7 @@ export default async function AnalysisSpotlight() {
 
       {/* Main card */}
       <Link
-        href={`/post/${post.slug}`}
+        href={`/artigo/${post.slug}`}
         className="group relative flex flex-col lg:flex-row min-h-96 lg:min-h-[480px] overflow-hidden border border-zinc-800 hover:border-amber-500/30 transition-all duration-500"
       >
         {/* ── IMAGE SIDE (full bg on mobile, 60% on lg) ── */}
@@ -121,17 +121,17 @@ export default async function AnalysisSpotlight() {
           {/* Badges row */}
           <div className="flex flex-wrap items-center gap-2 mb-5">
             {editorialLabel && (
-              <span className="text-[9px] font-black uppercase tracking-widest bg-amber-500 text-[#0a0b0d] px-2.5 py-1">
+              <span className="text-[12px] font-black uppercase tracking-widest bg-amber-500 text-[#0a0b0d] px-2.5 py-1">
                 {editorialLabel}
               </span>
             )}
             {pillarLabel && (
-              <span className="text-[9px] font-black uppercase tracking-wider border border-amber-500/30 text-amber-500/70 px-2.5 py-1">
+              <span className="text-[12px] font-black uppercase tracking-wider border border-amber-500/30 text-amber-500/70 px-2.5 py-1">
                 {pillarLabel}
               </span>
             )}
             {post.rating && (
-              <span className="ml-auto text-[9px] font-black tabular-nums text-emerald-400 border border-emerald-400/20 px-2.5 py-1">
+              <span className="ml-auto text-[12px] font-black tabular-nums text-emerald-400 border border-emerald-400/20 px-2.5 py-1">
                 {post.rating}/10
               </span>
             )}
@@ -156,21 +156,21 @@ export default async function AnalysisSpotlight() {
           {post.cluster && (
             <div className="flex items-center gap-2 mb-6">
               <div className="w-2 h-2 bg-amber-500/60" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-amber-500/60">
+              <span className="text-[12px] font-black uppercase tracking-widest text-amber-500/60">
                 Série: {post.cluster.title}
               </span>
             </div>
           )}
 
           {/* Meta */}
-          <div className="flex items-center gap-3 text-[10px] text-zinc-600 mb-7">
+          <div className="flex items-center gap-3 text-[12px] text-zinc-600 mb-7">
             {post.author && <span className="font-bold text-zinc-500">{post.author}</span>}
             <span>·</span>
             <time className="tabular-nums">{dateStr}</time>
           </div>
 
           {/* CTA */}
-          <div className="flex items-center gap-3 text-[11px] font-black uppercase tracking-widest text-amber-500 group-hover:text-amber-400 transition-colors">
+          <div className="flex items-center gap-3 text-[12px] font-black uppercase tracking-widest text-amber-500 group-hover:text-amber-400 transition-colors">
             Ler Dossiê Completo
             <svg
               className="w-4 h-4 group-hover:translate-x-1 transition-transform"

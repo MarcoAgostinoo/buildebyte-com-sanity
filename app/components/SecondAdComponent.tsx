@@ -29,7 +29,7 @@ export default async function SecondAdComponent({ className = "" }: { className?
   if (!offer?.affiliateLink) {
     return (
       <div className={`p-4 text-center border border-(--border) bg-(--card-bg) ${className}`}>
-        <p className="text-[10px] font-black uppercase tracking-widest text-primary">
+        <p className="text-[12px] font-black uppercase tracking-widest text-primary">
           Espaço Publicitário
         </p>
       </div>
@@ -65,7 +65,7 @@ export default async function SecondAdComponent({ className = "" }: { className?
       {/* Text — remaining 60% */}
       <div className="flex flex-col justify-between gap-2 px-4 py-4 min-w-0 flex-1">
         <div className="flex flex-col gap-1.5">
-          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/60">
+          <p className="text-[12px] font-black uppercase tracking-[0.2em] text-primary/60">
             Oferta Verificada
           </p>
           <h3 className="font-black text-sm leading-snug text-(--foreground) line-clamp-3 group-hover:text-primary transition-colors">
@@ -73,7 +73,7 @@ export default async function SecondAdComponent({ className = "" }: { className?
           </h3>
         </div>
 
-        <span className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-primary/70 group-hover:text-primary transition-colors">
+        <span className="inline-flex items-center gap-1.5 text-[12px] font-black uppercase tracking-wider text-primary/70 group-hover:text-primary transition-colors">
           Ver oferta
           <svg
             className="w-3 h-3 group-hover:translate-x-0.5 transition-transform"

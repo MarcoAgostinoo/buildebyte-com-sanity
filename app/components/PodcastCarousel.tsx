@@ -55,14 +55,14 @@ export default function PodcastCarousel({ episodes = [], defaultImage }: { episo
                     quality={75}
                     className="object-cover"
                   />
-                  <span className="absolute bottom-2 left-2 bg-[#0070f3] text-white text-[9px] font-black px-1.5 py-0.5 uppercase">
+                  <span className="absolute bottom-2 left-2 bg-[#0070f3] text-white text-[12px] font-black px-1.5 py-0.5 uppercase">
                     PODCAST
                   </span>
                 </div>
                 <h3 className="font-bold text-zinc-900 dark:text-white text-base line-clamp-2 leading-tight">
                   {ep.title}
                 </h3>
-                <p className="text-[11px] text-zinc-500 mt-1">
+                <p className="text-[12px] text-zinc-500 mt-1">
                   {formatDate(ep.pubDate)} • Vetor Estratégico Podcast
                 </p>
               </a>

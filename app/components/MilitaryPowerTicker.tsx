@@ -81,7 +81,7 @@ export default function MilitaryPowerTicker() {
       <div className="flex items-center h-8 sm:h-10 relative">
         
         {/* Etiqueta estratégica com proteção contra quebra e redução no mobile */}
-        <div className="bg-red-700 text-white text-[10px] sm:text-xs font-bold px-2 sm:px-4 h-full flex items-center tracking-widest uppercase border-r border-red-500 z-10 flex-shrink-0 whitespace-nowrap">
+        <div className="bg-red-700 text-white text-[12px] sm:text-xs font-bold px-2 sm:px-4 h-full flex items-center tracking-widest uppercase border-r border-red-500 z-10 flex-shrink-0 whitespace-nowrap">
           <span className="hidden sm:inline">BALANÇO DE&nbsp;</span>PODER GLOBAL
         </div>
 

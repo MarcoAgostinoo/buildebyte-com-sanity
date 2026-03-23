@@ -64,7 +64,7 @@ export default function ReadNext({ posts }: ReadNextProps) {
          <h3 className="font-black text-xs uppercase tracking-tighter text-primary">Recomendado</h3>
          <button 
            onClick={handleManualClose} 
-           className="text-[10px] font-bold text-zinc-500 hover:text-white uppercase transition-colors"
+           className="text-[12px] font-bold text-zinc-500 hover:text-white uppercase transition-colors"
          >
            Fechar [x]
          </button>
@@ -72,7 +72,7 @@ export default function ReadNext({ posts }: ReadNextProps) {
       
       <div className="space-y-4">
         {posts.map(post => (
-          <Link href={`/post/${post.slug}`} key={post.slug} className="group block">
+          <Link href={`/artigo/${post.slug}`} key={post.slug} className="group block">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 relative shrink-0 overflow-hidden border border-zinc-800">
                 {post.imagem ? (
@@ -87,7 +87,7 @@ export default function ReadNext({ posts }: ReadNextProps) {
                   <div className="w-full h-full bg-zinc-800" />
                 )}
               </div>
-              <span className="text-[11px] font-bold text-zinc-100 line-clamp-2 group-hover:text-primary transition-colors">
+              <span className="text-[12px] font-bold text-zinc-100 line-clamp-2 group-hover:text-primary transition-colors">
                 {post.title}
               </span>
             </div>

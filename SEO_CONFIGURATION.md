@@ -36,7 +36,7 @@
 
 ### 2. **Metadata Dinâmica** - ✅ CONCLUÍDO
 
-#### Open Graph (app/post/[slug]/page.tsx)
+#### Open Graph (app/artigo/[slug]/page.tsx)
 - ✅ Título e descrição dinâmicos
 - ✅ Imagem com alt text (imagemAlt)
 - ✅ URL canônica
@@ -44,7 +44,7 @@
 - ✅ Autores e tags
 - ✅ Data de publicação
 
-#### Twitter Cards (app/post/[slug]/page.tsx)
+#### Twitter Cards (app/artigo/[slug]/page.tsx)
 - ✅ Summary Large Image card
 - ✅ Título, descrição e imagem
 - ✅ Compatível com redes sociais
@@ -104,7 +104,7 @@
      items: [
        { name: "Home", url: "https://vetorestrategico.com" },
        { name: "Posts", url: "https://vetorestrategico.com/radar" },
-       { name: "Post Title", url: "https://vetorestrategico.com/post/slug" },
+       { name: "Post Title", url: "https://vetorestrategico.com/artigo/slug" },
      ]
    });
    ```

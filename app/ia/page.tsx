@@ -58,7 +58,7 @@ export default async function IAPage() {
           {posts.length > 0 ? (
             posts.map((post) => (
               <article key={post._id} className="group bg-(--card-bg) border border-(--border)  overflow-hidden hover:shadow-xl transition-all duration-300">
-                <Link href={`/post/${post.slug}`}>
+                <Link href={`/artigo/${post.slug}`}>
                   <div className="relative h-48 overflow-hidden">
                     {post.imagem && (
                       <Image

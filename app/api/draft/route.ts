@@ -23,5 +23,5 @@ export async function GET(request: Request) {
   ;(await draftMode()).enable()
 
   // Redirect to the post page with the given slug
-  redirect(`/post/${slug}`)
+  redirect(`/artigo/${slug}`)
 }

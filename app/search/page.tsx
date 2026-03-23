@@ -44,14 +44,14 @@ export default async function SearchPage({ searchParams }: { searchParams: { q: 
             {post.imagem && (
               <Image src={post.imagem} alt={post.title} width={800} height={450} className="w-full h-auto object-cover  mb-6" />
             )}
-            <Link href={`/post/${post.slug}`}>
+            <Link href={`/artigo/${post.slug}`}>
               <h2 className="text-3xl font-bold text-blue-600 mb-4 hover:underline">{post.title}</h2>
             </Link>
             <div className="text-sm text-gray-500 mb-4">
               <span>{post.author}</span> | <span>{formatDate(post.publishedAt)}</span>
             </div>
             <p className="text-gray-600">{post.excerpt}</p>
-            <Link href={`/post/${post.slug}`} className="text-blue-500 hover:underline mt-4 inline-block">
+            <Link href={`/artigo/${post.slug}`} className="text-blue-500 hover:underline mt-4 inline-block">
               Leia mais...
             </Link>
           </article>

@@ -131,7 +131,7 @@ export default async function FrentesPage() {
       {/* ── SEÇÃO DE FRENTES (PILARES COM IMAGENS) ── */}
       <section className="mb-16">
         <div className="mb-8 border-l-4 border-primary pl-4">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60 mb-1">
+          <p className="text-[12px] font-black uppercase tracking-[0.2em] text-primary/60 mb-1">
             Arquitetura de Conteúdo
           </p>
           <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-foreground uppercase">
@@ -178,7 +178,7 @@ export default async function FrentesPage() {
                     </p>
                   )}
 
-                  <div className="mt-8 pt-4 border-t border-[#2a2f3a]/50 flex items-center justify-between text-[10px] font-black text-zinc-400 uppercase tracking-widest group-hover:text-primary transition-colors">
+                  <div className="mt-8 pt-4 border-t border-[#2a2f3a]/50 flex items-center justify-between text-[12px] font-black text-zinc-400 uppercase tracking-widest group-hover:text-primary transition-colors">
                     <span>Acessar Dossiês</span>
                     <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -201,7 +201,7 @@ export default async function FrentesPage() {
       {/* ── SEÇÃO DE FILTRO SECUNDÁRIO ── */}
       <section>
         <div className="mb-8 border-l-4 border-zinc-700 pl-4">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-1">
+          <p className="text-[12px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-1">
             Filtro Tático
           </p>
           <h2 className="text-2xl font-black tracking-tight text-foreground uppercase">

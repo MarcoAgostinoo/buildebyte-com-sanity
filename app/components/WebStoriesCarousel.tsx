@@ -89,7 +89,7 @@ export function WebStoriesCarousel({ webStories }: { webStories: WebStory[] }) {
       </div>
       
       {/* Indicador de Swipe */}
-      <p className="text-center text-foreground/40 text-[10px] mt-4 uppercase tracking-widest font-bold">
+      <p className="text-center text-foreground/40 text-[12px] mt-4 uppercase tracking-widest font-bold">
         Arraste para o lado
       </p>
     </section>
