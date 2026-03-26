@@ -1,6 +1,9 @@
 import { client, previewClient } from "@/app/lib/sanity";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
-import { type PortableTextBlock, type PortableTextSpan } from "@portabletext/types";
+import {
+  type PortableTextBlock,
+  type PortableTextSpan,
+} from "@portabletext/types";
 import { notFound } from "next/navigation";
 import { type Metadata } from "next";
 import Script from "next/script";
@@ -180,9 +183,12 @@ async function getPost(slug: string): Promise<Post | null> {
 }
 
 // QUERY ATUALIZADA: Busca posts relacionados baseados no Pilar Pai
-async function getRelatedPosts(pillarSlug: string | undefined, currentPostSlug: string) {
+async function getRelatedPosts(
+  pillarSlug: string | undefined,
+  currentPostSlug: string,
+) {
   if (!pillarSlug) return [];
-  
+
   const query = `*[_type == "post" && slug.current != $currentPostSlug && pillar->slug.current == $pillarSlug] | order(publishedAt desc) [0...3] {
     title,
     "slug": slug.current,
@@ -243,16 +249,16 @@ const ptComponents: PortableTextComponents = {
                 <div className="absolute inset-0 border border-[#c8a84b]/20 pointer-events-none z-10"></div>
                 <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-[#c8a84b] z-10"></div>
                 <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-[#c8a84b] z-10"></div>
-                
-                <Image 
-                  src={value.imagem} 
+
+                <Image
+                  src={value.imagem}
                   alt={value.title}
                   fill
                   className="object-contain p-4 group-hover:scale-105 transition-transform duration-700 filter brightness-90 group-hover:brightness-110"
                 />
               </div>
             )}
-            
+
             <div className="flex-1 flex flex-col justify-center">
               <div>
                 <div className="flex items-center gap-2 mb-3">
@@ -261,16 +267,16 @@ const ptComponents: PortableTextComponents = {
                     Equipamento Validado
                   </span>
                 </div>
-                
+
                 <h3 className="text-xl sm:text-2xl font-black tracking-tight text-zinc-100 mb-3 leading-tight uppercase">
                   {value.title}
                 </h3>
-                
+
                 <p className="text-sm text-zinc-600 mb-5 leading-relaxed border-l-2 border-[#c8a84b]/30 pl-3">
                   {value.description}
                 </p>
               </div>
-              
+
               <div className="mt-auto pt-5 border-t border-[#2a2f3a] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
                 <div>
                   {value.originalPrice && (
@@ -289,15 +295,15 @@ const ptComponents: PortableTextComponents = {
                     )}
                   </div>
                   {value.storeName && (
-                     <span className="text-[12px] uppercase tracking-wider text-zinc-500 block mt-1">
-                       Via {value.storeName}
-                     </span>
+                    <span className="text-[12px] uppercase tracking-wider text-zinc-500 block mt-1">
+                      Via {value.storeName}
+                    </span>
                   )}
                 </div>
-                
-                <a 
-                  href={value.affiliateLink} 
-                  target="_blank" 
+
+                <a
+                  href={value.affiliateLink}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="w-full sm:w-auto text-center animate-pulse bg-[#161a20] border border-[#c8a84b]/30 hover:bg-[#c8a84b] text-[#c8a84b] hover:text-[#0a0b0d] font-black uppercase tracking-[0.15em] text-xs py-3.5 px-6 transition-all shadow-[0_0_15px_rgba(200,168,75,0.2)] hover:shadow-[0_0_25px_rgba(200,168,75,0.4)]"
                 >
@@ -361,9 +367,7 @@ const ptComponents: PortableTextComponents = {
         <span className="block text-[12px] font-black text-primary uppercase mb-2 tracking-[0.2em]">
           {"// Dado Técnico"}
         </span>
-        <div className="italic text-foreground leading-relaxed">
-          {children}
-        </div>
+        <div className="italic text-foreground leading-relaxed">{children}</div>
       </blockquote>
     ),
     normal: ({ children }) => (
@@ -787,13 +791,15 @@ export async function generateMetadata({
   if (!post) return {};
 
   const ogImage = post.imagem || "https://vetorestrategico.com/og-image.png";
-  
+
   // ATUALIZADO: Palavras chaves baseadas no Pilar e Cluster em vez das antigas categorias
   const seoKeywords = [
-    post.pillar?.title, 
-    post.cluster?.title, 
-    ...(post.keywords || [])
-  ].filter(Boolean).join(", ");
+    post.pillar?.title,
+    post.cluster?.title,
+    ...(post.keywords || []),
+  ]
+    .filter(Boolean)
+    .join(", ");
 
   return {
     title: post.seoTitle || post.title,
@@ -846,10 +852,12 @@ export default async function PostPage({
   const readTime = estimateReadTime(post.body);
 
   const seoKeywords = [
-    post.pillar?.title, 
-    post.cluster?.title, 
-    ...(post.keywords || [])
-  ].filter(Boolean).join(", ");
+    post.pillar?.title,
+    post.cluster?.title,
+    ...(post.keywords || []),
+  ]
+    .filter(Boolean)
+    .join(", ");
 
   const articleJsonLd = generateNewsArticleSchema({
     title: post.title,
@@ -879,7 +887,7 @@ export default async function PostPage({
             <div className="mb-6">
               <PressaoBrasil />
             </div>
-            
+
             <article className="bg-(--card-bg) p-2 sm:p-4 shadow-sm">
               {/* BADGES */}
               <div className="mb-5 flex flex-wrap items-center gap-2">
@@ -950,7 +958,7 @@ export default async function PostPage({
                 </time>
 
                 <span className="hidden sm:block text-foreground/15">|</span>
-                
+
                 {post.pillar && (
                   <>
                     <span className="font-black uppercase tracking-wider text-[12px] text-primary">
@@ -986,20 +994,32 @@ export default async function PostPage({
               {/* IMAGEM PRINCIPAL */}
               {post.imagem && (
                 <figure className="mb-10">
-                  <div className="relative aspect-video overflow-hidden shadow-lg border border-primary/10">
-                    <Image
-                      src={post.imagem}
-                      alt={post.imagemAlt || post.title}
-                      title={post.imagemAlt || post.title}
-                      fill
-                      priority
-                      placeholder={post.imagemLqip ? "blur" : "empty"}
-                      blurDataURL={post.imagemLqip}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 50vw"
-                      className="object-cover"
-                    />
-                  </div>
-                  
+                  <figure className="mb-10">
+                    <div className="relative w-full overflow-hidden shadow-lg border border-primary/10">
+                      <div className="relative w-full pt-[75%]">
+                        {" "}
+                        {/* 4:3 */}
+                        <Image
+                          src={post.imagem}
+                          alt={post.imagemAlt || post.title}
+                          title={post.imagemAlt || post.title}
+                          fill
+                          priority
+                          placeholder={post.imagemLqip ? "blur" : "empty"}
+                          blurDataURL={post.imagemLqip}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 50vw"
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+
+                    {post.imagemAlt && (
+                      <figcaption className="mt-3 text-[12px] sm:text-xs text-foreground/50 leading-relaxed border-l-2 border-primary/30 pl-3 font-medium">
+                        {post.imagemAlt}
+                      </figcaption>
+                    )}
+                  </figure>
+
                   {post.imagemAlt && (
                     <figcaption className="mt-3 text-[12px] sm:text-xs text-foreground/50 leading-relaxed border-l-2 border-primary/30 pl-3 font-medium">
                       {post.imagemAlt}
@@ -1042,7 +1062,7 @@ export default async function PostPage({
                 )}
               </div>
             </article>
-            
+
             <div className="w-full py-24 my-6 flex flex-col items-center justify-center text-center px-4 relative bg-transparent">
               <h3 className="text-2xl sm:text-3xl font-black text-black drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)] mb-6 max-w-2xl leading-tight">
                 Mantenha-se atualizado com os desdobramentos que definem o
@@ -1056,7 +1076,7 @@ export default async function PostPage({
                 LER ÚLTIMAS NOTÍCIAS
               </Link>
             </div>
-            
+
             <article className="bg-(--card-bg) p-2 sm:p-2 border border-(--border) shadow-sm">
               {post.analystView && post.analystView.length > 0 && (
                 <AnalystView content={post.analystView} />
@@ -1084,7 +1104,7 @@ export default async function PostPage({
                 <LeadCapture />
               </div>
             </article>
-            
+
             <div className="mt-10">
               <Comments />
             </div>
@@ -1092,7 +1112,6 @@ export default async function PostPage({
 
           <aside className="w-full lg:w-1/3 lg:sticky lg:top-22 self-start">
             <div className="flex flex-col gap-3">
-
               {/* ── PILLAR CARD ATUALIZADO ── */}
               {post.pillar && (
                 <Link
@@ -1117,16 +1136,22 @@ export default async function PostPage({
                   </div>
                   <svg
                     className="w-3.5 h-3.5 shrink-0 text-primary/30 group-hover:text-primary group-hover:translate-x-0.5 transition-all"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M17 8l4 4m0 0l-4 4m4-4H3"
+                    />
                   </svg>
                 </Link>
               )}
 
               <AdComponent />
               <SecondAdComponent />
-
             </div>
           </aside>
         </div>
