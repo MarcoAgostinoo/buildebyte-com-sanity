@@ -61,7 +61,8 @@ async function getRegularPosts(pillarSlug: string, anchorId?: string): Promise<P
     "imagemAlt": mainImage.alt,
     publishedAt,
     editorialType,
-    "clusterName": cluster->title
+    "clusterName": cluster->title,
+    "authorName": author->name
   }`;
   return await client.fetch(query, { pillarSlug, anchorId: anchorId ?? "" }, { next: { revalidate: 60 } });
 }

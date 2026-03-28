@@ -57,7 +57,7 @@ async function getSpotlightPost(): Promise<SpotlightPost | null> {
     "imagem": mainImage.asset->url,
     "imagemAlt": mainImage.alt,
     "imagemLqip": mainImage.asset->metadata.lqip,
-    pillar,
+    "pillar": pillar->slug.current,
     editorialType,
     rating,
     "author": author->name,

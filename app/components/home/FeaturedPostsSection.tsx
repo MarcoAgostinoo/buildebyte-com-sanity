@@ -7,18 +7,18 @@ import styles from '../MilitaryTheme.module.css';
 const DEFAULT_IMAGE = "/images/placeholder.png";
 
 // ---------------------------------------------------------------------------
-// MAPEAMENTO DOS EIXOS (O que vai aparecer na etiqueta)
+// MAPEAMENTO DOS EIXOS (Corrigido para usar hifens '-' como nos slugs do Sanity)
 // ---------------------------------------------------------------------------
 const EIXO_LABELS: Record<string, string> = {
-  geopolitica_defesa: "Geopolítica & Defesa",
-  arsenal_tecnologia: "Arsenal & Tecnologia",
-  teatro_operacoes: "Teatro de Operações",
-  defesa_tecnologia: "Defesa & Tecnologia",
-  infraestrutura_digital: "Infraestrutura Digital",
-  ia_automacao: "IA & Automação",
-  economia_poder: "Economia de Poder",
-  brasil: "Brasil Estratégico",
-  global: "Cenário Global",
+  "geopolitica-defesa": "Geopolítica & Defesa",
+  "arsenal-tecnologia": "Arsenal & Tecnologia",
+  "teatro-operacoes": "Teatro de Operações",
+  "defesa-tecnologia": "Defesa & Tecnologia",
+  "infraestrutura-digital": "Infraestrutura Digital",
+  "ia-automacao": "IA & Automação",
+  "economia-poder": "Economia de Poder",
+  "brasil": "Brasil Estratégico",
+  "global": "Cenário Global",
 };
 
 type FeaturedPostsSectionProps = {
@@ -26,7 +26,7 @@ type FeaturedPostsSectionProps = {
 };
 
 export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSectionProps) {
-  if (featuredPosts.length === 0) {
+  if (!featuredPosts || featuredPosts.length === 0) {
     return null;
   }
 
@@ -64,11 +64,12 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
       {/* Grid de cards */}
       <div className={styles.mil_grid}>
         {featuredPosts.map((post, index) => {
-          const isHero = index === 0; // O índice 0 sempre será Geopolítica graças à nossa nova query
+          const isHero = index === 0;
           
-          // AQUI: Lê o nome do pilar do banco e converte para MAIÚSCULO
-          const badgeText = post.pillar && EIXO_LABELS[post.pillar] 
-            ? EIXO_LABELS[post.pillar].toUpperCase() 
+          // AQUI: Lê o nome do pilar, normaliza para minúsculas e busca no EIXO_LABELS
+          const pillarSlug = post.pillar ? post.pillar.toLowerCase() : "";
+          const badgeText = pillarSlug && EIXO_LABELS[pillarSlug] 
+            ? EIXO_LABELS[pillarSlug].toUpperCase() 
             : (isHero ? "MANCHETE" : "EM ALTA");
 
           return (
@@ -105,7 +106,7 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
                 {/* Conteúdo */}
                 <div className={styles.mil_card_content}>
                   
-                  {/* BADGE COM O NOME EXATO DO EIXO (EX: GEOPOLÍTICA & DEFESA) */}
+                  {/* BADGE COM O NOME EXATO DO EIXO */}
                   <span
                     className={`${styles.mil_badge} ${
                       isHero ? styles.mil_badge_manchete : styles.mil_badge_alta

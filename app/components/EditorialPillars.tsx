@@ -9,7 +9,7 @@ import { client } from "@/app/lib/sanity";
 
 async function getPillarCount(pillar: string): Promise<number> {
   return await client.fetch(
-    `count(*[_type == "post" && pillar == $pillar && !(_id in path('drafts.**'))])`,
+    `count(*[_type == "post" && pillar->slug.current == $pillar && !(_id in path('drafts.**'))])`,
     { pillar },
     { next: { revalidate: 300 } }
   );
@@ -17,7 +17,7 @@ async function getPillarCount(pillar: string): Promise<number> {
 
 const PILLARS = [
   {
-    slug:        "geopolitica",
+    slug:        "geopolitica-e-defesa",
     pillar:      "geopolitica_defesa",
     title:       "Geopolítica",
     titleLine2:  "& Defesa",
@@ -29,7 +29,7 @@ const PILLARS = [
     index:       "01",
   },
   {
-    slug:        "arsenal",
+    slug:        "arsenal-e-tecnologia",
     pillar:      "arsenal_tecnologia",
     title:       "Arsenal",
     titleLine2:  "& Tecnologia",
@@ -41,7 +41,7 @@ const PILLARS = [
     index:       "02",
   },
   {
-    slug:        "teatro",
+    slug:        "teatro-de-operacoes",
     pillar:      "teatro_operacoes",
     title:       "Teatro de",
     titleLine2:  "Operações",
@@ -53,7 +53,7 @@ const PILLARS = [
     index:       "03",
   },
   {
-    slug:        "sobrevivencia",
+    slug:        "manual-de-sobrevivencia",
     pillar:      "manual_sobrevivencia",
     title:       "Manual de",
     titleLine2:  "Sobrevivência",
@@ -65,7 +65,7 @@ const PILLARS = [
     index:       "04",
   },
   {
-    slug:        "carreiras",
+    slug:        "carreiras-estrategicas",
     pillar:      "carreiras_estrategicas",
     title:       "Carreiras",
     titleLine2:  "Estratégicas",

@@ -192,10 +192,7 @@ async function getRelatedPosts(
   const query = `*[_type == "post" && slug.current != $currentPostSlug && pillar->slug.current == $pillarSlug] | order(publishedAt desc) [0...3] {
     title,
     "slug": slug.current,
-    "imagem": mainImage.asset->url,
-    excerpt,
-    "pillar": pillar->title,
-    publishedAt
+    "imagem": mainImage.asset->url
   }`;
   return await client.fetch(query, { currentPostSlug, pillarSlug });
 }

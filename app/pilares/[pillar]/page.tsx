@@ -42,47 +42,20 @@ const EDITORIAL_COLORS: Record<string, string> = {
   opiniao:    "bg-orange-600",
 };
 
-// Mapeamento entre o SLUG da URL (kebab-case) e o VALOR no Sanity (snake_case)
-const PILLAR_DATA: Record<string, { title: string; value: string; description: string }> = {
-  "defesa-tecnologia": { 
-    title: "Defesa & Tecnologia", 
-    value: "defesa_tecnologia", 
-    description: "Análises sobre sistemas de defesa, soberania militar e tecnologias de dissuasão." 
-  },
-  "infraestrutura-digital": { 
-    title: "Infraestrutura Digital", 
-    value: "infraestrutura_digital", 
-    description: "Cabos submarinos, datacenters, 5G e a espinha dorsal da conectividade estratégica." 
-  },
-  "ia-automacao": { 
-    title: "IA & Automação", 
-    value: "ia_automacao", 
-    description: "O impacto da inteligência artificial e automação na economia e no poder estatal." 
-  },
-  "economia-poder": { 
-    title: "Economia de Poder", 
-    value: "economia_poder", 
-    description: "Sanções, guerras comerciais, commodities e a geoeconomia como arma." 
-  },
-  "brasil": { 
-    title: "Brasil Estratégico", 
-    value: "brasil", 
-    description: "O papel do Brasil no tabuleiro global, base industrial e soberania nacional." 
-  },
-  "global": { 
-    title: "Cenário Global", 
-    value: "global", 
-    description: "Movimentos geopolíticos, alianças e tensões entre grandes potências." 
-  },
-};
-
 // ---------------------------------------------------------------------------
 // DATA
 // ---------------------------------------------------------------------------
 
-async function getPillarPosts(pillarValue: string): Promise<PostCard[]> {
-  // Filtra pelo campo 'pillar' (string) em vez de referência de categoria
-  const query = `*[_type == "post" && pillar == $pillarValue] | order(publishedAt desc) {
+async function getPillar(slug: string) {
+  if (!slug) {
+    return null;
+  }
+  const query = `*[_type == "pillar" && slug.current == $slug][0]{ title, description }`;
+  return await client.fetch<{ title: string; description: string } | null>(query, { slug });
+}
+
+async function getPillarPosts(pillarSlug: string): Promise<PostCard[]> {
+  const query = `*[_type == "post" && pillar->slug.current == $pillarSlug] | order(publishedAt desc) {
     title,
     "slug": slug.current,
     excerpt,
@@ -90,14 +63,14 @@ async function getPillarPosts(pillarValue: string): Promise<PostCard[]> {
     "imagemLqip": mainImage.asset->metadata.lqip,
     publishedAt,
     editorialType,
-    "topics": categories[]->{title, "slug": slug.current},
     "author": author->{ name }
   }`;
-  return await client.fetch(query, { pillarValue });
+  return await client.fetch(query, { pillarSlug });
 }
 
 export async function generateStaticParams() {
-  return Object.keys(PILLAR_DATA).map((slug) => ({ pillar: slug }));
+  const pillars = await client.fetch<{slug: string}[]>(`*[_type == "pillar" && count(*[_type == "post" && references(^._id)]) > 0]{"slug": slug.current}`);
+  return pillars.filter(p => p.slug).map((p) => ({ pillar: p.slug }));
 }
 
 // ---------------------------------------------------------------------------
@@ -107,10 +80,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ pillar: string }>;
+  params: { pillar: string };
 }): Promise<Metadata> {
-  const { pillar } = await params;
-  const data = PILLAR_DATA[pillar];
+  const data = await getPillar(params.pillar);
   if (!data) return { title: "Pilar não encontrado" };
   return {
     title: `${data.title} — Vetor Estratégico`,
@@ -125,14 +97,12 @@ export async function generateMetadata({
 export default async function PillarPage({
   params,
 }: {
-  params: Promise<{ pillar: string }>;
+  params: { pillar: string };
 }) {
-  const { pillar } = await params;
-  const data = PILLAR_DATA[pillar];
-
+  const data = await getPillar(params.pillar);
   if (!data) notFound();
   
-  const posts = await getPillarPosts(data.value);
+  const posts = await getPillarPosts(params.pillar);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 sm:px-6 lg:px-8">

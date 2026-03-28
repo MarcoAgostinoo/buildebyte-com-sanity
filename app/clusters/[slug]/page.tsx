@@ -80,7 +80,7 @@ async function getClusterPosts(slug: string): Promise<PostCard[]> {
     "imagemLqip": mainImage.asset->metadata.lqip,
     publishedAt,
     editorialType,
-    pillar,
+    "pillar": pillar->slug.current,
     categories[]->{title, "slug": slug.current},
     "author": author->{ name }
   }`;

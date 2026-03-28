@@ -42,11 +42,11 @@ export const metadata: Metadata = {
 // PRIORIDADE DOS PILARES
 // ---------------------------------------------------------------------------
 const PILLAR_PRIORITY: Record<string, number> = {
-  "Geopolítica & Defesa": 0,
-  "Arsenal & Tecnologia": 1,
-  "Teatro de Operações": 2,
-  "Carreiras Estratégicas": 3,
-  "Manual de Sobrevivência": 4,
+  geopolitica_defesa: 0,
+  arsenal_tecnologia: 1,
+  teatro_operacoes: 2,
+  carreiras_estrategicas: 3, // Assumindo slug a partir do título
+  manual_de_sobrevivencia: 4, // Assumindo slug a partir do título
 };
 
 const DEFAULT_IMAGE = "/images/placeholder.png";
@@ -56,10 +56,16 @@ const DEFAULT_IMAGE = "/images/placeholder.png";
 // ---------------------------------------------------------------------------
 async function getFeaturedPosts(): Promise<FeaturedPost[]> {
   const query = `*[_type == "post" && featured == true && !(_id in path('drafts.**'))] | order(publishedAt desc) [0...3] {
-    _id, title, "slug": slug.current, excerpt, mainImage,
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    mainImage,
     "imagemAlt": mainImage.alt,
     "imagemLqip": mainImage.asset->metadata.lqip,
-    publishedAt, "pillar": pillar->title, editorialType, "author": author->name
+    "author": author->name,
+    publishedAt,
+    "pillar": pillar->slug.current
   }`;
   const data = await client.fetch(query, {}, { next: { revalidate: 300 } });
 
@@ -90,7 +96,7 @@ async function getPillarsWithPosts(): Promise<CategoryWithPosts[]> {
       _id, title, "slug": slug.current, mainImage,
       "imagemAlt": mainImage.alt,
       "imagemLqip": mainImage.asset->metadata.lqip,
-      excerpt, "author": author->name, publishedAt, "pillar": pillar->title, editorialType
+      excerpt, "author": author->name, publishedAt, "pillar": pillar->slug.current, editorialType
     }
   }`;
   const pillars = await client.fetch(query, {}, { next: { revalidate: 300 } });

@@ -5,8 +5,7 @@ interface Post {
   title: string;
   slug: string;
   publishedAt: string;
-  overview: string | null;
-  description: string | null;
+  excerpt: string | null;
   author: string | null;
 }
 
@@ -17,8 +16,7 @@ export async function GET() {
     title,
     "slug": slug.current,
     publishedAt,
-    overview,
-    description,
+    excerpt,
     "author": author->name
   }`;
 
@@ -39,7 +37,7 @@ export async function GET() {
     ${posts.map((post: Post) => {
       const postUrl = `${siteUrl}/artigo/${post.slug}`;
       // Fallback para garantir que sempre haja uma descrição
-      const summary = post.description || post.overview || '';
+      const summary = post.excerpt || '';
       
       return `
     <item>
