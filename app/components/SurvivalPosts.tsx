@@ -36,13 +36,12 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 async function getData(): Promise<Post[]> {
+  // AJUSTE: Removidas as restrições de 'featured' e 'anchor' e adicionada ordenação por data
   const query = `*[
     _type == "post" &&
     pillar->slug.current == "manual-de-sobrevivencia" &&
-    (!defined(featured) || featured == false) &&
-    (!defined(anchor) || anchor == false) &&
     !(_id in path("drafts.**"))
-  ][0...30] {
+  ] | order(publishedAt desc)[0...30] {
     title,
     "slug": slug.current,
     mainImage,
@@ -52,7 +51,6 @@ async function getData(): Promise<Post[]> {
     editorialType
   }`;
 
-  // CORREÇÃO TYPESCRIPT: Tipagem explícita do retorno do fetch como RawPost[]
   const data: RawPost[] = await client.fetch(query, {}, { next: { revalidate: 3600 } });
 
   const randomizedData = shuffleArray(data).slice(0, 4);
@@ -73,11 +71,9 @@ export default async function SurvivalPosts() {
 
   return (
     <section className="py-16 w-full bg-[#0a0b0d] border-t border-b border-[#2a2f3a] relative overflow-hidden">
-      {/* CORREÇÃO TAILWIND: var(--tw-gradient-stops) sem o underline */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-primary/5 via-[#0a0b0d] to-[#0a0b0d] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-
         <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-10 border-b border-[#2a2f3a] pb-6 gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
@@ -121,7 +117,6 @@ export default async function SurvivalPosts() {
                       </div>
                     )}
 
-                    {/* CORREÇÃO TAILWIND: bg-linear-to-t */}
                     <div className="absolute inset-0 bg-linear-to-t from-[#111318] via-transparent to-transparent opacity-90" />
 
                     <div className="absolute top-3 left-3 flex gap-1">
@@ -181,7 +176,6 @@ export default async function SurvivalPosts() {
             Acessar Manual Completo <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>
-
       </div>
     </section>
   );
