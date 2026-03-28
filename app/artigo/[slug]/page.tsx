@@ -332,6 +332,7 @@ const ptComponents: PortableTextComponents = {
               blurDataURL={value.asset.metadata?.lqip}
               className="w-full h-auto object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 85vw"
+              quality={65}
             />
           </div>
           {descriptionText && (
@@ -1006,6 +1007,7 @@ export default async function PostPage({
                           blurDataURL={post.imagemLqip}
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 50vw"
                           className="object-cover"
+                          quality={70}
                         />
                       </div>
                     </div>

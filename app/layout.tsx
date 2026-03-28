@@ -155,6 +155,7 @@ export default async function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
+        <link rel="preconnect" href="https://api.worldbank.org" />
         {/* Você pode renderizar o JSON-LD aqui se tiver a estrutura completa:
             <script
               type="application/ld+json"

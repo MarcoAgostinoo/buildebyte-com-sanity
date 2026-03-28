@@ -98,6 +98,7 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
                     priority={isHero}
                     loading={isHero ? "eager" : "lazy"}
                     fetchPriority={isHero ? "high" : "auto"}
+                    quality={isHero ? 70 : 65}
                   />
                 </div>
 
