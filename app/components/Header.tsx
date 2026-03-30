@@ -128,7 +128,7 @@ export default function Header({ pillars }: { pillars: Pillar[] }) {
                     {pillars.map((pillar) => (
                       <DropdownItem
                         key={pillar.slug || pillar.basePath}
-                        href={`/pilares/${pillar.slug}`}
+                        href={pillar.slug === 'carreiras-estrategicas' ? '/concursos' : `/pilares/${pillar.slug}`}
                         label={pillar.title}
                       />
                     ))}
@@ -190,7 +190,7 @@ export default function Header({ pillars }: { pillars: Pillar[] }) {
                     {pillars.map((pillar) => (
                       <MobileNavItem
                         key={pillar.slug || pillar.basePath}
-                        href={`/pilares/${pillar.slug}`}
+                        href={pillar.slug === 'carreiras-estrategicas' ? '/concursos' : `/pilares/${pillar.slug}`}
                         label={pillar.title}
                         onClick={closeMenu}
                       />

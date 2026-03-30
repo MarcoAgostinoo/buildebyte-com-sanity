@@ -82,7 +82,7 @@ export default function StrategicFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/pilares/carreiras-estrategicas" className="text-zinc-500 hover:text-primary transition-colors flex items-center gap-2 group">
+                <Link href="/concursos" className="text-zinc-500 hover:text-primary transition-colors flex items-center gap-2 group">
                   <span className="text-[#2a2f3a] group-hover:text-primary transition-colors">▹</span> Concursos & Carreiras
                 </Link>
               </li>

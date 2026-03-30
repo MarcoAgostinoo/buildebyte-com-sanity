@@ -1,6 +1,7 @@
 
 import { client } from "@/app/lib/sanity";
 import DestaquesGrid from "@/app/components/DestaquesGrid";
+import { Metadata } from "next";
 
 interface Post {
   _id: string;
@@ -15,6 +16,11 @@ interface Post {
   pillarSlug?: string;
 }
 
+export const metadata: Metadata = {
+  title: "Concursos & Carreiras | Vetor Estratégico",
+  description: "Notícias, editais e análises sobre os principais concursos públicos militares, policiais e de inteligência do Brasil.",
+};
+
 async function getConcursos(): Promise<Post[]> {
   const query = `*[_type == "post" && pillar->slug.current == "carreiras-estrategicas" && !(_id in path('drafts.**'))] | order(publishedAt desc) [0...20] {
     _id,
@@ -28,17 +34,23 @@ async function getConcursos(): Promise<Post[]> {
     "pillarSlug": pillar->slug.current,
     "categorySlug": category->slug.current
   }`;
-  return await client.fetch(query, {}, { cache: "no-store" });
+  // Adicionado revalidate para performance em produção
+  return await client.fetch(query, {}, { next: { revalidate: 60 } });
 }
 
 export default async function ConcursosPage() {
   const concursos = await getConcursos();
 
   return (
-    <div className="max-w-9xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-black text-primary mb-8 border-l-4 border-secondary pl-4">
-        Concursos
-      </h1>
+    <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+      <header className="mb-12 border-b border-[#2a2f3a] pb-8">
+        <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-zinc-100 uppercase">
+          Concursos & Carreiras
+        </h1>
+        <p className="mt-4 text-lg text-zinc-400 max-w-3xl">
+          Notícias, editais e análises sobre os principais concursos públicos militares, policiais e de inteligência do Brasil.
+        </p>
+      </header>
       <DestaquesGrid initialPosts={concursos} />
     </div>
   );
