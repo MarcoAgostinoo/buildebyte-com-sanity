@@ -116,6 +116,11 @@ export interface Post {
   affiliateLink?: string;
   affiliateLabel?: string;
   rating?: number;
+  faq?: {
+    _key: string;
+    question: string;
+    answer: PortableTextBlock[];
+  }[];
 }
 
 /**
@@ -132,7 +137,7 @@ export interface PostCard {
   mainImage: SanityImage;
   author: Pick<Author, "_id" | "name">;
   pillar: Pick<Pillar, "basePath">;
-  category: Pick<Category, "slug" | "pillar">;
+  category: Pick<Category, "slug">;
 }
 
 /**

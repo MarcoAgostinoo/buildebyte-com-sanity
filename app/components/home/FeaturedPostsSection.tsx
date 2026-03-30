@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { FeaturedPost } from "@/app/lib";
+import { Post as FeaturedPost } from "@/app/lib/types";
 import { formatDate } from "@/app/lib/utils";
 import styles from '../MilitaryTheme.module.css';
 
@@ -21,6 +21,16 @@ type FeaturedPostsSectionProps = {
   featuredPosts: FeaturedPost[];
 };
 
+// Tipo auxiliar para lidar com a estrutura de dados flexível vinda do CMS
+// sem desativar as regras do linter com 'any'.
+type PostWithFlexibleRelations = FeaturedPost & {
+  pillar?: string | { slug: string };
+  category?: string | { slug: string };
+  pillarBasePath?: string;
+  pillarSlug?: string;
+  categorySlug?: string;
+};
+
 export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSectionProps) {
   if (!featuredPosts || featuredPosts.length === 0) {
     return null;
@@ -30,7 +40,7 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
     <section className={`${styles.mil_section} mb-8`}>
       {/* Cabeçalho */}
       <div className={`${styles.mil_header} w-full flex flex-wrap items-end justify-between gap-x-2 gap-y-4`}>
-        <div className={`${styles.mil_title_wrap} flex items-end gap-3 flex-1 min-w-[240px]`}>
+        <div className={`${styles.mil_title_wrap} flex items-end gap-3 flex-1 min-w-60`}>
           <div className={`${styles.mil_title_icon} shrink-0`}>
             <span />
             <span />
@@ -62,9 +72,8 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
         {featuredPosts.map((post, index) => {
           const isHero = index === 0;
           
-          // 'as any' previne o erro de 'never' caso a interface exija uma string plana, permitindo as verificações robustas.
-          const postAny = post as any;
-          const pillarSlug = (typeof postAny.pillar === 'object' ? postAny.pillar.slug : postAny.pillar)?.toLowerCase() || postAny.pillarBasePath || postAny.pillarSlug || "";
+          const flexiblePost = post as PostWithFlexibleRelations;
+          const pillarSlug = (typeof flexiblePost.pillar === 'object' ? flexiblePost.pillar.slug : flexiblePost.pillar)?.toLowerCase() || flexiblePost.pillarBasePath || flexiblePost.pillarSlug || "";
           const badgeText = pillarSlug && EIXO_LABELS[pillarSlug] 
             ? EIXO_LABELS[pillarSlug].toUpperCase() 
             : (isHero ? "MANCHETE" : "EM ALTA");
@@ -78,7 +87,7 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
 
           let postUrl = '';
           const militarCategory = MILITAR_CATEGORY_MAP[pillarSlug];
-          const categorySlug = typeof postAny.category === 'object' ? postAny.category.slug : postAny.categorySlug || "geral";
+          const categorySlug = typeof flexiblePost.category === 'object' ? flexiblePost.category.slug : flexiblePost.categorySlug || "geral";
 
           if (militarCategory) {
             // Constrói a URL para pilares dentro de /militar
@@ -103,11 +112,11 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
                 {/* Imagem de fundo */}
                 <div className={styles.mil_card_img}>
                   <Image
-                    src={post.imagem || DEFAULT_IMAGE}
-                    alt={post.imagemAlt || post.title || "Imagem do artigo"}
+                    src={post.mainImage?.asset?.url || DEFAULT_IMAGE}
+                    alt={post.mainImage?.alt || post.title || "Imagem do artigo"}
                     fill
-                    placeholder={post.imagemLqip ? "blur" : "empty"}
-                    blurDataURL={post.imagemLqip}
+                    placeholder={post.mainImage?.asset?.metadata?.lqip ? "blur" : "empty"}
+                    blurDataURL={post.mainImage?.asset?.metadata?.lqip}
                     className="object-cover"
                     sizes={
                       isHero
@@ -149,7 +158,7 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
 
                   <div className={styles.mil_card_meta}>
                     <span className={styles.mil_card_meta_author}>
-                      {post.author}
+                      {post.author?.name}
                     </span>
                     <span className={styles.mil_card_meta_sep}>◆</span>
                     <span>{formatDate(post.publishedAt)}</span>

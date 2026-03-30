@@ -1,8 +1,17 @@
 import Link from "next/link";
 import Image from "next/image";
-import { CategoryWithPosts } from "@/app/lib";
 
-type Post = CategoryWithPosts["posts"][number];
+// Tipagem local definida para evitar o erro de exportação do @/app/lib
+export interface Post {
+  _id?: string;
+  slug: string;
+  title: string;
+  imagem?: string;
+  pillar?: string | { basePath?: string; slug?: string; title?: string };
+  pillarBasePath?: string;
+  categorySlug?: string;
+  category?: string | { slug?: string };
+}
 
 export default function PopularPostsList({ posts }: { posts: Post[] }) {
   return (
@@ -31,10 +40,9 @@ export default function PopularPostsList({ posts }: { posts: Post[] }) {
       {/* LISTA DE POSTS */}
       <div className="flex flex-col flex-1 divide-y divide-[#2a2f3a] relative z-10">
         {posts.map((post, index) => {
-          const postAny = post as any;
           // Traduz os dados do CMS para a pasta física correspondente no Next.js
-          const p = (postAny.pillarBasePath || (typeof postAny.pillar === 'object' ? postAny.pillar.basePath || postAny.pillar.slug : postAny.pillar) || "").toLowerCase();
-          const c = postAny.categorySlug || (typeof postAny.category === 'object' ? postAny.category.slug : postAny.category) || "geral";
+          const p = (post.pillarBasePath || (typeof post.pillar === 'object' ? post.pillar.basePath || post.pillar.slug : post.pillar) || "").toLowerCase();
+          const c = post.categorySlug || (typeof post.category === 'object' ? post.category.slug : post.category) || "geral";
           let postUrl = `/militar/geral/${post.slug}`;
           if (p.includes("geopolitica")) postUrl = `/militar/geopolitica/${post.slug}`;
           else if (p.includes("arsenal")) postUrl = `/militar/arsenal/${post.slug}`;
@@ -72,7 +80,7 @@ export default function PopularPostsList({ posts }: { posts: Post[] }) {
             <div className="flex flex-col justify-center flex-1 min-w-0">
               {post.pillar && (
                 <span className="text-[12px] font-black uppercase tracking-widest text-primary/70 mb-1.5 line-clamp-1 font-mono">
-                  [{typeof postAny.pillar === 'object' ? postAny.pillar.title || postAny.pillar.basePath : postAny.pillar}]
+                  [{typeof post.pillar === 'object' ? post.pillar.title || post.pillar.basePath : post.pillar}]
                 </span>
               )}
               <h3 className="font-bold text-zinc-300 text-sm leading-snug line-clamp-2 group-hover:text-white transition-colors">

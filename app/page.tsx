@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { client, urlFor } from "@/app/lib/sanity";
-import { CategoryWithPosts, WebStory, FeaturedPost } from "@/app/lib";
+import { Post as FeaturedPost } from "@/app/lib/types";
 import { getPodcastEpisodes } from "@/app/lib/podcast-service";
 
 // ── Componentes SSR ──
@@ -30,6 +30,33 @@ const LeadCapture = dynamic(() => import("./components/LeadCapture"));
 
 // ATUALIZAÇÃO TÁTICA: Renomeado para refletir o novo Módulo de Sobrevivência
 const SurvivalPosts = dynamic(() => import("./components/SurvivalPosts"));
+
+export interface WebStory {
+  _id: string;
+  title: string;
+  slug: string;
+  coverImage: string;
+  description?: string;
+  ctaText?: string;
+}
+
+export interface CategoryPost {
+  _id: string;
+  title: string;
+  slug: string;
+  publishedAt: string;
+  pillar?: string;
+  [key: string]: unknown;
+}
+
+// Tipagem local definida para evitar o erro de compilação
+export interface CategoryWithPosts {
+  _id: string;
+  title: string;
+  slug: string;
+  basePath: string;
+  posts: CategoryPost[];
+}
 
 export const metadata: Metadata = {
   title: "Vetor Estratégico - Defesa e Estratégia",
@@ -86,8 +113,8 @@ async function getFeaturedPosts(): Promise<FeaturedPost[]> {
 
   return posts.sort(
     (a, b) =>
-      (PILLAR_PRIORITY[a.pillar ?? ""] ?? 99) -
-      (PILLAR_PRIORITY[b.pillar ?? ""] ?? 99),
+      (PILLAR_PRIORITY[(a.pillar as unknown as string) ?? ""] ?? 99) -
+      (PILLAR_PRIORITY[(b.pillar as unknown as string) ?? ""] ?? 99),
   );
 }
 
@@ -192,11 +219,11 @@ export default async function Home() {
         {/* Divisor Tático (Feixe de Transmissão) */}
         <div className="flex items-center gap-4 mb-10 w-full">
           <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--primary-rgb),0.8)] shrink-0" />
-          <div className="flex-1 h-px bg-gradient-to-r from-primary/50 via-[#2a2f3a] to-[#2a2f3a]" />
+          <div className="flex-1 h-px bg-linear-to-r from-primary/50 via-[#2a2f3a] to-[#2a2f3a]" />
           <span className="text-[12px] font-black uppercase tracking-[0.4em] text-primary/80 font-mono shrink-0 px-2">
             Inteligência & Transmissão
           </span>
-          <div className="flex-1 h-px bg-gradient-to-l from-primary/50 via-[#2a2f3a] to-[#2a2f3a]" />
+          <div className="flex-1 h-px bg-linear-to-l from-primary/50 via-[#2a2f3a] to-[#2a2f3a]" />
           <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--primary-rgb),0.8)] shrink-0" />
         </div>
 
