@@ -2,14 +2,16 @@ import { client, urlFor, type SanityImageSource } from "@/app/lib/sanity";
 import Image from "next/image";
 import Link from "next/link";
 
+// A interface foi simplificada pois o caminho da URL agora é previsível.
 interface Post {
   title: string;
   slug: string;
   imagem: string;
   alt: string;
   publishedAt: string;
-  pillarName?: string;
   editorialType?: string;
+  pillarBasePath?: string;
+  categorySlug?: string;
 }
 
 interface RawPost extends Omit<Post, "imagem"> {
@@ -36,7 +38,7 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 async function getData(): Promise<Post[]> {
-  // AJUSTE: Removidas as restrições de 'featured' e 'anchor' e adicionada ordenação por data
+  // A query foi simplificada pois não precisamos mais de dados do pilar/categoria para a URL.
   const query = `*[
     _type == "post" &&
     pillar->slug.current == "manual-de-sobrevivencia" &&
@@ -47,8 +49,9 @@ async function getData(): Promise<Post[]> {
     mainImage,
     "alt": mainImage.alt,
     publishedAt,
-    "pillarName": pillar->title,
-    editorialType
+    editorialType,
+    "pillarBasePath": pillar->basePath,
+    "categorySlug": category->slug.current
   }`;
 
   const data: RawPost[] = await client.fetch(query, {}, { next: { revalidate: 3600 } });
@@ -60,8 +63,9 @@ async function getData(): Promise<Post[]> {
     slug: post.slug,
     alt: post.alt || "",
     publishedAt: post.publishedAt,
-    pillarName: post.pillarName,
     editorialType: post.editorialType,
+    pillarBasePath: post.pillarBasePath,
+    categorySlug: post.categorySlug,
     imagem: post.mainImage ? urlFor(post.mainImage).width(800).height(500).quality(75).auto('format').url() : ""
   }));
 }
@@ -88,7 +92,7 @@ export default async function SurvivalPosts() {
           </div>
           
           <Link 
-            href="/frentes/manual-de-sobrevivencia" 
+            href="/militar/sobrevivencia" 
             className="hidden sm:flex items-center gap-2 text-[12px] font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-orange-500 transition-colors border border-[#2a2f3a] px-4 py-2 hover:bg-orange-500/5"
           >
             Acessar Manual Completo <span aria-hidden="true">&rarr;</span>
@@ -99,8 +103,9 @@ export default async function SurvivalPosts() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {data.map((post: Post, idx: number) => (
               <article key={idx} className="group relative flex flex-col bg-[#111318] border border-[#2a2f3a] hover:border-orange-500/50 transition-all duration-300 shadow-lg">
-                
-                <Link href={`/artigo/${post.slug}`} className="flex flex-col h-full relative z-10">
+
+                {/* O SurvivalPosts tem a URL garantida por pertencer exclusivamente à categoria sobrevivência */}
+                <Link href={`/militar/sobrevivencia/${post.slug}`} className="flex flex-col h-full relative z-10">
                   <div className="relative aspect-video w-full overflow-hidden border-b border-[#2a2f3a]">
                     {post.imagem ? (
                       <Image
@@ -121,7 +126,7 @@ export default async function SurvivalPosts() {
 
                     <div className="absolute top-3 left-3 flex gap-1">
                       <span className="bg-black/90 backdrop-blur-md text-orange-400 text-[12px] font-black px-2.5 py-1 uppercase tracking-[0.2em] border border-orange-900 shadow-lg">
-                        {post.pillarName || "Sobrevivência"}
+                        Sobrevivência
                       </span>
                     </div>
                   </div>
@@ -170,7 +175,7 @@ export default async function SurvivalPosts() {
 
         <div className="mt-8 sm:hidden w-full">
           <Link
-            href="/frentes/manual-de-sobrevivencia"
+            href="/militar/sobrevivencia"
             className="flex justify-center items-center gap-2 bg-[#111318] border border-[#2a2f3a] text-zinc-300 font-black text-[12px] py-4 uppercase tracking-[0.2em] w-full hover:bg-orange-600 hover:text-white transition-all active:scale-95"
           >
             Acessar Manual Completo <span aria-hidden="true">&rarr;</span>

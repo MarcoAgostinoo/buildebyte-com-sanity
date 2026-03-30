@@ -65,7 +65,9 @@ async function getFeaturedPosts(): Promise<FeaturedPost[]> {
     "imagemLqip": mainImage.asset->metadata.lqip,
     "author": author->name,
     publishedAt,
-    "pillar": pillar->slug.current
+    "pillar": pillar->slug.current,
+    "pillarBasePath": pillar->basePath,
+    "categorySlug": category->slug.current
   }`;
   const data = await client.fetch(query, {}, { next: { revalidate: 300 } });
 
@@ -91,12 +93,13 @@ async function getFeaturedPosts(): Promise<FeaturedPost[]> {
 
 async function getPillarsWithPosts(): Promise<CategoryWithPosts[]> {
   const query = `*[_type == "pillar" && !(_id in path('drafts.**')) && count(*[_type == "post" && references(^._id)]) > 0] {
-    _id, title, "slug": slug.current,
+    _id, title, "slug": slug.current, "basePath": basePath,
     "posts": *[_type == "post" && references(^._id)] | order(publishedAt desc) [0...4] {
       _id, title, "slug": slug.current, mainImage,
       "imagemAlt": mainImage.alt,
       "imagemLqip": mainImage.asset->metadata.lqip,
-      excerpt, "author": author->name, publishedAt, "pillar": pillar->slug.current, editorialType
+      excerpt, "author": author->name, publishedAt, "pillar": pillar->slug.current, 
+      "pillarBasePath": pillar->basePath, "categorySlug": category->slug.current, editorialType
     }
   }`;
   const pillars = await client.fetch(query, {}, { next: { revalidate: 300 } });

@@ -10,17 +10,23 @@ interface Post {
   imagem: string;
   publishedAt: string;
   author: string;
+  pillarBasePath?: string;
+  categorySlug?: string;
+  pillarSlug?: string;
 }
 
 async function getConcursos(): Promise<Post[]> {
-  const query = `*[_type == "post" && "concursos" in categories[]->slug.current && !(_id in path('drafts.**'))] | order(publishedAt desc) [0...20] {
+  const query = `*[_type == "post" && pillar->slug.current == "carreiras-estrategicas" && !(_id in path('drafts.**'))] | order(publishedAt desc) [0...20] {
     _id,
     title,
     "slug": slug.current,
     excerpt,
     "imagem": mainImage.asset->url,
     publishedAt,
-    "author": author->name
+    "author": author->name,
+    "pillarBasePath": pillar->basePath,
+    "pillarSlug": pillar->slug.current,
+    "categorySlug": category->slug.current
   }`;
   return await client.fetch(query, {}, { cache: "no-store" });
 }

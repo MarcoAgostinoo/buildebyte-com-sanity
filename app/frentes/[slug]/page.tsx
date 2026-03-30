@@ -18,6 +18,8 @@ interface PostData {
   editorialType?: string;
   clusterName?: string;
   authorName?: string;
+  pillarBasePath?: string;
+  categorySlug?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -44,7 +46,9 @@ async function getAnchorPost(pillarSlug: string): Promise<PostData | null> {
     publishedAt,
     editorialType,
     "clusterName": cluster->title,
-    "authorName": author->name
+    "authorName": author->name,
+    "pillarBasePath": pillar->basePath,
+    "categorySlug": category->slug.current
   }`;
   return await client.fetch(query, { pillarSlug }, { next: { revalidate: 60 } });
 }
@@ -62,7 +66,9 @@ async function getRegularPosts(pillarSlug: string, anchorId?: string): Promise<P
     publishedAt,
     editorialType,
     "clusterName": cluster->title,
-    "authorName": author->name
+    "authorName": author->name,
+    "pillarBasePath": pillar->basePath,
+    "categorySlug": category->slug.current
   }`;
   return await client.fetch(query, { pillarSlug, anchorId: anchorId ?? "" }, { next: { revalidate: 60 } });
 }
@@ -126,7 +132,7 @@ export default async function FrentePage({ params }: { params: Promise<{ slug: s
             </h2>
           </div>
 
-          <Link href={`/artigo/${anchorPost.slug}`} className="group block relative bg-[#111318] border border-[#2a2f3a] hover:border-primary/50 transition-all overflow-hidden shadow-2xl">
+          <Link href={anchorPost.pillarBasePath && anchorPost.categorySlug ? `/${anchorPost.pillarBasePath}/${anchorPost.categorySlug}/${anchorPost.slug}` : `/artigo/${anchorPost.slug}`} className="group block relative bg-[#111318] border border-[#2a2f3a] hover:border-primary/50 transition-all overflow-hidden shadow-2xl">
             <div className="flex flex-col md:flex-row">
               <div className="w-full md:w-3/5 relative aspect-video md:aspect-auto">
                 {anchorPost.imagem ? (
@@ -197,7 +203,7 @@ export default async function FrentePage({ params }: { params: Promise<{ slug: s
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Correção TypeScript: tipo alterado de any para PostData */}
             {regularPosts.map((post: PostData) => (
-              <Link key={post._id} href={`/artigo/${post.slug}`} className="group flex flex-col bg-[#111318] border border-[#2a2f3a] hover:border-primary/40 transition-colors shadow-md h-full">
+              <Link key={post._id} href={post.pillarBasePath && post.categorySlug ? `/${post.pillarBasePath}/${post.categorySlug}/${post.slug}` : `/artigo/${post.slug}`} className="group flex flex-col bg-[#111318] border border-[#2a2f3a] hover:border-primary/40 transition-colors shadow-md h-full">
                 
                 <div className="relative aspect-video w-full overflow-hidden border-b border-[#2a2f3a]">
                   {post.imagem ? (

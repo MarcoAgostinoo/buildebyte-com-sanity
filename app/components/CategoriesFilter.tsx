@@ -20,6 +20,10 @@ interface Post {
   publishedAt: string;
   category: string;
   categoryId: string;
+  pillarBasePath?: string;
+  categorySlug?: string;
+  pillarSlug?: string;
+  pillar?: any;
 }
 
 const formatDate = (dateString: string) => {
@@ -99,13 +103,23 @@ export default function CategoriesFilter({
             const imageUrl = post.mainImage
               ? urlFor(post.mainImage).width(800).height(500).quality(80).auto('format').url()
               : "";
+              
+            // Traduz os dados do CMS para a pasta física correspondente no Next.js
+            const p = (post.pillarSlug || post.pillarBasePath || (typeof post.pillar === 'object' ? post.pillar?.slug : post.pillar) || "").toLowerCase();
+            const c = post.categorySlug || "geral";
+            let postUrl = `/militar/geral/${post.slug}`;
+            if (p.includes("geopolitica")) postUrl = `/militar/geopolitica/${post.slug}`;
+            else if (p.includes("arsenal")) postUrl = `/militar/arsenal/${post.slug}`;
+            else if (p.includes("teatro") || p.includes("operacoes") || p.includes("historia")) postUrl = `/militar/historia/${post.slug}`;
+            else if (p.includes("sobrevivencia")) postUrl = `/militar/sobrevivencia/${post.slug}`;
+            else if (p.includes("carreira") || p.includes("concurso")) postUrl = `/concursos/${c}/${post.slug}`;
 
             return (
               <article
-                key={post._id}
+                key={post._id || post.slug || index}
                 className="bg-white shadow-sm border border-zinc-200 overflow-hidden transform hover:shadow-lg transition-all duration-300 group"
               >
-                <Link href={`/artigo/${post.slug}`}>
+                <Link href={postUrl}>
                   <div className="cursor-pointer h-full flex flex-col">
                     {/* IMAGEM */}
                     {imageUrl && (

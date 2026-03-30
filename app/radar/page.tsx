@@ -12,6 +12,9 @@ interface Post {
   author: string;
   editorialType?: string;
   pillarName?: string;
+  pillarBasePath?: string;
+  categorySlug?: string;
+  pillarSlug?: string;
 }
 
 interface RawPost extends Omit<Post, "imagem"> {
@@ -29,6 +32,9 @@ async function getRadar(): Promise<Post[]> {
     publishedAt,
     editorialType,
     "pillarName": pillar->title,
+    "pillarBasePath": pillar->basePath,
+    "pillarSlug": pillar->slug.current,
+    "categorySlug": category->slug.current,
     "author": author->name
   }`;
 
@@ -67,12 +73,23 @@ export default async function RadarPage() {
       {/* FEED DE NOTÍCIAS (LISTA VERTICAL TÁTICA) */}
       {posts.length > 0 ? (
         <div className="flex flex-col gap-6">
-          {posts.map((post) => (
-            <Link 
-              key={post._id} 
-              href={`/artigo/${post.slug}`} 
-              className="group flex flex-col sm:flex-row bg-[#111318] border border-[#2a2f3a] hover:border-primary/50 transition-all overflow-hidden shadow-md"
-            >
+          {posts.map((post) => {
+            // Traduz os dados do CMS para a pasta física correspondente no Next.js
+            const p = (post.pillarSlug || post.pillarBasePath || "").toLowerCase();
+            const c = post.categorySlug || "geral";
+            let postUrl = `/militar/geral/${post.slug}`;
+            if (p.includes("geopolitica")) postUrl = `/militar/geopolitica/${post.slug}`;
+            else if (p.includes("arsenal")) postUrl = `/militar/arsenal/${post.slug}`;
+            else if (p.includes("teatro") || p.includes("operacoes") || p.includes("historia")) postUrl = `/militar/historia/${post.slug}`;
+            else if (p.includes("sobrevivencia")) postUrl = `/militar/sobrevivencia/${post.slug}`;
+            else if (p.includes("carreira") || p.includes("concurso")) postUrl = `/concursos/${c}/${post.slug}`;
+            
+            return (
+              <Link 
+                key={post._id || post.slug} 
+                href={postUrl}
+                className="group flex flex-col sm:flex-row bg-[#111318] border border-[#2a2f3a] hover:border-primary/50 transition-all overflow-hidden shadow-md"
+              >
               {/* Imagem (Esquerda) */}
               <div className="w-full sm:w-64 shrink-0 relative aspect-video sm:aspect-auto border-r border-[#2a2f3a]">
                 {post.imagem ? (
@@ -114,7 +131,8 @@ export default async function RadarPage() {
                 </p>
               </div>
             </Link>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <div className="text-center py-24 border border-dashed border-[#2a2f3a] bg-[#111318]/50">

@@ -28,7 +28,7 @@ export default function StrategicFooter() {
                 alt="Vetor Estratégico Logo"
                 width={48}
                 height={48}
-                className="h-12 w-auto filter grayscale group-hover:grayscale-0 transition-all duration-500"
+                className="h-12 w-12 filter grayscale group-hover:grayscale-0 transition-all duration-500"
               />
               <div className="flex flex-col">
                 <span className="whitespace-nowrap text-xl sm:text-2xl font-black text-zinc-100 uppercase tracking-widest leading-none group-hover:text-[#c8a84b] transition-colors">
@@ -62,27 +62,27 @@ export default function StrategicFooter() {
 
             <ul className="space-y-3 text-sm font-bold tracking-wide">
               <li>
-                <Link href="/frentes/geopolitica-e-defesa" className="text-zinc-500 hover:text-primary transition-colors flex items-center gap-2 group">
+                <Link href="/pilares/geopolitica-e-defesa" className="text-zinc-500 hover:text-primary transition-colors flex items-center gap-2 group">
                   <span className="text-[#2a2f3a] group-hover:text-primary transition-colors">▹</span> Geopolítica & Defesa
                 </Link>
               </li>
               <li>
-                <Link href="/frentes/arsenal-e-tecnologia" className="text-zinc-500 hover:text-primary transition-colors flex items-center gap-2 group">
+                <Link href="/pilares/arsenal-e-tecnologia" className="text-zinc-500 hover:text-primary transition-colors flex items-center gap-2 group">
                   <span className="text-[#2a2f3a] group-hover:text-primary transition-colors">▹</span> Arsenal & Tecnologia
                 </Link>
               </li>
               <li>
-                <Link href="/frentes/teatro-de-operacoes" className="text-zinc-500 hover:text-primary transition-colors flex items-center gap-2 group">
+                <Link href="/pilares/teatro-de-operacoes" className="text-zinc-500 hover:text-primary transition-colors flex items-center gap-2 group">
                   <span className="text-[#2a2f3a] group-hover:text-primary transition-colors">▹</span> Teatro de Operações
                 </Link>
               </li>
               <li>
-                <Link href="/frentes/manual-de-sobrevivencia" className="text-zinc-500 hover:text-primary transition-colors flex items-center gap-2 group">
+                <Link href="/pilares/manual-de-sobrevivencia" className="text-zinc-500 hover:text-primary transition-colors flex items-center gap-2 group">
                   <span className="text-[#2a2f3a] group-hover:text-primary transition-colors">▹</span> Sobrevivencialismo
                 </Link>
               </li>
               <li>
-                <Link href="/frentes/carreiras-estrategicas" className="text-zinc-500 hover:text-primary transition-colors flex items-center gap-2 group">
+                <Link href="/pilares/carreiras-estrategicas" className="text-zinc-500 hover:text-primary transition-colors flex items-center gap-2 group">
                   <span className="text-[#2a2f3a] group-hover:text-primary transition-colors">▹</span> Concursos & Carreiras
                 </Link>
               </li>

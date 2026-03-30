@@ -5,6 +5,9 @@ import { client } from '@/app/lib/sanity';
 interface SanitySitemapItem {
   slug: string;
   _updatedAt: string;
+  pillarBasePath?: string;
+  categorySlug?: string;
+  pillarSlug?: string;
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -20,8 +23,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/videos`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
     { url: `${baseUrl}/web-stories`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
     { url: `${baseUrl}/achados`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
-    { url: `${baseUrl}/concursos`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
-    { url: `${baseUrl}/frentes`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
+    // Frentes/Categorias principais
+    { url: `${baseUrl}/militar/geopolitica`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
+    { url: `${baseUrl}/militar/arsenal`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
+    { url: `${baseUrl}/militar/historia`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
+    { url: `${baseUrl}/militar/sobrevivencia`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
+    { url: `${baseUrl}/concursos`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
+    // Páginas institucionais
     { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/contato`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/manifesto`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.4 },
@@ -32,14 +40,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     // 3. BUSCA POSTS DINÂMICOS
-    const postsQuery = `*[_type == "post" && defined(slug.current)] { "slug": slug.current, _updatedAt }`;
+    const postsQuery = `*[_type == "post" && defined(slug.current) && defined(pillar->basePath) && defined(category->slug.current)] {
+      "slug": slug.current,
+      _updatedAt,
+      "pillarBasePath": pillar->basePath,
+      "pillarSlug": pillar->slug.current,
+      "categorySlug": category->slug.current
+    }`;
     const posts = await client.fetch<SanitySitemapItem[]>(postsQuery);
-    const postRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
-      url: `${baseUrl}/artigo/${post.slug}`, 
-      lastModified: new Date(post._updatedAt),
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    }));
+    const postRoutes: MetadataRoute.Sitemap = posts.map((post) => {
+      const p = (post.pillarSlug || post.pillarBasePath || "").toLowerCase();
+      const c = post.categorySlug || "geral";
+      let postUrl = `/militar/geral/${post.slug}`;
+      
+      if (p.includes("geopolitica")) postUrl = `/militar/geopolitica/${post.slug}`;
+      else if (p.includes("arsenal")) postUrl = `/militar/arsenal/${post.slug}`;
+      else if (p.includes("teatro") || p.includes("operacoes") || p.includes("historia")) postUrl = `/militar/historia/${post.slug}`;
+      else if (p.includes("sobrevivencia")) postUrl = `/militar/sobrevivencia/${post.slug}`;
+      else if (p.includes("carreira") || p.includes("concurso")) postUrl = `/concursos/${c}/${post.slug}`;
+
+      return {
+        url: `${baseUrl}${postUrl}`,
+        lastModified: new Date(post._updatedAt),
+        changeFrequency: 'weekly',
+        priority: 0.7,
+      };
+    });
 
     // 4. BUSCA WEB STORIES DINÂMICAS
     const storiesQuery = `*[_type == "webStory" && defined(slug.current)] { "slug": slug.current, _updatedAt }`;
@@ -49,16 +75,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(story._updatedAt),
       changeFrequency: 'daily',
       priority: 0.9,
-    }));
-
-    // 5. BUSCA FRENTES DINÂMICAS (NOVO)
-    const frentesQuery = `*[_type == "frente" && defined(slug.current)] { "slug": slug.current, _updatedAt }`;
-    const frentes = await client.fetch<SanitySitemapItem[]>(frentesQuery);
-    const frentesRoutes: MetadataRoute.Sitemap = frentes.map((frente) => ({
-        url: `${baseUrl}/frentes/${frente.slug}`,
-        lastModified: new Date(frente._updatedAt),
-        changeFrequency: 'weekly',
-        priority: 0.6,
     }));
 
     // 6. BUSCA PILARES DINÂMICOS (NOVO)
@@ -82,7 +98,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }));
 
     // Retorna tudo combinado
-    return [...staticRoutes, ...postRoutes, ...storyRoutes, ...frentesRoutes, ...pilaresRoutes, ...clustersRoutes];
+    return [...staticRoutes, ...postRoutes, ...storyRoutes, ...pilaresRoutes, ...clustersRoutes];
 
   } catch (error) {
     console.error("Erro ao gerar rotas dinâmicas do sitemap:", error);

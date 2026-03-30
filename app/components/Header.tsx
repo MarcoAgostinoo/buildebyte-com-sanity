@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Pillar } from "@/app/layout";
+
 
 // ✅ DATA DIRETA (sem state / sem effect)
 const currentDate = new Date().toLocaleDateString("pt-BR", {
@@ -32,6 +32,8 @@ type MobileNavItemProps = {
   onClick: () => void;
   isHighlight?: boolean;
 };
+
+import { Pillar } from "@/app/layout";
 
 export default function Header({ pillars }: { pillars: Pillar[] }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -125,15 +127,16 @@ export default function Header({ pillars }: { pillars: Pillar[] }) {
                     {/* Lista dinâmica de Pilares */}
                     {pillars.map((pillar) => (
                       <DropdownItem
-                        key={pillar.slug}
-                        href={`/frentes/${pillar.slug}`}
+                        key={pillar.slug || pillar.basePath}
+                        href={`/pilares/${pillar.slug}`}
                         label={pillar.title}
                       />
                     ))}
                     
                     {/* Opção para Ver Todas (A página incrível) */}
                     <DropdownItem
-                        href="/frentes"
+                        key="ver-todas"
+                        href="/pilares"
                         label="Ver Todas as Frentes &rarr;"
                         isHighlight
                       />
@@ -142,7 +145,6 @@ export default function Header({ pillars }: { pillars: Pillar[] }) {
               </div>
 
               <NavItem href="/videos" label="Vídeos" />
-              <NavItem href="/frentes/carreiras-estrategicas" label="Concursos" />
               <NavItem href="/contato" label="Contato" />
 
               {/* BUSCA */}
@@ -187,14 +189,15 @@ export default function Header({ pillars }: { pillars: Pillar[] }) {
                   <div className="pl-4 bg-gray-50/30 pb-2">
                     {pillars.map((pillar) => (
                       <MobileNavItem
-                        key={pillar.slug}
-                        href={`/frentes/${pillar.slug}`}
+                        key={pillar.slug || pillar.basePath}
+                        href={`/pilares/${pillar.slug}`}
                         label={pillar.title}
                         onClick={closeMenu}
                       />
                     ))}
                     <MobileNavItem
-                        href="/frentes"
+                        key="ver-todas-mobile"
+                        href="/pilares"
                         label="Ver Todas as Frentes &rarr;"
                         onClick={closeMenu}
                         isHighlight
@@ -204,7 +207,6 @@ export default function Header({ pillars }: { pillars: Pillar[] }) {
               </div>
 
               <MobileNavItem href="/videos" label="Vídeos" onClick={closeMenu} />
-              <MobileNavItem href="/frentes/carreiras-estrategicas" label="Concursos" onClick={closeMenu} />
               <MobileNavItem href="/contato" label="Contato" onClick={closeMenu} />
             </div>
           )}

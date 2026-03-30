@@ -21,6 +21,8 @@ interface SpotlightPost {
   imagemAlt: string | null;
   imagemLqip: string | null;
   pillar: string | null;
+  pillarBasePath: string | null;
+  categorySlug: string | null;
   editorialType: string | null;
   rating: number | null;
   author: string | null;
@@ -58,6 +60,8 @@ async function getSpotlightPost(): Promise<SpotlightPost | null> {
     "imagemAlt": mainImage.alt,
     "imagemLqip": mainImage.asset->metadata.lqip,
     "pillar": pillar->slug.current,
+    "pillarBasePath": pillar->basePath,
+    "categorySlug": category->slug.current,
     editorialType,
     rating,
     "author": author->name,
@@ -81,6 +85,16 @@ export default async function AnalysisSpotlight() {
     year: "numeric",
   });
 
+  // Traduz os dados do CMS para a pasta física correspondente no Next.js
+  const p = (post.pillar || post.pillarBasePath || "").toLowerCase();
+  const c = post.categorySlug || "geral";
+  let postUrl = `/militar/geral/${post.slug}`;
+  if (p.includes("geopolitica")) postUrl = `/militar/geopolitica/${post.slug}`;
+  else if (p.includes("arsenal")) postUrl = `/militar/arsenal/${post.slug}`;
+  else if (p.includes("teatro") || p.includes("operacoes") || p.includes("historia")) postUrl = `/militar/historia/${post.slug}`;
+  else if (p.includes("sobrevivencia")) postUrl = `/militar/sobrevivencia/${post.slug}`;
+  else if (p.includes("carreira") || p.includes("concurso")) postUrl = `/concursos/${c}/${post.slug}`;
+
   return (
     <section className="my-16 relative overflow-hidden">
       {/* Label acima */}
@@ -94,7 +108,7 @@ export default async function AnalysisSpotlight() {
 
       {/* Main card */}
       <Link
-        href={`/artigo/${post.slug}`}
+        href={postUrl}
         className="group relative flex flex-col lg:flex-row min-h-96 lg:min-h-[480px] overflow-hidden border border-zinc-800 hover:border-amber-500/30 transition-all duration-500"
       >
         {/* ── IMAGE SIDE (full bg on mobile, 60% on lg) ── */}

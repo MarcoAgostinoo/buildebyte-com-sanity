@@ -1,263 +1,99 @@
 import { client } from "@/app/lib/sanity";
+import DestaquesGrid from "@/app/components/DestaquesGrid";
 import { notFound } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
-import type { Metadata } from "next";
+import { Metadata } from "next";
 
-// ---------------------------------------------------------------------------
-// INTERFACES
-// ---------------------------------------------------------------------------
-
-interface PostCard {
-  title: string;
-  slug: string;
-  excerpt?: string;
-  imagem?: string;
-  imagemLqip?: string;
-  publishedAt: string;
-  editorialType?: string;
-  topics?: { title: string; slug: string }[];
-  author?: { name: string };
+// Interface tipando os dados retornados pelo Sanity
+interface PillarData {
+  pillar: {
+    title: string;
+    description: string;
+  };
+  posts: any[];
 }
 
-// ---------------------------------------------------------------------------
-// CONSTANTES
-// ---------------------------------------------------------------------------
-
-const EDITORIAL_LABELS: Record<string, string> = {
-  analise: "Análise",
-  relatorio: "Relatório",
-  guia: "Guia",
-  comparativo: "Comparativo",
-  review: "Review",
-  opiniao: "Opinião",
+type Props = {
+  params: Promise<{ pillar: string }>;
 };
 
-const EDITORIAL_COLORS: Record<string, string> = {
-  analise:    "bg-blue-600",
-  relatorio:  "bg-slate-600",
-  guia:       "bg-emerald-600",
-  comparativo:"bg-violet-600",
-  review:     "bg-amber-600",
-  opiniao:    "bg-orange-600",
-};
+// Gera os Metadados para SEO dinamicamente com base no pilar
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { pillar } = await params;
+  const query = `*[_type == "pillar" && slug.current == $pillar][0] { title, description }`;
+  const data = await client.fetch(query, { pillar });
 
-// ---------------------------------------------------------------------------
-// DATA
-// ---------------------------------------------------------------------------
+  if (!data) return { title: "Pilar não encontrado | Vetor Estratégico" };
 
-async function getPillar(slug: string) {
-  if (!slug) {
-    return null;
-  }
-  const query = `*[_type == "pillar" && slug.current == $slug][0]{ title, description }`;
-  return await client.fetch<{ title: string; description: string } | null>(query, { slug });
-}
-
-async function getPillarPosts(pillarSlug: string): Promise<PostCard[]> {
-  const query = `*[_type == "post" && pillar->slug.current == $pillarSlug] | order(publishedAt desc) {
-    title,
-    "slug": slug.current,
-    excerpt,
-    "imagem": mainImage.asset->url,
-    "imagemLqip": mainImage.asset->metadata.lqip,
-    publishedAt,
-    editorialType,
-    "author": author->{ name }
-  }`;
-  return await client.fetch(query, { pillarSlug });
-}
-
-export async function generateStaticParams() {
-  const pillars = await client.fetch<{slug: string}[]>(`*[_type == "pillar" && count(*[_type == "post" && references(^._id)]) > 0]{"slug": slug.current}`);
-  return pillars.filter(p => p.slug).map((p) => ({ pillar: p.slug }));
-}
-
-// ---------------------------------------------------------------------------
-// METADATA
-// ---------------------------------------------------------------------------
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { pillar: string };
-}): Promise<Metadata> {
-  const data = await getPillar(params.pillar);
-  if (!data) return { title: "Pilar não encontrado" };
   return {
-    title: `${data.title} — Vetor Estratégico`,
+    title: `${data.title} | Vetor Estratégico`,
     description: data.description,
   };
 }
 
-// ---------------------------------------------------------------------------
-// PAGE
-// ---------------------------------------------------------------------------
+// Componente da Página Principal do Pilar
+export default async function PillarPage({ params }: Props) {
+  // No Next.js 15+, os params são promises e precisam do await
+  const { pillar } = await params;
 
-export default async function PillarPage({
-  params,
-}: {
-  params: { pillar: string };
-}) {
-  const data = await getPillar(params.pillar);
-  if (!data) notFound();
-  
-  const posts = await getPillarPosts(params.pillar);
+  // Query otimizada que busca o Pilar E os Posts relacionados a ele em uma única requisição
+  const query = `{
+    "pillar": *[_type == "pillar" && slug.current == $pillar][0] {
+      title,
+      description
+    },
+    "posts": *[_type == "post" && pillar->slug.current == $pillar && !(_id in path('drafts.**'))] | order(publishedAt desc) [0...30] {
+      _id,
+      title,
+      "slug": slug.current,
+      excerpt,
+      "imagem": mainImage.asset->url,
+      publishedAt,
+      "author": author->name,
+      "pillarBasePath": pillar->basePath,
+      "pillarSlug": pillar->slug.current,
+      "categorySlug": category->slug.current
+    }
+  }`;
+
+  const data: PillarData = await client.fetch(query, { pillar }, { next: { revalidate: 60 } });
+
+  if (!data.pillar) {
+    notFound();
+  }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10 sm:px-6 lg:px-8">
-
-      {/* ──HEADER DO PILAR EDITORIAL ─────────────────────────────────────────── */}
-      <header className="mb-12">
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-xs text-foreground/40 font-bold uppercase tracking-widest mb-6">
-          <Link href="/" className="hover:text-primary transition-colors">Início</Link>
-          <span>›</span>
-          <span className="text-foreground/60">Pilares</span>
-          <span>›</span>
-          <span className="text-primary">{data.title}</span>
-        </nav>
-
-        {/* Hero do Pilar */}
-        <div className="relative overflow-hidden border border-(--border) bg-(--card-bg) p-8 sm:p-12">
-          {/* Gradiente decorativo */}
-          <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
-          
-          <div className="relative">
-            <div className="flex items-start gap-4 mb-4">
-              <div className="w-12 h-12 bg-primary/10 flex items-center justify-center text-2xl shrink-0">
-                🎯
-              </div>
-              <div>
-                <p className="text-[12px] font-black uppercase tracking-[0.2em] text-primary/60 mb-1">
-                  PILAR EDITORIAL
-                </p>
-                <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-foreground leading-tight">
-                  {data.title}
-                </h1>
-              </div>
-            </div>
-
-            {data.description && (
-              <p className="text-base sm:text-lg text-foreground/60 leading-relaxed max-w-2xl">
-                {data.description}
-              </p>
-            )}
-
-            <div className="mt-5 flex items-center gap-2">
-              <div className="h-px w-8 bg-primary/30" />
-              <span className="text-xs font-bold text-foreground/40 uppercase tracking-widest">
-                {posts.length} {posts.length === 1 ? "publicação" : "publicações"}
-              </span>
-            </div>
+    <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+      {/* Cabeçalho do Pilar Tático */}
+      <header className="mb-12 border-b border-[#2a2f3a] pb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <div className="flex items-center gap-3 mb-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-primary animate-pulse shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]"></span>
+            <span className="text-[12px] font-black uppercase tracking-[0.3em] text-primary">
+              Frente Estratégica
+            </span>
           </div>
+          <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-zinc-100 uppercase mb-4">
+            {data.pillar.title}
+          </h1>
         </div>
+        
+        {data.pillar.description && (
+          <p className="text-sm text-zinc-500 max-w-md leading-relaxed border-l-2 border-[#2a2f3a] pl-4">
+            {data.pillar.description}
+          </p>
+        )}
       </header>
 
-      {/* ── GRID DE ARTIGOS ─────────────────────────────────────────────── */}
-      {posts.length === 0 ? (
-        <div className="text-center py-20 text-foreground/40">
-          <p className="text-lg font-bold">Nenhuma publicação encontrada neste pilar.</p>
-        </div>
+      {/* Grid de Artigos */}
+      {data.posts && data.posts.length > 0 ? (
+        <DestaquesGrid initialPosts={data.posts} />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((post) => (
-            <PostCard key={post.slug} post={post} />
-          ))}
+        <div className="text-center py-24 border border-dashed border-[#2a2f3a] bg-[#111318]/50">
+          <p className="text-zinc-500 uppercase font-black tracking-widest text-sm">
+            Nenhum documento tático classificado para este pilar no momento.
+          </p>
         </div>
       )}
     </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// CARD DE ARTIGO
-// ---------------------------------------------------------------------------
-
-function PostCard({ post }: { post: PostCard }) {
-  const editorialColor =
-    EDITORIAL_COLORS[post.editorialType ?? ""] ?? "bg-primary";
-  const editorialLabel =
-    EDITORIAL_LABELS[post.editorialType ?? ""] ?? post.editorialType;
-
-  return (
-    <article className="group flex flex-col bg-(--card-bg) border border-(--border) overflow-hidden shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-300">
-      {/* Imagem */}
-      <Link href={`/artigo/${post.slug}`} className="block relative aspect-video overflow-hidden bg-foreground/5">
-        {post.imagem ? (
-          <Image
-            src={post.imagem}
-            alt={post.title}
-            fill
-            placeholder={post.imagemLqip ? "blur" : "empty"}
-            blurDataURL={post.imagemLqip}
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-4xl opacity-20">📡</span>
-          </div>
-        )}
-        {/* Badge editorial sobre a imagem */}
-        {post.editorialType && (
-          <span
-            className={`absolute top-3 left-3 ${editorialColor} text-white text-[12px] font-black px-2 py-0.5 uppercase tracking-widest`}
-          >
-            {editorialLabel}
-          </span>
-        )}
-      </Link>
-
-      {/* Conteúdo */}
-      <div className="flex flex-col flex-1 p-5">
-        {/* Pilares */}
-        {post.topics && post.topics.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-3">
-            {post.topics.map((cat) => (
-              <span
-                key={cat.slug}
-                className="text-[12px] font-bold text-foreground/40 uppercase tracking-widest"
-              >
-                {cat.title}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* Título */}
-        <Link href={`/artigo/${post.slug}`}>
-          <h2 className="font-black text-foreground leading-tight mb-3 group-hover:text-primary transition-colors line-clamp-3">
-            {post.title}
-          </h2>
-        </Link>
-
-        {/* Excerpt */}
-        {post.excerpt && (
-          <p className="text-sm text-foreground/55 leading-relaxed line-clamp-2 mb-4 flex-1">
-            {post.excerpt}
-          </p>
-        )}
-
-        {/* Rodapé do card */}
-        <div className="flex items-center justify-between pt-3 border-t border-(--border) mt-auto">
-          <span className="text-xs text-foreground/40 font-medium">
-            {new Date(post.publishedAt).toLocaleDateString("pt-BR", {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-            })}
-          </span>
-          <Link
-            href={`/artigo/${post.slug}`}
-            className="text-[12px] font-black text-primary uppercase tracking-wider hover:gap-2 flex items-center gap-1 transition-all"
-          >
-            Ler
-            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </Link>
-        </div>
-      </div>
-    </article>
   );
 }

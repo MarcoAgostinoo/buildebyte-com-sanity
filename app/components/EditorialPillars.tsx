@@ -18,7 +18,7 @@ async function getPillarCount(pillar: string): Promise<number> {
 const PILLARS = [
   {
     slug:        "geopolitica-e-defesa",
-    pillar:      "geopolitica_defesa",
+    pillar:      "geopolitica-e-defesa",
     title:       "Geopolítica",
     titleLine2:  "& Defesa",
     tagline:     "O xadrez global",
@@ -27,10 +27,11 @@ const PILLARS = [
     accent:      "#1f3a5f",
     accentLight: "#3d5a8c",
     index:       "01",
+    href:        "/pilares/geopolitica-e-defesa",
   },
   {
     slug:        "arsenal-e-tecnologia",
-    pillar:      "arsenal_tecnologia",
+    pillar:      "arsenal-e-tecnologia",
     title:       "Arsenal",
     titleLine2:  "& Tecnologia",
     tagline:     "Engenharia de guerra",
@@ -39,10 +40,11 @@ const PILLARS = [
     accent:      "#c8a84b",
     accentLight: "#e4c97e",
     index:       "02",
+    href:        "/pilares/arsenal-e-tecnologia",
   },
   {
     slug:        "teatro-de-operacoes",
-    pillar:      "teatro_operacoes",
+    pillar:      "teatro-de-operacoes",
     title:       "Teatro de",
     titleLine2:  "Operações",
     tagline:     "Campo de batalha",
@@ -51,10 +53,11 @@ const PILLARS = [
     accent:      "#c0392b",
     accentLight: "#e74c3c",
     index:       "03",
+    href:        "/pilares/teatro-de-operacoes",
   },
   {
     slug:        "manual-de-sobrevivencia",
-    pillar:      "manual_sobrevivencia",
+    pillar:      "manual-de-sobrevivencia",
     title:       "Manual de",
     titleLine2:  "Sobrevivência",
     tagline:     "Resiliência extrema",
@@ -63,10 +66,11 @@ const PILLARS = [
     accent:      "#27ae60",
     accentLight: "#2ecc71",
     index:       "04",
+    href:        "/pilares/manual-de-sobrevivencia",
   },
   {
     slug:        "carreiras-estrategicas",
-    pillar:      "carreiras_estrategicas",
+    pillar:      "carreiras-estrategicas",
     title:       "Carreiras",
     titleLine2:  "Estratégicas",
     tagline:     "Ascensão profissional",
@@ -75,6 +79,7 @@ const PILLARS = [
     accent:      "#8e44ad",
     accentLight: "#9b59b6",
     index:       "05",
+    href:        "/pilares/carreiras-estrategicas",
   },
 ];
 
@@ -101,7 +106,7 @@ export default async function EditorialPillars() {
         </div>
 
         <Link
-          href="/frentes"
+          href="/pilares"
           className="hidden sm:flex items-center gap-2 text-[12px] font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-900 transition-colors group"
         >
           Ver todas
@@ -122,7 +127,7 @@ export default async function EditorialPillars() {
         {PILLARS.map((pillar, i) => (
           <Link
             key={pillar.slug}
-            href={`/frentes/${pillar.slug}`}
+            href={pillar.href}
             className="group relative flex flex-col overflow-hidden min-h-96 border-b md:border-b-0 md:border-r border-zinc-800 last:border-0"
           >
             {/* BG */}

@@ -10,15 +10,11 @@ const DEFAULT_IMAGE = "/images/placeholder.png";
 // MAPEAMENTO DOS EIXOS (Corrigido para usar hifens '-' como nos slugs do Sanity)
 // ---------------------------------------------------------------------------
 const EIXO_LABELS: Record<string, string> = {
-  "geopolitica-defesa": "Geopolítica & Defesa",
-  "arsenal-tecnologia": "Arsenal & Tecnologia",
-  "teatro-operacoes": "Teatro de Operações",
-  "defesa-tecnologia": "Defesa & Tecnologia",
-  "infraestrutura-digital": "Infraestrutura Digital",
-  "ia-automacao": "IA & Automação",
-  "economia-poder": "Economia de Poder",
-  "brasil": "Brasil Estratégico",
-  "global": "Cenário Global",
+  "geopolitica-e-defesa": "Geopolítica & Defesa",
+  "arsenal-e-tecnologia": "Arsenal & Tecnologia",
+  "teatro-de-operacoes": "Teatro de Operações",
+  "manual-de-sobrevivencia": "Manual de Sobrevivência",
+  "carreiras-estrategicas": "Carreiras Estratégicas",
 };
 
 type FeaturedPostsSectionProps = {
@@ -66,11 +62,34 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
         {featuredPosts.map((post, index) => {
           const isHero = index === 0;
           
-          // AQUI: Lê o nome do pilar, normaliza para minúsculas e busca no EIXO_LABELS
-          const pillarSlug = post.pillar ? post.pillar.toLowerCase() : "";
+          // 'as any' previne o erro de 'never' caso a interface exija uma string plana, permitindo as verificações robustas.
+          const postAny = post as any;
+          const pillarSlug = (typeof postAny.pillar === 'object' ? postAny.pillar.slug : postAny.pillar)?.toLowerCase() || postAny.pillarBasePath || postAny.pillarSlug || "";
           const badgeText = pillarSlug && EIXO_LABELS[pillarSlug] 
             ? EIXO_LABELS[pillarSlug].toUpperCase() 
             : (isHero ? "MANCHETE" : "EM ALTA");
+
+          const MILITAR_CATEGORY_MAP: Record<string, string> = {
+            "geopolitica-e-defesa": "geopolitica",
+            "arsenal-e-tecnologia": "arsenal",
+            "teatro-de-operacoes": "historia",
+            "manual-de-sobrevivencia": "sobrevivencia",
+          };
+
+          let postUrl = '';
+          const militarCategory = MILITAR_CATEGORY_MAP[pillarSlug];
+          const categorySlug = typeof postAny.category === 'object' ? postAny.category.slug : postAny.categorySlug || "geral";
+
+          if (militarCategory) {
+            // Constrói a URL para pilares dentro de /militar
+            postUrl = `/militar/${militarCategory}/${post.slug}`;
+          } else if (pillarSlug === 'carreiras-estrategicas') {
+            // Constrói a URL para o pilar de /concursos, usando a categoria do post
+            postUrl = `/concursos/${categorySlug}/${post.slug}`;
+          } else {
+            // Fallback para um link que provavelmente resultará em 404, para sinalizar dados de pilar ausentes ou incorretos no CMS.
+            postUrl = `/${pillarSlug}/${categorySlug}/${post.slug}`;
+          }
 
           return (
             <article
@@ -80,7 +99,7 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
               {isHero && <div className={styles.mil_top_accent} />}
               <div className={styles.mil_scan_line} />
 
-              <Link href={`/artigo/${post.slug}`} className={styles.mil_card_link}>
+              <Link href={postUrl} className={styles.mil_card_link}>
                 {/* Imagem de fundo */}
                 <div className={styles.mil_card_img}>
                   <Image

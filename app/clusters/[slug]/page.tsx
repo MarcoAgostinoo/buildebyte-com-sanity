@@ -23,6 +23,8 @@ interface PostCard {
   publishedAt: string;
   editorialType?: string;
   pillar?: string;
+  pillarBasePath?: string;
+  categorySlug?: string;
   categories?: { title: string; slug: string }[];
   author?: { name: string };
 }
@@ -81,6 +83,8 @@ async function getClusterPosts(slug: string): Promise<PostCard[]> {
     publishedAt,
     editorialType,
     "pillar": pillar->slug.current,
+    "pillarBasePath": pillar->basePath,
+    "categorySlug": category->slug.current,
     categories[]->{title, "slug": slug.current},
     "author": author->{ name }
   }`;
@@ -250,7 +254,7 @@ function ClusterPostCard({
 
       {/* Imagem */}
       <Link
-        href={`/artigo/${post.slug}`}
+        href={post.pillarBasePath && post.categorySlug ? `/${post.pillarBasePath}/${post.categorySlug}/${post.slug}` : `/artigo/${post.slug}`}
         className="block relative w-36 sm:w-48 shrink-0 overflow-hidden bg-foreground/5"
       >
         {post.imagem ? (

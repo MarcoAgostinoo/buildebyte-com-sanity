@@ -23,6 +23,8 @@ export async function GET(
     "coverImage": coverImage.asset->url,
     "coverImageAlt": coverImage.alt,
     "targetSlug": targetPost->slug.current,
+    "targetPillarBasePath": targetPost->pillar->basePath,
+    "targetCategorySlug": targetPost->category->slug.current,
     "publishedAt": coalesce(publishedAt, _createdAt),
     "author": targetPost->author->name,
     pages[]{
@@ -40,7 +42,9 @@ export async function GET(
   }
 
   const ctaLink = story.targetSlug
-    ? `${baseUrl}/artigo/${story.targetSlug}`
+    ? story.targetPillarBasePath && story.targetCategorySlug
+      ? `${baseUrl}/${story.targetPillarBasePath}/${story.targetCategorySlug}/${story.targetSlug}`
+      : `${baseUrl}/artigo/${story.targetSlug}`
     : baseUrl;
 
   // USO DO HELPER DE SEO OFICIAL

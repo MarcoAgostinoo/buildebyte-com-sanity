@@ -30,10 +30,22 @@ export default function PopularPostsList({ posts }: { posts: Post[] }) {
 
       {/* LISTA DE POSTS */}
       <div className="flex flex-col flex-1 divide-y divide-[#2a2f3a] relative z-10">
-        {posts.map((post, index) => (
+        {posts.map((post, index) => {
+          const postAny = post as any;
+          // Traduz os dados do CMS para a pasta física correspondente no Next.js
+          const p = (postAny.pillarBasePath || (typeof postAny.pillar === 'object' ? postAny.pillar.basePath || postAny.pillar.slug : postAny.pillar) || "").toLowerCase();
+          const c = postAny.categorySlug || (typeof postAny.category === 'object' ? postAny.category.slug : postAny.category) || "geral";
+          let postUrl = `/militar/geral/${post.slug}`;
+          if (p.includes("geopolitica")) postUrl = `/militar/geopolitica/${post.slug}`;
+          else if (p.includes("arsenal")) postUrl = `/militar/arsenal/${post.slug}`;
+          else if (p.includes("teatro") || p.includes("operacoes") || p.includes("historia")) postUrl = `/militar/historia/${post.slug}`;
+          else if (p.includes("sobrevivencia")) postUrl = `/militar/sobrevivencia/${post.slug}`;
+          else if (p.includes("carreira") || p.includes("concurso")) postUrl = `/concursos/${c}/${post.slug}`;
+
+          return (
           <Link
-            key={post._id}
-            href={`/artigo/${post.slug}`}
+            key={post._id || post.slug || index}
+            href={postUrl}
             className="group flex items-stretch gap-4 p-4 hover:bg-[#111318] transition-colors relative overflow-hidden"
           >
             {/* Index Numérico (Estilo Terminal) */}
@@ -60,7 +72,7 @@ export default function PopularPostsList({ posts }: { posts: Post[] }) {
             <div className="flex flex-col justify-center flex-1 min-w-0">
               {post.pillar && (
                 <span className="text-[12px] font-black uppercase tracking-widest text-primary/70 mb-1.5 line-clamp-1 font-mono">
-                  [{post.pillar}]
+                  [{typeof postAny.pillar === 'object' ? postAny.pillar.title || postAny.pillar.basePath : postAny.pillar}]
                 </span>
               )}
               <h3 className="font-bold text-zinc-300 text-sm leading-snug line-clamp-2 group-hover:text-white transition-colors">
@@ -75,7 +87,8 @@ export default function PopularPostsList({ posts }: { posts: Post[] }) {
               </svg>
             </div>
           </Link>
-        ))}
+          );
+        })}
       </div>
 
       {/* CTA INFERIOR */}

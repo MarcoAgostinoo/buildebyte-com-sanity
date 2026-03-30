@@ -11,6 +11,8 @@ interface Post {
   imagem: string;
   publishedAt: string;
   author: string;
+  pillarBasePath?: string;
+  categorySlug?: string;
 }
 
 const formatDate = (dateString: string) => {
@@ -25,7 +27,9 @@ async function searchPosts(term: string): Promise<Post[]> {
     excerpt,
     "imagem": mainImage.asset->url,
     publishedAt,
-    "author": author->name
+    "author": author->name,
+    "pillarBasePath": pillar->basePath,
+    "categorySlug": category->slug.current
   }`;
   const posts = await client.fetch(query, { term: `*${term}*` });
   return posts;
@@ -44,14 +48,14 @@ export default async function SearchPage({ searchParams }: { searchParams: { q: 
             {post.imagem && (
               <Image src={post.imagem} alt={post.title} width={800} height={450} className="w-full h-auto object-cover  mb-6" />
             )}
-            <Link href={`/artigo/${post.slug}`}>
+            <Link href={post.pillarBasePath && post.categorySlug ? `/${post.pillarBasePath}/${post.categorySlug}/${post.slug}` : `/artigo/${post.slug}`}>
               <h2 className="text-3xl font-bold text-blue-600 mb-4 hover:underline">{post.title}</h2>
             </Link>
             <div className="text-sm text-gray-500 mb-4">
               <span>{post.author}</span> | <span>{formatDate(post.publishedAt)}</span>
             </div>
             <p className="text-gray-600">{post.excerpt}</p>
-            <Link href={`/artigo/${post.slug}`} className="text-blue-500 hover:underline mt-4 inline-block">
+            <Link href={post.pillarBasePath && post.categorySlug ? `/${post.pillarBasePath}/${post.categorySlug}/${post.slug}` : `/artigo/${post.slug}`} className="text-blue-500 hover:underline mt-4 inline-block">
               Leia mais...
             </Link>
           </article>

@@ -16,6 +16,8 @@ interface Post {
   imagem: string;
   publishedAt: string;
   author: string;
+  pillarBasePath?: string;
+  categorySlug?: string;
 }
 
 async function getIAPosts(): Promise<Post[]> {
@@ -27,7 +29,9 @@ async function getIAPosts(): Promise<Post[]> {
     excerpt,
     "imagem": mainImage.asset->url,
     publishedAt,
-    "author": author->name
+    "author": author->name,
+    "pillarBasePath": pillar->basePath,
+    "categorySlug": category->slug.current
   }`;
   return await client.fetch(query, {}, { next: { revalidate: 60 } });
 }
@@ -58,7 +62,7 @@ export default async function IAPage() {
           {posts.length > 0 ? (
             posts.map((post) => (
               <article key={post._id} className="group bg-(--card-bg) border border-(--border)  overflow-hidden hover:shadow-xl transition-all duration-300">
-                <Link href={`/artigo/${post.slug}`}>
+                <Link href={post.pillarBasePath && post.categorySlug ? `/${post.pillarBasePath}/${post.categorySlug}/${post.slug}` : `/artigo/${post.slug}`}>
                   <div className="relative h-48 overflow-hidden">
                     {post.imagem && (
                       <Image

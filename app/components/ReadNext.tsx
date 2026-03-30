@@ -8,6 +8,10 @@ export interface RelatedPost {
   title: string;
   slug: string;
   imagem: string;
+  pillarBasePath?: string;
+  categorySlug?: string;
+  pillarSlug?: string;
+  pillar?: any;
 }
 
 interface ReadNextProps {
@@ -71,28 +75,40 @@ export default function ReadNext({ posts }: ReadNextProps) {
       </div>
       
       <div className="space-y-4">
-        {posts.map(post => (
-          <Link href={`/artigo/${post.slug}`} key={post.slug} className="group block">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 relative shrink-0 overflow-hidden border border-zinc-800">
-                {post.imagem ? (
-                    <Image
-                      src={post.imagem}
-                      alt={post.title}
-                      fill
-                      sizes="48px"
-                      className="object-cover group-hover:scale-110 transition-transform"
-                    />
-                ) : (
-                  <div className="w-full h-full bg-zinc-800" />
-                )}
+        {posts.map(post => {
+          // Traduz os dados do CMS para a pasta física correspondente no Next.js
+          const p = (post.pillarSlug || post.pillarBasePath || (typeof post.pillar === 'object' ? post.pillar?.slug : post.pillar) || "").toLowerCase();
+          const c = post.categorySlug || "geral";
+          let postUrl = `/militar/geral/${post.slug}`;
+          if (p.includes("geopolitica")) postUrl = `/militar/geopolitica/${post.slug}`;
+          else if (p.includes("arsenal")) postUrl = `/militar/arsenal/${post.slug}`;
+          else if (p.includes("teatro") || p.includes("operacoes") || p.includes("historia")) postUrl = `/militar/historia/${post.slug}`;
+          else if (p.includes("sobrevivencia")) postUrl = `/militar/sobrevivencia/${post.slug}`;
+          else if (p.includes("carreira") || p.includes("concurso")) postUrl = `/concursos/${c}/${post.slug}`;
+          
+          return (
+            <Link href={postUrl} key={post.slug} className="group block">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 relative shrink-0 overflow-hidden border border-zinc-800">
+                  {post.imagem ? (
+                      <Image
+                        src={post.imagem}
+                        alt={post.title}
+                        fill
+                        sizes="48px"
+                        className="object-cover group-hover:scale-110 transition-transform"
+                      />
+                  ) : (
+                    <div className="w-full h-full bg-zinc-800" />
+                  )}
+                </div>
+                <span className="text-[12px] font-bold text-zinc-100 line-clamp-2 group-hover:text-primary transition-colors">
+                  {post.title}
+                </span>
               </div>
-              <span className="text-[12px] font-bold text-zinc-100 line-clamp-2 group-hover:text-primary transition-colors">
-                {post.title}
-              </span>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

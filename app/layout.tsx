@@ -42,6 +42,7 @@ const barlow = Barlow({
 export interface Pillar {
   title: string;
   slug: string;
+  basePath: string;
 }
 
 
@@ -130,7 +131,8 @@ export const metadata: Metadata = {
 async function getPillars(): Promise<Pillar[]> {
   const query = `*[_type == "pillar"] | order(title asc) {
     title,
-    "slug": slug.current
+    "slug": slug.current,
+    basePath
   }`;
   return client.fetch(query);
 }
