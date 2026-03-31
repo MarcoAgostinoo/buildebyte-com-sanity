@@ -29,6 +29,9 @@ type PostWithFlexibleRelations = FeaturedPost & {
   pillarBasePath?: string;
   pillarSlug?: string;
   categorySlug?: string;
+  imagem?: string;
+  imagemLqip?: string;
+  imagemAlt?: string;
 };
 
 export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSectionProps) {
@@ -112,11 +115,11 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
                 {/* Imagem de fundo */}
                 <div className={styles.mil_card_img}>
                   <Image
-                    src={post.mainImage?.asset?.url || DEFAULT_IMAGE}
-                    alt={post.mainImage?.alt || post.title || "Imagem do artigo"}
+                    src={flexiblePost.imagem || DEFAULT_IMAGE}
+                    alt={flexiblePost.imagemAlt || post.title || "Imagem do artigo"}
                     fill
-                    placeholder={post.mainImage?.asset?.metadata?.lqip ? "blur" : "empty"}
-                    blurDataURL={post.mainImage?.asset?.metadata?.lqip}
+                    placeholder={flexiblePost.imagemLqip ? "blur" : "empty"}
+                    blurDataURL={flexiblePost.imagemLqip}
                     className="object-cover"
                     sizes={
                       isHero
@@ -126,7 +129,7 @@ export default function FeaturedPostsSection({ featuredPosts }: FeaturedPostsSec
                     priority={isHero}
                     loading={isHero ? "eager" : "lazy"}
                     fetchPriority={isHero ? "high" : "auto"}
-                    quality={isHero ? 70 : 65}
+                    quality={75}
                   />
                 </div>
 

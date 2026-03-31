@@ -90,15 +90,13 @@ const FALLBACK: ThreatZone[] = [
 
 async function fetchThreats(): Promise<ThreatZone[]> {
   // URL formatada para a ReliefWeb API
-  const url = `https://api.reliefweb.int/v1/disasters?appname=vetorestrategico&preset=latest&filter[operator]=AND&filter[conditions][0][field]=status&filter[conditions][0][value]=ongoing&filter[conditions][1][operator]=OR&filter[conditions][1][conditions][0][field]=type.name&filter[conditions][1][conditions][0][value][]=Armed+Conflict&filter[conditions][1][conditions][0][value][]=Civil+Unrest&filter[conditions][1][conditions][0][value][]=Epidemic&fields[include][]=name&fields[include][]=status&fields[include][]=country.name&fields[include][]=country.iso3&fields[include][]=type.name&fields[include][]=date.event&sort[]=date.event:desc&limit=8`;
+  const url = `https://api.reliefweb.int/v1/disasters?appname=vetorestrategico.com&preset=latest&filter[operator]=AND&filter[conditions][0][field]=status&filter[conditions][0][value]=ongoing&filter[conditions][1][operator]=OR&filter[conditions][1][conditions][0][field]=type.name&filter[conditions][1][conditions][0][value][]=Armed+Conflict&filter[conditions][1][conditions][0][value][]=Civil+Unrest&filter[conditions][1][conditions][0][value][]=Epidemic&fields[include][]=name&fields[include][]=status&fields[include][]=country.name&fields[include][]=country.iso3&fields[include][]=type.name&fields[include][]=date.event&sort[]=date.event:desc&limit=8`;
 
   try {
     const res = await fetch(url, {
       method: "GET",
       headers: { 
-        "Accept": "application/json",
-        // AQUI ESTÁ A CHAVE: Identificar o servidor para evitar o 403
-        "User-Agent": "VetorEstrategico-Portal/1.0 (contato@vetorestrategico.com)"
+        "Accept": "application/json"
       },
       next: { revalidate: 3600 },
     });
@@ -211,7 +209,7 @@ export default async function ThreatIndexBar() {
         {zones.map((zone) => (
           <div
             key={zone.id}
-            className="group flex flex-col gap-4 px-5 sm:px-6 py-6 hover:bg-white/[0.02] transition-all duration-300"
+            className="group flex flex-col gap-4 px-5 sm:px-6 py-6 hover:bg-white/2 transition-all duration-300"
             style={{ backgroundColor: zone.bgColor }}
           >
             <div className="flex items-start justify-between gap-2">

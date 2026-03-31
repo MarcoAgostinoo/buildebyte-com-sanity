@@ -121,6 +121,15 @@ export function urlForMobile(source: SanityImageSource) {
 
 }
 
+export interface RawPost {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  mainImage?: SanityImageSource;
+  publishedAt: string;
+  author?: string;
+}
 
 
 
@@ -1604,63 +1613,3 @@ export async function getPillars() {
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

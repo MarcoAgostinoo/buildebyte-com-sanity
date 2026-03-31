@@ -882,13 +882,13 @@ export default async function PostPage({
           {/* MAIN                                                             */}
           {/* ================================================================ */}
           <main className="w-full lg:w-2/3">
-            <nav aria-label="Breadcrumb" className="mb-4 text-sm text-foreground/50">
+            <nav aria-label="Breadcrumb" className="mb-4 ml-2 text-sm text-foreground/50">
               <ol className="flex items-center gap-2 flex-wrap">
                 <li><Link href="/" className="hover:text-primary">Home</Link></li>
                 <li><span className="text-foreground/30">&gt;</span></li>
                 <li><Link href="/militar" className="hover:text-primary">Militar</Link></li>
                 <li><span className="text-foreground/30">&gt;</span></li>
-                <li><p className="font-semibold text-foreground">Arsenal</p></li>
+                <li><Link href="/pilares/arsenal-e-tecnologia" className="hover:text-primary">Arsenal</Link></li>
               </ol>
             </nav>
             <div className="mb-6">

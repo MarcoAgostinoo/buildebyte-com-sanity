@@ -44,7 +44,7 @@ export default async function ConcursosPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
       <header className="mb-12 border-b border-[#2a2f3a] pb-8">
-        <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-zinc-100 uppercase">
+        <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-primary uppercase">
           Concursos & Carreiras
         </h1>
         <p className="mt-4 text-lg text-zinc-400 max-w-3xl">

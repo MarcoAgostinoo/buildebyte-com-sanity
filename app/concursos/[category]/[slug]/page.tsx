@@ -4,6 +4,7 @@ import Image from "next/image";
 import { PortableText } from "@portabletext/react";
 import Link from "next/link";
 import { Metadata } from "next";
+import AdComponent from "@/app/components/AdComponent"; // <-- Adicionado o import do AdComponent
 
 type Props = {
   params: Promise<{ category: string; slug: string }>;
@@ -53,6 +54,12 @@ export default async function ConcursoPostPage({ params }: Props) {
     notFound();
   }
 
+  // Lógica para dividir o conteúdo no meio e inserir a propaganda
+  const bodyArray = post.body || [];
+  const midIndex = Math.ceil(bodyArray.length / 2);
+  const firstHalf = bodyArray.slice(0, midIndex);
+  const secondHalf = bodyArray.slice(midIndex);
+
   return (
     <article className="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
       <header className="mb-10 border-b border-[#2a2f3a] pb-8">
@@ -61,7 +68,7 @@ export default async function ConcursoPostPage({ params }: Props) {
           <span className="text-zinc-600">/</span>
           <span className="capitalize">{category.replace(/-/g, ' ')}</span>
         </div>
-        <h1 className="text-3xl sm:text-5xl font-black text-white leading-tight mb-6">
+        <h1 className="text-3xl sm:text-5xl font-black text-primary leading-tight mb-6">
           {post.title}
         </h1>
         {post.excerpt && (
@@ -78,7 +85,22 @@ export default async function ConcursoPostPage({ params }: Props) {
       )}
 
       <div className="prose prose-invert prose-lg max-w-none prose-headings:font-black prose-headings:uppercase prose-headings:text-zinc-100 prose-a:text-primary hover:prose-a:text-primary/80 prose-p:text-zinc-300 prose-strong:text-zinc-100 prose-blockquote:border-primary prose-blockquote:text-zinc-400">
-        {post.body ? <PortableText value={post.body} /> : <p>Conteúdo não disponível.</p>}
+        {bodyArray.length > 0 ? (
+          <>
+            {/* Renderiza a primeira metade do artigo */}
+            <PortableText value={firstHalf} />
+            
+            {/* Componente de Propaganda no meio do artigo (not-prose impede que as classes tipográficas quebrem o anúncio) */}
+            <div className="my-10 w-full flex justify-center not-prose">
+              <AdComponent />
+            </div>
+
+            {/* Renderiza a segunda metade do artigo */}
+            <PortableText value={secondHalf} />
+          </>
+        ) : (
+          <p>Conteúdo não disponível.</p>
+        )}
       </div>
     </article>
   );
