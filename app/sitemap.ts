@@ -21,8 +21,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}`, lastModified: fallbackDate, changeFrequency: 'daily', priority: 1.0 },
     { url: `${baseUrl}/destaques`, lastModified: fallbackDate, changeFrequency: 'daily', priority: 0.9 },
     { url: `${baseUrl}/radar`, lastModified: fallbackDate, changeFrequency: 'daily', priority: 0.9 },
-    { url: `${baseUrl}/mundo`, lastModified: fallbackDate, changeFrequency: 'daily', priority: 0.8 },
-    { url: `${baseUrl}/ia`, lastModified: fallbackDate, changeFrequency: 'daily', priority: 0.8 },
     { url: `${baseUrl}/videos`, lastModified: fallbackDate, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${baseUrl}/web-stories`, lastModified: fallbackDate, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${baseUrl}/achados`, lastModified: fallbackDate, changeFrequency: 'weekly', priority: 0.7 },
