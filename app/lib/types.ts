@@ -182,3 +182,25 @@ export interface SEOMetadata {
   keywords?: string[];
   type: "article" | "category" | "pillar";
 }
+
+
+export interface WebStory {
+  _id: string;
+  title: string;
+  slug: string;
+  coverImage: string;
+  description?: string;
+  publishedAt?: string;
+  authorName?: string;
+  ctaText?: string;
+  // Opcional: Se você for usar a página interna da story, 
+  // pode adicionar a estrutura das páginas aqui também:
+  pages?: Array<{
+    mediaType: 'Imagem' | 'Vídeo';
+    image?: string;
+    video?: string;
+    text?: string;
+    textPosition?: 'Topo' | 'Centro' | 'Base';
+    duration?: number;
+  }>;
+}

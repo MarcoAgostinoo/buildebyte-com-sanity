@@ -1,10 +1,10 @@
 import { MetadataRoute } from 'next';
 import { client } from '@/app/lib/sanity';
 
-// 1. Criamos a interface para tipar o retorno exato do Sanity
+// 1. Interface atualizada com _updatedAt opcional por segurança
 interface SanitySitemapItem {
   slug: string;
-  _updatedAt: string;
+  _updatedAt?: string; 
   pillarBasePath?: string;
   categorySlug?: string;
   pillarSlug?: string;
@@ -12,30 +12,31 @@ interface SanitySitemapItem {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.vetorestrategico.com';
+  
+  // Data de fallback segura caso o Sanity falhe em retornar a data
+  const fallbackDate = new Date(); 
 
-  // 2. ROTAS ESTÁTICAS (ATUALIZADAS)
-  const staticRoutes: MetadataRoute.Sitemap = [
-    { url: `${baseUrl}`, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
-    { url: `${baseUrl}/destaques`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
-    { url: `${baseUrl}/radar`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
-    { url: `${baseUrl}/mundo`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
-    { url: `${baseUrl}/ia`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
-    { url: `${baseUrl}/videos`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${baseUrl}/web-stories`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${baseUrl}/achados`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
-    // Frentes/Categorias principais
-    { url: `${baseUrl}/militar/geopolitica`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
-    { url: `${baseUrl}/militar/arsenal`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
-    { url: `${baseUrl}/militar/historia`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
-    { url: `${baseUrl}/militar/sobrevivencia`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
-    { url: `${baseUrl}/concursos`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.8 },
-    // Páginas institucionais
-    { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${baseUrl}/contato`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${baseUrl}/manifesto`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.4 },
-    { url: `${baseUrl}/search`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.3 },
-    { url: `${baseUrl}/privacy-policy`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
-    { url: `${baseUrl}/licensing`, lastModified: new Date(), changeFrequency: 'yearly', priority: 0.3 },
+  // 2. ROTAS ESTÁTICAS
+  const staticRoutes: MetadataRoute.Sitemap =[
+    { url: `${baseUrl}`, lastModified: fallbackDate, changeFrequency: 'daily', priority: 1.0 },
+    { url: `${baseUrl}/destaques`, lastModified: fallbackDate, changeFrequency: 'daily', priority: 0.9 },
+    { url: `${baseUrl}/radar`, lastModified: fallbackDate, changeFrequency: 'daily', priority: 0.9 },
+    { url: `${baseUrl}/mundo`, lastModified: fallbackDate, changeFrequency: 'daily', priority: 0.8 },
+    { url: `${baseUrl}/ia`, lastModified: fallbackDate, changeFrequency: 'daily', priority: 0.8 },
+    { url: `${baseUrl}/videos`, lastModified: fallbackDate, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/web-stories`, lastModified: fallbackDate, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/achados`, lastModified: fallbackDate, changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${baseUrl}/militar/geopolitica`, lastModified: fallbackDate, changeFrequency: 'daily', priority: 0.8 },
+    { url: `${baseUrl}/militar/arsenal`, lastModified: fallbackDate, changeFrequency: 'daily', priority: 0.8 },
+    { url: `${baseUrl}/militar/historia`, lastModified: fallbackDate, changeFrequency: 'daily', priority: 0.8 },
+    { url: `${baseUrl}/militar/sobrevivencia`, lastModified: fallbackDate, changeFrequency: 'daily', priority: 0.8 },
+    { url: `${baseUrl}/concursos`, lastModified: fallbackDate, changeFrequency: 'daily', priority: 0.8 },
+    { url: `${baseUrl}/about`, lastModified: fallbackDate, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${baseUrl}/contato`, lastModified: fallbackDate, changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${baseUrl}/manifesto`, lastModified: fallbackDate, changeFrequency: 'monthly', priority: 0.4 },
+    { url: `${baseUrl}/search`, lastModified: fallbackDate, changeFrequency: 'monthly', priority: 0.3 },
+    { url: `${baseUrl}/privacy-policy`, lastModified: fallbackDate, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${baseUrl}/licensing`, lastModified: fallbackDate, changeFrequency: 'yearly', priority: 0.3 },
   ];
 
   try {
@@ -61,7 +62,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
       return {
         url: `${baseUrl}${postUrl}`,
-        lastModified: new Date(post._updatedAt),
+        lastModified: post._updatedAt ? new Date(post._updatedAt) : fallbackDate,
         changeFrequency: 'weekly',
         priority: 0.7,
       };
@@ -72,36 +73,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const stories = await client.fetch<SanitySitemapItem[]>(storiesQuery);
     const storyRoutes: MetadataRoute.Sitemap = stories.map((story) => ({
       url: `${baseUrl}/web-stories/${story.slug}`,
-      lastModified: new Date(story._updatedAt),
+      lastModified: story._updatedAt ? new Date(story._updatedAt) : fallbackDate,
       changeFrequency: 'daily',
       priority: 0.9,
     }));
 
-    // 6. BUSCA PILARES DINÂMICOS (NOVO)
+    // 5. BUSCA PILARES DINÂMICOS
     const pilaresQuery = `*[_type == "pillar" && defined(slug.current)] { "slug": slug.current, _updatedAt }`;
     const pilares = await client.fetch<SanitySitemapItem[]>(pilaresQuery);
     const pilaresRoutes: MetadataRoute.Sitemap = pilares.map((pilar) => ({
         url: `${baseUrl}/pilares/${pilar.slug}`,
-        lastModified: new Date(pilar._updatedAt),
+        lastModified: pilar._updatedAt ? new Date(pilar._updatedAt) : fallbackDate,
         changeFrequency: 'weekly',
         priority: 0.6,
     }));
 
-    // 7. BUSCA CLUSTERS DINÂMICOS (NOVO)
+    // 6. BUSCA CLUSTERS DINÂMICOS
     const clustersQuery = `*[_type == "cluster" && defined(slug.current)]{ "slug": slug.current, _updatedAt }`;
     const clusters = await client.fetch<SanitySitemapItem[]>(clustersQuery);
     const clustersRoutes: MetadataRoute.Sitemap = clusters.map((cluster) => ({
         url: `${baseUrl}/clusters/${cluster.slug}`,
-        lastModified: new Date(cluster._updatedAt),
+        lastModified: cluster._updatedAt ? new Date(cluster._updatedAt) : fallbackDate,
         changeFrequency: 'weekly',
         priority: 0.6,
     }));
 
-    // Retorna tudo combinado
-    return [...staticRoutes, ...postRoutes, ...storyRoutes, ...pilaresRoutes, ...clustersRoutes];
+    // Retorna tudo combinado de forma limpa
+    return[...staticRoutes, ...postRoutes, ...storyRoutes, ...pilaresRoutes, ...clustersRoutes];
 
   } catch (error) {
-    console.error("Erro ao gerar rotas dinâmicas do sitemap:", error);
+    console.error("Erro ao gerar rotas dinâmicas do sitemap. Retornando apenas estáticas:", error);
     return staticRoutes;
   }
 }

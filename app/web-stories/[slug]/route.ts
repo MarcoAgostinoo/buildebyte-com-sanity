@@ -23,7 +23,7 @@ export async function GET(
     "coverImage": coverImage.asset->url,
     "coverImageAlt": coverImage.alt,
     "targetSlug": targetPost->slug.current,
-    "targetPillarBasePath": targetPost->pillar->basePath,
+    "targetPillarSlug": coalesce(targetPost->pillar->slug.current, targetPost->category->pillar->slug.current),
     "targetCategorySlug": targetPost->category->slug.current,
     "publishedAt": coalesce(publishedAt, _createdAt),
     "author": targetPost->author->name,
@@ -41,11 +41,28 @@ export async function GET(
     return new Response("Story not found", { status: 404 });
   }
 
-  const ctaLink = story.targetSlug
-    ? story.targetPillarBasePath && story.targetCategorySlug
-      ? `${baseUrl}/${story.targetPillarBasePath}/${story.targetCategorySlug}/${story.targetSlug}`
-      : `${baseUrl}/artigo/${story.targetSlug}`
-    : baseUrl;
+  const MILITAR_CATEGORY_MAP: Record<string, string> = {
+    "geopolitica-e-defesa": "geopolitica",
+    "arsenal-e-tecnologia": "arsenal",
+    "teatro-de-operacoes": "historia",
+    "manual-de-sobrevivencia": "sobrevivencia",
+  };
+
+  let ctaLink = baseUrl;
+  if (story.targetSlug) {
+    const pillarSlug = story.targetPillarSlug || "";
+    const categorySlug = story.targetCategorySlug || "geral";
+    const militarCategory = MILITAR_CATEGORY_MAP[pillarSlug];
+
+    if (militarCategory) {
+      ctaLink = `${baseUrl}/militar/${militarCategory}/${story.targetSlug}`;
+    } else if (pillarSlug === 'carreiras-estrategicas') {
+      ctaLink = `${baseUrl}/concursos/${categorySlug}/${story.targetSlug}`;
+    } else if (pillarSlug) {
+      // Fallback for other pillars that might not have a special route
+      ctaLink = `${baseUrl}/${pillarSlug}/${categorySlug}/${story.targetSlug}`;
+    }
+  }
 
   // USO DO HELPER DE SEO OFICIAL
   const schema = generateWebStorySchema({

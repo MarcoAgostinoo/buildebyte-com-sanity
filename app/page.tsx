@@ -265,11 +265,7 @@ export default async function Home() {
       <div className="w-full h-px bg-linear-to-r from-transparent via-zinc-700 to-transparent mb-10" />
 
       {/* ── 8. WEB STORIES ── */}
-      {webStories.length > 0 && (
-        <section className="mb-14">
-          <WebStoriesCarousel webStories={webStories} />
-        </section>
-      )}
+      <WebStoriesCarousel webStories={webStories} />
 
       {/* ── 9. PROTOCOLOS DE SOBREVIVÊNCIA ── */}
       <section className="mb-6">

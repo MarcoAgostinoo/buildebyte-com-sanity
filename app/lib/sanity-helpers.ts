@@ -6,17 +6,27 @@
  */
 
 import { client, previewClient } from "./sanity";
-import { Pillar, Category, Post, PostCard, CategoryWithPostCount } from "./types";
+import { 
+  Pillar, 
+  Category, 
+  Post, 
+  PostCard, 
+  CategoryWithPostCount, 
+  WebStory // Certifique-se de que este tipo existe no seu arquivo de types
+} from "./types";
+
 import {
   QUERY_PILLAR_BY_BASEPATH,
   QUERY_ALL_PILLARS,
   QUERY_PILLAR_BY_SLUG,
 } from "./queries/pillar";
+
 import {
   QUERY_CATEGORIES_BY_PILLAR,
   QUERY_CATEGORY_BY_SLUG,
   QUERY_VALIDATE_CATEGORY_IN_PILLAR,
 } from "./queries/category";
+
 import {
   QUERY_POSTS_BY_CATEGORY,
   QUERY_POST_COMPLETE,
@@ -27,6 +37,12 @@ import {
   QUERY_COUNT_POSTS_IN_CATEGORY,
   QUERY_RECENT_POSTS_BY_PILLAR,
 } from "./queries/post";
+
+// Importação das novas queries de Web Story
+import { 
+  QUERY_WEB_STORIES, 
+  QUERY_WEB_STORY_BY_SLUG 
+} from "./queries/webStory";
 
 /**
  * PILLAR FUNCTIONS
@@ -224,5 +240,36 @@ export async function getRecentPostsByPillar(
       error
     );
     return [];
+  }
+}
+
+/**
+ * WEB STORY FUNCTIONS
+ * ============================================================================
+ */
+
+/**
+ * Busca as stories para o carrossel da Home
+ * Inclui autor e data para o componente WebStoriesCarousel
+ */
+export async function getWebStories(): Promise<WebStory[]> {
+  try {
+    return await client.fetch(QUERY_WEB_STORIES);
+  } catch (error) {
+    console.error("[Sanity] Erro ao buscar Web Stories para a Home:", error);
+    return [];
+  }
+}
+
+/**
+ * Busca os dados completos de uma Web Story específica para a página interna
+ * Inclui mídia (imagem/vídeo) de cada página e o CTA relacionado
+ */
+export async function getWebStoryBySlug(slug: string): Promise<any | null> {
+  try {
+    return await client.fetch(QUERY_WEB_STORY_BY_SLUG, { slug });
+  } catch (error) {
+    console.error(`[Sanity] Erro ao buscar Web Story completa "${slug}":`, error);
+    return null;
   }
 }
