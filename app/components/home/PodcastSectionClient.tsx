@@ -31,11 +31,11 @@ export default function PodcastSectionClient({ episodes }: { episodes: Episode[]
       {/* HEADER DO PODCAST */}
       <div className="p-5 border-b border-[#2a2f3a] bg-[#111318] flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
         <div className="flex flex-col gap-1">
-          <p className="text-[12px] font-black uppercase tracking-[0.3em] text-primary/70 font-mono">
+          <p className="text-[12px] font-black uppercase tracking-[0.3em] text-primary/90 font-mono">
             Frequência Aberta
           </p>
           <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-zinc-100">
-            Vetor Estratégico <span className="text-primary">Cast</span>
+            Vetor Estratégico <span className="text-amber-500">Cast</span>
           </h2>
         </div>
 

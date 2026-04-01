@@ -43,7 +43,7 @@ export default function PodcastSection({ episodes }: { episodes: Episode[] }) {
               <div className="absolute inset-0 bg-linear-to-t from-[#111318] via-transparent to-transparent opacity-90 pointer-events-none" />
 
               {/* Badge de Transmissão */}
-              <span className="absolute top-3 left-3 text-[12px] font-black uppercase tracking-[0.2em] bg-black/80 backdrop-blur-sm text-primary border border-primary/30 px-2.5 py-1">
+              <span className="absolute top-3 left-3 text-[12px] font-black uppercase tracking-[0.2em] bg-white/10 backdrop-blur-sm text-primary border border-primary/30 px-2.5 py-1">
                 Áudio
               </span>
 
@@ -65,17 +65,17 @@ export default function PodcastSection({ episodes }: { episodes: Episode[] }) {
                 rel="noopener noreferrer"
                 className="block flex-1"
               >
-                <h3 className="font-black text-sm text-zinc-200 group-hover:text-primary leading-snug line-clamp-2 transition-colors uppercase tracking-wide">
+                <h3 className="font-bold text-zinc-300 text-sm leading-snug line-clamp-2 group-hover:text-white transition-colors">
                   {ep.title}
                 </h3>
               </a>
 
               {/* Meta Info */}
               <div className="flex items-center justify-between pt-4 border-t border-[#2a2f3a]/60 mt-auto">
-                <span className="text-[12px] font-mono font-bold text-zinc-500 uppercase">
+                <span className="text-sm font-mono font-bold text-zinc-300 uppercase">
                   {formatDate(ep.pubDate)}
                 </span>
-                <span className="text-[12px] font-black uppercase tracking-[0.2em] text-zinc-600 group-hover:text-primary transition-colors">
+                <span className="text-sm font-black uppercase tracking-[0.2em] text-zinc-200 group-hover:text-primary transition-colors">
                   Ouvir Relatório
                 </span>
               </div>

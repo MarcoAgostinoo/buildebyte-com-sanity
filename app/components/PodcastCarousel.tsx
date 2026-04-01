@@ -59,7 +59,7 @@ export default function PodcastCarousel({ episodes = [], defaultImage }: { episo
                     PODCAST
                   </span>
                 </div>
-                <h3 className="font-bold text-zinc-900 dark:text-white text-base line-clamp-2 leading-tight">
+                <h3 className="font-bold text-white text-base line-clamp-2 leading-tight">
                   {ep.title}
                 </h3>
                 <p className="text-[12px] text-zinc-500 mt-1">

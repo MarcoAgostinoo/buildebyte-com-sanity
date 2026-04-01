@@ -93,12 +93,12 @@ export default async function EditorialPillars() {
       {/* HEADER */}
       <div className="flex items-end justify-between mb-6">
         <div>
-          <p className="text-[12px] font-black uppercase tracking-[0.35em] text-zinc-600 mb-1">
+          <p className="text-sm font-black uppercase tracking-[0.35em] text-zinc-500 mb-2">
             Arquitetura Editorial
           </p>
 
           <h2
-            className="text-3xl sm:text-4xl font-black tracking-tight text-zinc-700 uppercase leading-none"
+            className="text-4xl sm:text-5xl font-black tracking-tight text-zinc-100 uppercase leading-none"
             style={{ fontFamily: "var(--font-bebas-neue, sans-serif)" }}
           >
             Frentes Estratégicas
@@ -107,7 +107,7 @@ export default async function EditorialPillars() {
 
         <Link
           href="/pilares"
-          className="hidden sm:flex items-center gap-2 text-[12px] font-black uppercase tracking-widest text-zinc-600 hover:text-zinc-900 transition-colors group"
+          className="hidden sm:flex items-center gap-2 text-sm font-black uppercase tracking-widest text-zinc-500 hover:text-zinc-100 transition-colors group"
         >
           Ver todas
           <svg
@@ -146,7 +146,7 @@ export default async function EditorialPillars() {
             {/* INDEX */}
             <div className="relative z-10 flex justify-end p-5">
               <span
-                className="text-6xl font-black opacity-20"
+                className="text-8xl font-black opacity-60 drop-shadow-lg"
                 style={{ color: pillar.accent }}
               >
                 {pillar.index}
@@ -156,29 +156,29 @@ export default async function EditorialPillars() {
             {/* CONTENT */}
             <div className="relative z-10 mt-auto p-6">
               <p
-                className="text-[12px] font-black uppercase tracking-[0.25em] mb-2"
+                className="text-sm font-black uppercase tracking-[0.25em] mb-3"
                 style={{ color: pillar.accentLight }}
               >
                 {pillar.tagline}
               </p>
 
-              <h3 className="text-2xl font-black text-white uppercase mb-2">
+              <h3 className="text-3xl font-black text-white uppercase mb-3">
                 {pillar.title} <br />
                 <span style={{ color: pillar.accentLight }}>
                   {pillar.titleLine2}
                 </span>
               </h3>
 
-              <p className="text-sm text-zinc-400 mb-4 line-clamp-2">
+              <p className="text-sm text-zinc-300 mb-4 line-clamp-2">
                 {pillar.description}
               </p>
 
-              <div className="flex justify-between items-center text-xs">
-                <span style={{ color: pillar.accentLight }}>
+              <div className="flex justify-between items-center text-sm">
+                <span className="font-bold" style={{ color: pillar.accentLight }}>
                   {counts[i]} artigos
                 </span>
 
-                <span className="uppercase tracking-widest text-zinc-400 group-hover:text-white">
+                <span className="uppercase tracking-widest text-zinc-300 group-hover:text-white font-bold">
                   Explorar →
                 </span>
               </div>

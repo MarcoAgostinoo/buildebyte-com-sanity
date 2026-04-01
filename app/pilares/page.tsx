@@ -74,7 +74,7 @@ export default async function PilaresPage() {
       <div className="mb-16">
         <div className="flex items-center gap-3 mb-4">
           <span className="w-2 h-2 bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--primary-rgb),0.8)]"></span>
-          <h1 className="font-black uppercase tracking-[0.2em] text-zinc-100 text-3xl sm:text-4xl">
+          <h1 className="font-black uppercase tracking-[0.2em] text-zinc-800 text-3xl sm:text-4xl">
             Pilares <span className="text-primary">Editoriais</span>
           </h1>
         </div>

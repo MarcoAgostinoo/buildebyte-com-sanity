@@ -72,7 +72,7 @@ export default async function PillarPage({ params }: Props) {
               Frente Estratégica
             </span>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-zinc-100 uppercase mb-4">
+          <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-zinc-800 uppercase mb-4">
             {data.pillar.title}
           </h1>
         </div>

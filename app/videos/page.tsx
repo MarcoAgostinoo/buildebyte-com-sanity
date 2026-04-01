@@ -94,7 +94,7 @@ export default function VideosPage() {
             <div className="text-red-600 text-sm font-mono font-bold tracking-widest uppercase mb-2">
               Análises em Vídeo
             </div>
-            <h1 className="text-4xl font-bold text-amber-50 tracking-tight">Série Estratégica</h1>
+            <h1 className="text-4xl font-bold text-amber-800 tracking-tight">Série Estratégica</h1>
           </div>
           <div className="text-zinc-500 font-mono text-sm">
             Total catalogado: {todosVideos.length}

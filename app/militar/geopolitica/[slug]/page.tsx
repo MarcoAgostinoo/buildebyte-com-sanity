@@ -846,6 +846,7 @@ export default async function PostPage({
 
   // ATUALIZADO: Passando o slug do pilar para alimentar os artigos recomendados
   const relatedPosts = await getRelatedPosts(post.pillar?.slug, slug);
+  console.log('[GEOPOLITICA DEBUG]', { pilarSlug: post.pillar?.slug, relatedPostsCount: relatedPosts.length, relatedPosts });
   const isReview = REVIEW_TYPES.has(post.editorialType ?? "");
   const readTime = estimateReadTime(post.body);
 
