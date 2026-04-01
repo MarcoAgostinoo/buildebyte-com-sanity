@@ -4,7 +4,8 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Barlow } from "next/font/google";
 import Script from "next/script";
-import { GoogleTagManager } from "@next/third-parties/google";
+// IMPORT CORRIGIDO: Agora importa o GoogleAnalytics no lugar do GoogleTagManager
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from '@vercel/analytics/react';
 import { ThemeInit } from "../.flowbite-react/init";
 import Header from "./components/Header";
@@ -78,7 +79,10 @@ export const metadata: Metadata = {
   // Usei o código correto que termina em "...NpKKw"
   // =========================================================================
   verification: {
-    google: "J3d8JCbDKMu_W-_lw4elkvmWUF3be bD8XHpVizNpKKw",
+    google: "J3d8JCbDKMu_W-_lw4eIkvmWUF3bebD8XHpVizNpKKw",
+    other: {
+      "p:domain_verify": "5b578aa6bd9d28c4bf51763db9a7aebd",
+    },
   },
   // =========================================================================
 
@@ -182,9 +186,9 @@ export default async function RootLayout({
         {/* Vercel Analytics */}
         <Analytics />
         
-        {/* Google Tag Manager (Renderização condicional segura) */}
+        {/* Google Analytics (Renderização condicional segura) - CORRIGIDO AQUI */}
         {process.env.NEXT_PUBLIC_GA_ID && (
-          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GA_ID} />
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
         )}
       </body>
     </html>
