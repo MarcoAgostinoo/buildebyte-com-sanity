@@ -138,6 +138,16 @@ export function WebStoriesCarousel({ webStories }: { webStories: WebStory[] }) {
       <p className="text-center text-foreground/40 text-[11px] mt-5 uppercase tracking-[0.25em] font-black">
         Arraste para o lado
       </p>
+
+      {/* Botão Ver Todos */}
+      <div className="flex justify-center mt-6 px-4">
+        <Link
+          href="/web-stories"
+          className="px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-bold uppercase tracking-wider rounded-lg transition-colors duration-300 shadow-lg"
+        >
+          Ver Todos
+        </Link>
+      </div>
     </section>
   );
 }

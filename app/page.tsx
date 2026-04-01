@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { client, urlFor } from "@/app/lib/sanity";
-import { Post as FeaturedPost } from "@/app/lib/types";
+import { Post as FeaturedPost, type SanityImage, type PortableTextBlock } from "@/app/lib/types";
 import { getPodcastEpisodes } from "@/app/lib/podcast-service";
 
 // ── Componentes SSR ──
@@ -46,6 +46,7 @@ export interface CategoryPost {
   slug: string;
   publishedAt: string;
   pillar?: string;
+  author?: { _id: string; name: string; slug?: { current: string }; image?: SanityImage; bio?: PortableTextBlock[] };
   [key: string]: unknown;
 }
 
@@ -90,7 +91,7 @@ async function getFeaturedPosts(): Promise<FeaturedPost[]> {
     mainImage,
     "imagemAlt": mainImage.alt,
     "imagemLqip": mainImage.asset->metadata.lqip,
-    "author": author->name,
+    "author": author->{ _id, name, "slug": slug.current, image{ asset->{ url, metadata }, alt }, bio },
     publishedAt,
     "pillar": pillar->slug.current,
     "pillarBasePath": pillar->basePath,
@@ -125,7 +126,7 @@ async function getPillarsWithPosts(): Promise<CategoryWithPosts[]> {
       _id, title, "slug": slug.current, mainImage,
       "imagemAlt": mainImage.alt,
       "imagemLqip": mainImage.asset->metadata.lqip,
-      excerpt, "author": author->name, publishedAt, "pillar": pillar->slug.current, 
+      excerpt, "author": author->{ _id, name, "slug": slug.current, image{ asset->{ url, metadata }, alt }, bio }, publishedAt, "pillar": pillar->slug.current, 
       "pillarBasePath": pillar->basePath, "categorySlug": category->slug.current, editorialType
     }
   }`;

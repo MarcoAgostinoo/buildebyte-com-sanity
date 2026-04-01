@@ -16,7 +16,7 @@ const writeToken = process.env.SANITY_API_WRITE_TOKEN;
 // Validação de segurança básica
 if (!projectId || !dataset) {
   throw new Error(
-    "Faltam variáveis do Sanity no .env.local. Verifique PROJECT_ID e DATASET."
+    "Faltam variáveis do Sanity no .env.local. Verifique PROJECT_ID e DATASET.",
   );
 }
 
@@ -44,13 +44,13 @@ export const client = createClient({
  */
 export const previewClient = readToken
   ? createClient({
-      projectId,
-      dataset,
-      apiVersion,
-      useCdn: false,
-      token: readToken,
-      perspective: "previewDrafts",
-    })
+    projectId,
+    dataset,
+    apiVersion,
+    useCdn: false,
+    token: readToken,
+    perspective: "previewDrafts",
+  })
   : null;
 
 /**
@@ -62,12 +62,12 @@ export const previewClient = readToken
  */
 export const writeClient = writeToken
   ? createClient({
-      projectId,
-      dataset,
-      apiVersion,
-      useCdn: false,
-      token: writeToken,
-    })
+    projectId,
+    dataset,
+    apiVersion,
+    useCdn: false,
+    token: writeToken,
+  })
   : null;
 
 /**
@@ -95,13 +95,8 @@ export type SanityImageSource = Parameters<typeof builder.image>[0];
  * Gera URL de imagem otimizada para Desktop
  */
 export function urlFor(source: SanityImageSource) {
-  return builder.image(source)
-    .auto('format')
-    .fit('max')
-    .quality(75);
+  return builder.image(source).auto("format").fit("max").quality(75);
 }
-
-
 
 /**
 
@@ -110,15 +105,14 @@ export function urlFor(source: SanityImageSource) {
  */
 
 export function urlForMobile(source: SanityImageSource) {
+  return builder
+    .image(source)
 
-  return builder.image(source)
+    .auto("format")
 
-    .auto('format')
+    .fit("max")
 
-    .fit('max')
-
-    .quality(60); 
-
+    .quality(60);
 }
 
 export interface RawPost {
@@ -131,15 +125,7 @@ export interface RawPost {
   author?: string;
 }
 
-
-
-
-
-
 export async function getFeaturedPosts() {
-
-
-
   const query = `*[_type == "post" && featured == true && !(_id in path('drafts.**'))] | order(publishedAt desc) [0...20] {
 
 
@@ -168,66 +154,29 @@ export async function getFeaturedPosts() {
 
 
 
-    "author": author->name
+    "author": author->{ _id, name, "slug": slug.current, image{ asset->{ url, metadata }, alt }, bio }
 
 
 
   }`;
 
-
-
-  
-
-
-
   const data = await client.fetch(query);
 
-
-
-  
-
-
-
   return data.map((post: any) => ({
-
-
-
     ...post,
 
-
-
-    imagem: post.mainImage ? urlFor(post.mainImage).width(800).height(500).quality(80).auto('format').url() : ""
-
-
-
+    imagem: post.mainImage
+      ? urlFor(post.mainImage)
+        .width(800)
+        .height(500)
+        .quality(80)
+        .auto("format")
+        .url()
+      : "",
   }));
-
-
-
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export async function getOffers() {
-
-
-
-
-
-
-
   const query = `*[_type == "oferta" && !(_id in path('drafts.**'))] | order(publishedAt desc) {
 
 
@@ -310,92 +259,12 @@ export async function getOffers() {
 
   }`;
 
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
   const data = await client.fetch(query);
 
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
   return data;
-
-
-
-
-
-
-
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export async function getAllPosts() {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const query = `*[_type == "post" && !(_id in path('drafts.**'))] | order(publishedAt desc) [0...20] {
 
 
@@ -508,7 +377,7 @@ export async function getAllPosts() {
 
 
 
-    "author": author->name
+    "author": author->{ _id, name, "slug": slug.current, image{ asset->{ url, metadata }, alt }, bio }
 
 
 
@@ -526,228 +395,23 @@ export async function getAllPosts() {
 
   }`;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const data = await client.fetch(query);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   return data.map((post: any) => ({
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ...post,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    imagem: post.mainImage ? urlFor(post.mainImage).width(800).height(500).quality(80).auto('format').url() : ""
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    imagem: post.mainImage
+      ? urlFor(post.mainImage)
+        .width(800)
+        .height(500)
+        .quality(80)
+        .auto("format")
+        .url()
+      : "",
   }));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export async function getMorePosts(offset: number) {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const query = `*[_type == "post" && !(_id in path('drafts.**'))] | order(publishedAt desc) [${offset}...${offset + 20}] {
 
 
@@ -972,7 +636,7 @@ export async function getMorePosts(offset: number) {
 
 
 
-    "author": author->name
+    "author": author->{ _id, name, "slug": slug.current, image{ asset->{ url, metadata }, alt }, bio }
 
 
 
@@ -1006,356 +670,23 @@ export async function getMorePosts(offset: number) {
 
   }`;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const data = await client.fetch(query);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   return data.map((post: any) => ({
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ...post,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    imagem: post.mainImage ? urlFor(post.mainImage).width(800).height(500).quality(80).auto('format').url() : ""
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    imagem: post.mainImage
+      ? urlFor(post.mainImage)
+        .width(800)
+        .height(500)
+        .quality(80)
+        .auto("format")
+        .url()
+      : "",
   }));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 export async function getPillars() {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const query = `*[_type == "pillar" && defined(slug.current)]{
 
 
@@ -1454,162 +785,7 @@ export async function getPillars() {
 
   }`;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const data = await client.fetch(query);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   return data;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

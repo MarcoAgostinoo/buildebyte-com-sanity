@@ -5,7 +5,8 @@
  * Interfaces TypeScript para tipagem forte do conteúdo do Sanity CMS.
  */
 
-import { PortableTextBlock } from "@portabletext/types";
+import type { PortableTextBlock } from "@portabletext/types";
+export type { PortableTextBlock };
 
 /**
  * IMAGENS SANITY
@@ -135,7 +136,7 @@ export interface PostCard {
   excerpt?: string;
   publishedAt: string;
   mainImage: SanityImage;
-  author: Pick<Author, "_id" | "name">;
+  author: Author;
   pillar: Pick<Pillar, "basePath">;
   category: Pick<Category, "slug">;
 }

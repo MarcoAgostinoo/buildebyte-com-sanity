@@ -22,7 +22,7 @@ export const QUERY_POSTS_BY_CATEGORY = `
       asset->{ url, metadata },
       alt
     },
-    "author": author->{ _id, name },
+    "author": author->{ _id, name, "slug": slug.current, image{ asset->{ url, metadata }, alt }, bio },
     "pillar": pillar->{ basePath },
     "category": category->{ "slug": slug.current }
   }
@@ -115,7 +115,7 @@ export const QUERY_RELATED_POSTS = `
       asset->{ url, metadata },
       alt
     },
-    "author": author->{ _id, name },
+    "author": author->{ _id, name, "slug": slug.current, image{ asset->{ url, metadata }, alt }, bio },
     "pillar": pillar->{ basePath },
     "category": category->{ "slug": slug.current }
   }
@@ -137,7 +137,7 @@ export const QUERY_FEATURED_POSTS = `
       asset->{ url, metadata },
       alt
     },
-    "author": author->{ _id, name },
+    "author": author->{ _id, name, "slug": slug.current, image{ asset->{ url, metadata }, alt }, bio },
     editorialType,
     "pillar": pillar->{ basePath },
     "category": category->{ "slug": slug.current }
@@ -206,7 +206,7 @@ export const QUERY_RECENT_POSTS_BY_PILLAR = `
       asset->{ url, metadata },
       alt
     },
-    "author": author->{ _id, name },
+    "author": author->{ _id, name, "slug": slug.current, image{ asset->{ url, metadata }, alt }, bio },
     "pillar": pillar->{ basePath },
     "category": category->{ "slug": slug.current }
   }

@@ -2,6 +2,7 @@
 import { client } from "@/app/lib/sanity";
 import DestaquesGrid from "@/app/components/DestaquesGrid";
 import { Metadata } from "next";
+import { type SanityImage, type PortableTextBlock } from "@/app/lib/types";
 
 interface Post {
   _id: string;
@@ -10,7 +11,7 @@ interface Post {
   excerpt: string;
   imagem: string;
   publishedAt: string;
-  author: string;
+  author: { _id: string; name: string; slug?: { current: string }; image?: SanityImage; bio?: PortableTextBlock[] };
   pillarBasePath?: string;
   categorySlug?: string;
   pillarSlug?: string;
@@ -29,7 +30,7 @@ async function getConcursos(): Promise<Post[]> {
     excerpt,
     "imagem": mainImage.asset->url,
     publishedAt,
-    "author": author->name,
+    "author": author->{ _id, name, "slug": slug.current, image{ asset->{ url, metadata }, alt }, bio },
     "pillarBasePath": pillar->basePath,
     "pillarSlug": pillar->slug.current,
     "categorySlug": category->slug.current

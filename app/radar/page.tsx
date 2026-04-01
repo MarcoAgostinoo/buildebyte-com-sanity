@@ -1,6 +1,7 @@
 import { client, urlFor, type SanityImageSource } from "@/app/lib/sanity";
 import Image from "next/image";
 import Link from "next/link";
+import { type SanityImage, type PortableTextBlock } from "@/app/lib/types";
 
 interface Post {
   _id: string;
@@ -9,7 +10,7 @@ interface Post {
   excerpt: string;
   imagem: string;
   publishedAt: string;
-  author: string;
+  author: { _id: string; name: string; slug?: { current: string }; image?: SanityImage; bio?: PortableTextBlock[] };
   editorialType?: string;
   pillarName?: string;
   pillarBasePath?: string;
@@ -35,7 +36,7 @@ async function getRadar(): Promise<Post[]> {
     "pillarBasePath": pillar->basePath,
     "pillarSlug": pillar->slug.current,
     "categorySlug": category->slug.current,
-    "author": author->name
+    "author": author->{ _id, name, "slug": slug.current, image{ asset->{ url, metadata }, alt }, bio }
   }`;
 
   const data = await client.fetch(query, {}, { next: { revalidate: 60 } });

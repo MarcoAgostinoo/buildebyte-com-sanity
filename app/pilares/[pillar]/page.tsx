@@ -48,7 +48,7 @@ export default async function PillarPage({ params }: Props) {
       excerpt,
       "imagem": mainImage.asset->url,
       publishedAt,
-      "author": author->name,
+      "author": author->{ _id, name, "slug": slug.current, image{ asset->{ url, metadata }, alt }, bio },
       "pillarBasePath": pillar->basePath,
       "pillarSlug": pillar->slug.current,
       "categorySlug": category->slug.current

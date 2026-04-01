@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { client, urlFor, type SanityImageSource } from "@/app/lib/sanity";
+import { type SanityImage, type PortableTextBlock } from "@/app/lib/types";
 
 interface Post {
   _id: string;
@@ -12,7 +13,7 @@ interface Post {
   excerpt: string;
   imagem: string;
   publishedAt: string;
-  author: string;
+  author: { _id: string; name: string; slug?: { current: string }; image?: SanityImage; bio?: PortableTextBlock[] };
   pillarBasePath?: string;
   categorySlug?: string;
   pillarSlug?: string;
@@ -101,7 +102,7 @@ export default function DestaquesGrid({ initialPosts }: { initialPosts: Post[] }
                       {post.excerpt}
                     </p>
                     <div className="text-xs text-foreground/50 flex justify-between items-center mt-auto pt-4 border-t border-[var(--border)]">
-                      <span className="font-bold text-foreground/60 uppercase tracking-wider">{post.author}</span>
+                      <span className="font-bold text-foreground/60 uppercase tracking-wider">{post.author.name}</span>
                       <span>{formatDate(post.publishedAt)}</span>
                     </div>
                   </div>

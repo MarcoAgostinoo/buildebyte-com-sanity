@@ -531,6 +531,25 @@ function AuthorCard({ author }: { author: Author }) {
           <p className="font-black text-foreground text-base">{author.name}</p>
         )}
         {author.bio && <AuthorBio bio={author.bio} />}
+        <Link
+          href="/autores"
+          className="inline-flex items-center gap-1.5 mt-3 text-xs font-black text-primary hover:gap-3 transition-all uppercase tracking-wider"
+        >
+          Ver todos os autores
+          <svg
+            className="w-3.5 h-3.5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={3}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M17 8l4 4m0 0l-4 4m4-4H3"
+            />
+          </svg>
+        </Link>
       </div>
     </div>
   );

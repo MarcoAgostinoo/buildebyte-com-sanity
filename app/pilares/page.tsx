@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { client, urlFor } from "@/app/lib/sanity";
-import { SanityImage } from "@/app/lib/types";
+import { SanityImage, type PortableTextBlock } from "@/app/lib/types";
 
 export const metadata: Metadata = {
   title: "Pilares Editoriais | Vetor Estratégico",
@@ -19,7 +19,7 @@ interface PostShowcase {
   publishedAt: string;
   mainImage: SanityImage;
   categorySlug?: string;
-  authorName?: string;
+  author?: { _id: string; name: string; slug?: { current: string }; image?: SanityImage; bio?: PortableTextBlock[] };
 }
 
 interface PillarShowcase {
@@ -47,7 +47,7 @@ async function getPillarsShowcase(): Promise<PillarShowcase[]> {
       publishedAt,
       mainImage,
       "categorySlug": category->slug.current,
-      "authorName": author->name
+      "author": author->{ _id, name, "slug": slug.current, image{ asset->{ url, metadata }, alt }, bio }
     }
   }`;
   return await client.fetch(query, {}, { next: { revalidate: 300 } });
@@ -150,7 +150,7 @@ export default async function PilaresPage() {
                         </h3>
                         {post.excerpt && <p className="text-sm text-zinc-500 line-clamp-3 mb-4 flex-1">{post.excerpt}</p>}
                         <div className="mt-auto flex items-center justify-between text-[11px] font-black uppercase tracking-widest text-zinc-600 border-t border-[#2a2f3a]/50 pt-4">
-                          <span>{post.authorName || "Inteligência"}</span>
+                          <span>{post.author?.name || "Inteligência"}</span>
                           <span className="text-primary group-hover:translate-x-1 transition-transform">Ler Decodificação &rarr;</span>
                         </div>
                       </div>

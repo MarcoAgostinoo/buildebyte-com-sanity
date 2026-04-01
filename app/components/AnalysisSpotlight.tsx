@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { client, urlFor } from "@/app/lib/sanity";
-import { type PortableTextBlock } from "@portabletext/types";
 import { type SanityImageSource } from "@/app/lib/sanity";
 
 // ---------------------------------------------------------------------------
@@ -11,6 +10,8 @@ import { type SanityImageSource } from "@/app/lib/sanity";
 // defesa de alto nível — tipografia massiva, imagem de fundo tratada,
 // overlay tático e indicadores de classificação editorial.
 // ---------------------------------------------------------------------------
+
+import { type SanityImage, type PortableTextBlock } from "@/app/lib/types";
 
 interface SpotlightPost {
   _id: string;
@@ -25,7 +26,7 @@ interface SpotlightPost {
   categorySlug: string | null;
   editorialType: string | null;
   rating: number | null;
-  author: string | null;
+  author: { _id: string; name: string; slug?: { current: string }; image?: SanityImage; bio?: PortableTextBlock[] } | null;
   publishedAt: string;
   cluster: { title: string; slug: string } | null;
 }
@@ -64,7 +65,7 @@ async function getSpotlightPost(): Promise<SpotlightPost | null> {
     "categorySlug": category->slug.current,
     editorialType,
     rating,
-    "author": author->name,
+    "author": author->{ _id, name, "slug": slug.current, image{ asset->{ url, metadata }, alt }, bio },
     publishedAt,
     "cluster": cluster->{ title, "slug": slug.current }
   }`;
@@ -178,7 +179,7 @@ export default async function AnalysisSpotlight() {
 
           {/* Meta */}
           <div className="flex items-center gap-3 text-[12px] text-zinc-600 mb-7">
-            {post.author && <span className="font-bold text-zinc-500">{post.author}</span>}
+            {post.author && <span className="font-bold text-zinc-500">{post.author.name}</span>}
             <span>·</span>
             <time className="tabular-nums">{dateStr}</time>
           </div>
