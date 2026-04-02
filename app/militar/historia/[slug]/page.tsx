@@ -1047,12 +1047,6 @@ export default async function PostPage({
                       </figcaption>
                     )}
                   </figure>
-
-                  {post.imagemAlt && (
-                    <figcaption className="mt-3 text-[12px] sm:text-xs text-foreground/50 leading-relaxed border-l-2 border-primary/30 pl-3 font-medium">
-                      {post.imagemAlt}
-                    </figcaption>
-                  )}
                 </figure>
               )}
 
